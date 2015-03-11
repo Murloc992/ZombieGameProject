@@ -35,6 +35,14 @@ Chunk::~Chunk()
     freeVector(_blocks);
 }
 
+void Chunk::Update(float dt)
+{
+    for(auto ent:_entities)
+    {
+
+    }
+}
+
 void Chunk::UpdateNeighbours(uint32_t x, uint32_t y, uint32_t z)
 {
     if(x==0&&leftN!=nullptr)

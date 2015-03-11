@@ -134,6 +134,7 @@ void Application::InitFileSystem()
 
 
     PHYSFS_mount((_workingDirectoryPath +DSP()+ _resourcePath).c_str(),NULL,0);
+    PHYSFS_mount((_workingDirectoryPath +DSP()+ appWriteDir).c_str(),NULL,0);
 
     SetWriteDirectory(_workingDirectoryPath +DSP()+ appWriteDir);
 }

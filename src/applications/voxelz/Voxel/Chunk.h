@@ -9,6 +9,7 @@
 #define CHUNK_MESH_SIZE ((CHUNK_SIZE+1)*(CHUNK_SIZE+1)*(CHUNK_SIZE+1))
 
 class ChunkManager;
+class Entity;
 
 inline glm::ivec3 WorldToChunkCoords(const glm::ivec3 &other)
 {
@@ -65,6 +66,7 @@ public:
 private:
     ChunkManager *_chunkManager;
     vector<Block> _blocks;
+    vector<Entity*> _entities;
 public:
     BOOST_MOVABLE_BUT_NOT_COPYABLE(Chunk)
 
@@ -73,7 +75,9 @@ public:
 
     void Fill();
     void FillCheckerboard();
+
     void UpdateNeighbours(uint32_t x,uint32_t y,uint32_t z);
+    void Update(float dt);
 
     void SetBlock(uint32_t x,uint32_t y,uint32_t z,EBlockType type,bool active);
     const Block &GetBlock(uint32_t x,uint32_t y,uint32_t z);

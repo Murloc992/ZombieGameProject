@@ -8,7 +8,7 @@
 
 class ChunkManager;
 
-class Player:public CollisionObject
+class Player:public Entity
 {
     public:
         Player(ChunkManager* chunkManager, const glm::vec3 &feetPos);
@@ -36,13 +36,15 @@ Player::~Player()
 
 }
 
-void Player::CheckCollisions(dt)
+Player::OnCollision(Entity* ent)
 {
-    glm::ivec3 superchunkCoords=WorldToSuperChunkCoords(_playerPos),chunkCoords=WorldToChunkCoords(_playerPos);
-    SuperChunkPtr superchunk=_chunkManager->GetSuperChunk(superchunkCoords);
-    ChunkPtr chunk=superchunk->GetChunk(chunkCoords);
-
-
+    switch(ent->GetType())
+    {
+    case EET_WORLD:
+        break;
+    default:
+        break;
+    }
 }
 
 void Player::Update(float dt)
