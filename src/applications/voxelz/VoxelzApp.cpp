@@ -264,6 +264,8 @@ bool VoxelzApp::Init(const std::string & title, uint32_t width, uint32_t height)
     return true;
 }
 
+static bool thirdperson=false;
+
 bool VoxelzApp::Update()
 {
     if(_appContext->_window->Update() && !_appContext->_window->GetShouldClose() && !_appContext->_window->GetKey(GLFW_KEY_ESCAPE))
@@ -279,7 +281,7 @@ bool VoxelzApp::Update()
         swprintf(buf,255,L"['s]Player's speed: %.2f %.2f %.2f (%.2f)[s']",plr->GetVelocity().x,plr->GetVelocity().y,plr->GetVelocity().z,glm::length(plr->GetVelocity()));
         env->get_element_by_name_t<GUIStaticText>("9")->set_text(buf);
 
-        cam->SetPosition(plr->GetEyePos()-cam->GetLook()*5.f);
+        cam->SetPosition(plr->GetEyePos()-(thirdperson==true?(cam->GetLook()*5.f):glm::vec3(0.f)));
 
         GBuffer->Set();
         GBuffer->EnableBuffer(0);
@@ -405,6 +407,9 @@ void VoxelzApp::HandleMovement(float delta)
         cam->Strafe(speed*delta);
 }
 
+static EBlockType currentVoxelType=EBT_DIRT;
+static bool currentVoxelActive=false;
+
 void VoxelzApp::OnKeyEvent(int32_t key, int32_t scan_code, int32_t action, int32_t modifiers)
 {
     if(key==GLFW_KEY_SPACE&&action==GLFW_RELEASE)
@@ -418,6 +423,57 @@ void VoxelzApp::OnKeyEvent(int32_t key, int32_t scan_code, int32_t action, int32
     if(key==GLFW_KEY_F&&action==GLFW_RELEASE)
     {
         cam->SetFPS(!cam->IsFPS());
+    }
+    if(key==GLFW_KEY_F5&&action==GLFW_RELEASE)
+    {
+        thirdperson=!thirdperson;
+    }
+
+    if(action==GLFW_RELEASE)
+    {
+        switch (key)
+        {
+        case GLFW_KEY_1:
+            currentVoxelType=EBT_DIRT;
+            currentVoxelActive=true;
+            break;
+        case GLFW_KEY_2:
+            currentVoxelType=EBT_GRASS;
+            currentVoxelActive=true;
+            break;
+        case GLFW_KEY_3:
+            currentVoxelType=EBT_SAND;
+            currentVoxelActive=true;
+            break;
+        case GLFW_KEY_4:
+            currentVoxelType=EBT_STONE;
+            currentVoxelActive=true;
+            break;
+        case GLFW_KEY_5:
+            currentVoxelType=EBT_WOOD;
+            currentVoxelActive=true;
+            break;
+        case GLFW_KEY_6:
+            currentVoxelType=EBT_LEAF;
+            currentVoxelActive=true;
+            break;
+        case GLFW_KEY_7:
+            currentVoxelType=EBT_CLOUD;
+            currentVoxelActive=true;
+            break;
+        case GLFW_KEY_8:
+            currentVoxelType=EBT_AIR;
+            currentVoxelActive=true;
+            break;
+        case GLFW_KEY_9:
+            currentVoxelType=EBT_AIR;
+            currentVoxelActive=true;
+            break;
+        case GLFW_KEY_0:
+            currentVoxelType=EBT_AIR;
+            currentVoxelActive=true;
+            break;
+        }
     }
 }
 
@@ -533,11 +589,7 @@ void VoxelzApp::OnMouseKey(int32_t button, int32_t action, int32_t mod)
         {
         case GLFW_MOUSE_BUTTON_LEFT:
             if(validvoxel)
-                chkmgr->SetBlock(glm::ivec3(voxpos),EBT_AIR,false);
-            break;
-        case GLFW_MOUSE_BUTTON_RIGHT:
-            if(validvoxel)
-                chkmgr->SetBlock(glm::ivec3(newvoxpos),EBT_GRASS,true);
+                chkmgr->SetBlock(glm::ivec3(newvoxpos),currentVoxelType,currentVoxelActive);
             break;
         }
     }

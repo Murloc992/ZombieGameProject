@@ -86,7 +86,7 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
                         if(cinf.colliding&&cinf.depth==cinf.depth&&ccdVec3Eq(&cinf.dir,&cinf.dir))
                         {
                             glm::vec3 direction=CCDtoGLM(cinf.dir);
-                            this->Translate(-direction*cinf.depth*1.1f);
+                            this->Translate(-direction*cinf.depth);
 
                             OnCollisionWithWorld(blk);
                         }

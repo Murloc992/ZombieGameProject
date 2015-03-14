@@ -13,6 +13,7 @@ Player::Player(ChunkManager* chunkManager, const glm::vec3 &feetPos):Entity("Pla
     _tempMesh=new CubeMesh(AABB(glm::vec3(0),_colShape.GetHalfSize()));
     _isJumping=false;
     _isFalling=false;
+    _jumpHeight=1.f;
 }
 
 Player::~Player()
@@ -51,7 +52,11 @@ void Player::OnCollisionWithWorld(const Block &blk)
 
 void Player::CalculateSpeed()
 {
-    if(!_isOnGround&&_velocity.y<GRAVITY_CONSTANT)
+    if(_isJumping&&GetFeetPos().y<_jumpStartPos.y+_jumpHeight)
+    {
+        _velocity+=glm::vec3(0,GRAVITY_CONSTANT,0);
+    }
+    else if(!_isOnGround&&_velocity.y<GRAVITY_CONSTANT)
     {
         _velocity+=glm::vec3(0,-GRAVITY_CONSTANT,0);
     }
@@ -71,9 +76,9 @@ void Player::Update(float dt,CameraPtr cam)
         CalculateSpeed();
 
         float spd=
-        glm::max(glm::abs(_velocity.x),
-                 glm::max(glm::abs(_velocity.y),
-                          glm::abs(_velocity.z)));
+            glm::max(glm::abs(_velocity.x),
+                     glm::max(glm::abs(_velocity.y),
+                              glm::abs(_velocity.z)));
 
         int substeps=glm::ceil(spd*dt)*2;
         glm::vec3 stepsteed=(_velocity*dt)/(float)substeps;
@@ -86,6 +91,7 @@ void Player::Update(float dt,CameraPtr cam)
                 CollideWithWorld(dt,_chunkManager);
             }
         }
+
     }
 }
 
@@ -93,18 +99,18 @@ void Player::HandleInput(InputHandler* input)
 {
     if(input->IsKeyDown(GLFW_KEY_W))
     {
-        _velocity+=_walkingDir*5.f;
+        _velocity+=_walkingDir*2.f;
     }
 
     if(input->IsKeyDown(GLFW_KEY_S))
     {
-        _velocity+=_walkingDir*-5.f;
+        _velocity+=_walkingDir*-2.f;
     }
 
     if(input->IsKeyDown(GLFW_KEY_SPACE)&&(_isSwimming||(_isOnGround&&!_isJumping)))
     {
+        _jumpStartPos=GetFeetPos();
         _isJumping=true;
-        _velocity+=glm::vec3(0,GRAVITY_CONSTANT*4.f,0);
     }
 }
 
