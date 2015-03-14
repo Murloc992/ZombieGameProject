@@ -247,6 +247,7 @@ void InitPlaneMesh(AppContext * ctx)
     plr=new Player(chkmgr,glm::vec3(10,256,10));
 
     cam=share(new Camera(ctx,glm::vec3(0,128,-128),plr->GetPosition(),glm::vec3(0,1,0),1.777777f,45.0f,1.0f,4096.f));
+    cam->SetFPS(false);
     //cam->SetFPS(false);
 }
 
@@ -281,6 +282,7 @@ bool VoxelzApp::Update()
         cam->Update(dt);
         plr->Update(dt);
         plr->HandleInput(_appContext->_input);
+        cam->Orbit(plr->GetPosition()+glm::vec3(0,1.5,0),1,90,180);
 
         GBuffer->Set();
         GBuffer->EnableBuffer(0);

@@ -13,6 +13,7 @@ Entity::Entity(std::string id,const glm::vec3 &pos,const glm::vec3 &size,bool co
     _isColliding=colliding;
     _isCollidingWorld=collidingWorld;
     _isDynamic=dynamic;
+    _isOnGround=false;
 }
 
 Entity::~Entity()
@@ -78,14 +79,18 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
         ez=tmp;
     }
 
+    const Block &blockBelow=chkmgr->GetBlock(glm::ivec3(sx,sy-1,sz));
+    const Block &blockAbove=chkmgr->GetBlock(glm::ivec3(sx,ey+1,sz));
+    _isOnGround=blockBelow!=Chunk::EMPTY_BLOCK&&blockBelow.type!=EBT_WATER;
+
     for(int32_t x=sx; x<ex; x++)
     {
         for(int32_t y=sy; y<ey; y++)
         {
             for(int32_t z=sz; z<ez; z++)
             {
-                Block blk=chkmgr->GetBlock(glm::ivec3(x,y,z));
-                if(blk!=Chunk::EMPTY_BLOCK&&blk.active)
+                const Block &blk=chkmgr->GetBlock(glm::ivec3(x,y,z));
+                if(blk.active&&blk.type!=EBT_WATER)
                 {
                     CollisionObject b=CollisionObject(glm::vec3(x,y,z)+glm::vec3(0.5f),glm::vec3(0.5f));
 
@@ -94,10 +99,25 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
                         CollisionInfo cinf=MPRPenetration(this,&b);
                         if(cinf.colliding&&cinf.depth==cinf.depth&&ccdVec3Eq(&cinf.dir,&cinf.dir))
                         {
-                            this->Translate(-CCDtoGLM(cinf.dir)*(float)(cinf.depth));
+                            glm::vec3 direction=CCDtoGLM(cinf.dir);
+                            this->Translate(-direction*cinf.depth);
+
                             OnCollisionWithWorld(blk);
                         }
                     }
+                }
+                else if(blk.active&&blk.type==EBT_WATER)
+                {
+                    CollisionObject b=CollisionObject(glm::vec3(x,y,z)+glm::vec3(0.5f),glm::vec3(0.5f));
+
+                    if(MPRCollide(this,&b))
+                    {
+                        OnCollisionWithWorld(blk);
+                    }
+                }
+                else if(blk.type==EBT_AIR)
+                {
+                    OnCollisionWithWorld(blk);
                 }
                 else
                     continue;

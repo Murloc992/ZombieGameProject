@@ -10,6 +10,8 @@ Player::Player(ChunkManager* chunkManager, const glm::vec3 &feetPos):Entity("Pla
     _type=EET_PLAYER;
     _chunkManager=chunkManager;
     _tempMesh=new CubeMesh(AABB(glm::vec3(0),_colShape.GetHalfSize()));
+    _isJumping=false;
+    _isFalling=false;
 }
 
 Player::~Player()
@@ -28,14 +30,30 @@ bool Player::OnCollision(Entity* ent)
 
 void Player::OnCollisionWithWorld(const Block &blk)
 {
-    Player* stuff=this;
-    _velocity=glm::vec3(0);
+    switch(blk.type)
+    {
+    case EBT_WATER:
+        _isSwimming=true;
+        _fallingSpeed=GRAVITY_CONSTANT/9.f;
+        break;
+    default:
+        _isSwimming=false;
+        _fallingSpeed=GRAVITY_CONSTANT;
+        break;
+    }
 }
 
 void Player::CalculateSpeed()
 {
-    if(_velocity.y<GRAVITY_CONSTANT)
-    _velocity+=glm::vec3(0,-GRAVITY_CONSTANT,0);
+    if(!_isOnGround&&_velocity.y<GRAVITY_CONSTANT)
+    {
+        _velocity+=glm::vec3(0,-GRAVITY_CONSTANT,0);
+    }
+    else
+    {
+        _isJumping=false;
+    }
+    _velocity*=0.75;
 }
 
 void Player::Update(float dt)
@@ -80,6 +98,11 @@ void Player::HandleInput(InputHandler* input)
     if(input->IsKeyDown(GLFW_KEY_RIGHT))
     {
         _velocity+=glm::vec3(-5,0,0);
+    }
+    if(input->IsKeyDown(GLFW_KEY_SPACE)&&(_isSwimming||(_isOnGround&&!_isJumping)))
+    {
+        _isJumping=true;
+        _velocity+=glm::vec3(0,GRAVITY_CONSTANT*4.f,0);
     }
 }
 

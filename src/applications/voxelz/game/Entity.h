@@ -26,6 +26,11 @@ public:
 
     std::string GetId();
 
+    bool IsOnGround()
+    {
+        return _isOnGround;
+    }
+
     void CheckCollision(Entity* ent);
 
     virtual void Update(float dt) = 0;
@@ -34,7 +39,7 @@ public:
     virtual bool OnCollision(Entity* ent) = 0;
 private:
 protected:
-    bool _isDynamic,_isColliding,_isCollidingWorld;
+    bool _isDynamic,_isColliding,_isCollidingWorld,_isOnGround;
     uint32_t _type;
     std::string _id;
 

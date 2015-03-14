@@ -28,6 +28,9 @@ public:
     void HandleInput(InputHandler* input);
 protected:
 private:
+    bool _isJumping,_isFalling,_isSwimming;
+    float _fallingSpeed;
+
     ChunkManager* _chunkManager;
     VoxelMesh* _playerMesh;
     CubeMesh* _tempMesh;
