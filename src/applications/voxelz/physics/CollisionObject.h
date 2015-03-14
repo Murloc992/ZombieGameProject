@@ -75,7 +75,7 @@ inline bool MPRCollide(CollisionObject * obj1, CollisionObject * obj2)
     ccd.support2=obj2->Support;
     ccd.center1=obj1->Center;
     ccd.center2=obj2->Center;
-    ccd.mpr_tolerance=0.00001;
+    ccd.mpr_tolerance=0.001f;
 
     return ccdMPRIntersect(obj1,obj2,&ccd);
 }
@@ -89,7 +89,7 @@ inline CollisionInfo MPRPenetration(CollisionObject * obj1, CollisionObject * ob
     ccd.support2=obj2->Support;
     ccd.center1=obj1->Center;
     ccd.center2=obj2->Center;
-    ccd.mpr_tolerance=0.00001;
+    ccd.mpr_tolerance=0.001f;
 
     CollisionInfo ret;
 

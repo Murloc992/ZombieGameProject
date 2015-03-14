@@ -2,6 +2,7 @@
 
 #include "Voxel/Block.h"
 #include "Application/InputHandler.h"
+#include "Scenegraph/Camera.h"
 
 #include "Player.h"
 
@@ -28,6 +29,11 @@ bool Player::OnCollision(Entity* ent)
     }
 }
 
+glm::vec3 Player::GetVelocity()
+{
+    return _velocity;
+}
+
 void Player::OnCollisionWithWorld(const Block &blk)
 {
     switch(blk.type)
@@ -49,15 +55,17 @@ void Player::CalculateSpeed()
     {
         _velocity+=glm::vec3(0,-GRAVITY_CONSTANT,0);
     }
-    else
+    else if(_isOnGround||_hitCeiling||_velocity.y>0)
     {
         _isJumping=false;
     }
     _velocity*=0.75;
 }
 
-void Player::Update(float dt)
+void Player::Update(float dt,CameraPtr cam)
 {
+    glm::vec3 d=cam->GetLook();
+    _walkingDir=glm::vec3(d.x,0,d.z);
     if(_isDynamic)
     {
         CalculateSpeed();
@@ -83,22 +91,16 @@ void Player::Update(float dt)
 
 void Player::HandleInput(InputHandler* input)
 {
-    if(input->IsKeyDown(GLFW_KEY_UP))
+    if(input->IsKeyDown(GLFW_KEY_W))
     {
-        _velocity+=glm::vec3(0,0,5);
+        _velocity+=_walkingDir*5.f;
     }
-    if(input->IsKeyDown(GLFW_KEY_DOWN))
+
+    if(input->IsKeyDown(GLFW_KEY_S))
     {
-        _velocity+=glm::vec3(0,0,-5);
+        _velocity+=_walkingDir*-5.f;
     }
-    if(input->IsKeyDown(GLFW_KEY_LEFT))
-    {
-        _velocity+=glm::vec3(5,0,0);
-    }
-    if(input->IsKeyDown(GLFW_KEY_RIGHT))
-    {
-        _velocity+=glm::vec3(-5,0,0);
-    }
+
     if(input->IsKeyDown(GLFW_KEY_SPACE)&&(_isSwimming||(_isOnGround&&!_isJumping)))
     {
         _isJumping=true;
@@ -109,4 +111,14 @@ void Player::HandleInput(InputHandler* input)
 void Player::Render(float dt)
 {
     _tempMesh->Render(false);
+}
+
+glm::vec3 Player::GetFeetPos()
+{
+    return _colShape.GetCenter()-glm::vec3(0,_colShape.GetHalfSize().y,0);
+}
+
+glm::vec3 Player::GetEyePos()
+{
+    return _colShape.GetCenter()+glm::vec3(0,_colShape.GetHalfSize().y,0);
 }

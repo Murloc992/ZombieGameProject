@@ -45,49 +45,35 @@ void Entity::CheckCollision(Entity* ent)
 
 void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
 {
-    glm::ivec3 amn=(glm::ivec3)glm::floor((_colShape.GetMin()));
-    glm::ivec3 amx=(glm::ivec3)glm::ceil((_colShape.GetMax()));
+    glm::ivec3 amn=(glm::ivec3)_colShape.GetMin();
+    glm::ivec3 amx=(glm::ivec3)_colShape.GetMax();
 
     int32_t sx,ex,sy,ey,sz,ez;
 
-    sx=amn.x;
-    sy=amn.y;
-    sz=amn.z;
+    glm::ivec3 cen=(glm::ivec3)_colShape.GetCenter();
+    glm::ivec3 hs=(glm::ivec3)glm::ceil(_colShape.GetHalfSize());
 
-    ex=amx.x;
-    ey=amx.y;
-    ez=amx.z;
+    sx=cen.x-hs.x;
+    sy=cen.y-hs.y;
+    sz=cen.z-hs.z;
 
-    if(ex<sx)
+    ex=cen.x+hs.x;
+    ey=cen.y+hs.y;
+    ez=cen.z+hs.z;
+
+    glm::ivec3 epos=(glm::ivec3)_colShape.GetCenter();
+    //printf("Collision ranges: PLAYERPOS: %d %d %d START: %d %d %d END: %d %d %d\n",epos.x,epos.y,epos.z,sx,sy,sz,ex,ey,ez);
+
+    const Block &blockBelow=chkmgr->GetBlock(glm::ivec3(cen.x,sy,cen.z));
+    const Block &blockAbove=chkmgr->GetBlock(glm::ivec3(cen.x,ey,cen.z));
+    _isOnGround=blockBelow.active&&blockBelow.type!=EBT_WATER;
+    _hitCeiling=blockAbove.active&&blockAbove.type!=EBT_WATER;
+
+    for(int32_t x=sx; x<=ex; x++)
     {
-        int32_t tmp=sx;
-        sx=ex;
-        ex=tmp;
-    }
-
-    if(ey<sy)
-    {
-        int32_t tmp=sy;
-        sy=ey;
-        ey=tmp;
-    }
-
-    if(ez<sz)
-    {
-        int32_t tmp=sz;
-        sz=ez;
-        ez=tmp;
-    }
-
-    const Block &blockBelow=chkmgr->GetBlock(glm::ivec3(sx,sy-1,sz));
-    const Block &blockAbove=chkmgr->GetBlock(glm::ivec3(sx,ey+1,sz));
-    _isOnGround=blockBelow!=Chunk::EMPTY_BLOCK&&blockBelow.type!=EBT_WATER;
-
-    for(int32_t x=sx; x<ex; x++)
-    {
-        for(int32_t y=sy; y<ey; y++)
+        for(int32_t y=sy; y<=ey; y++)
         {
-            for(int32_t z=sz; z<ez; z++)
+            for(int32_t z=sz; z<=ez; z++)
             {
                 const Block &blk=chkmgr->GetBlock(glm::ivec3(x,y,z));
                 if(blk.active&&blk.type!=EBT_WATER)
@@ -100,7 +86,7 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
                         if(cinf.colliding&&cinf.depth==cinf.depth&&ccdVec3Eq(&cinf.dir,&cinf.dir))
                         {
                             glm::vec3 direction=CCDtoGLM(cinf.dir);
-                            this->Translate(-direction*cinf.depth);
+                            this->Translate(-direction*cinf.depth*1.1f);
 
                             OnCollisionWithWorld(blk);
                         }
@@ -124,4 +110,9 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
             }
         }
     }
+}
+
+void Entity::Update(float dt)
+{
+
 }

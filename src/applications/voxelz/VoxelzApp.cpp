@@ -112,7 +112,8 @@ bool InitPostProc(AppContext* ctx)
 
     //spr=VoxelSprite::LoadFromImage(loader->load("res/tile.png"),loader->load("res/tile_disp.png"),1);
     spr=new VoxelSprite(u16vec3(2,2,2));
-    loop(x,2)loop(y,2)loop(z,2)spr->CreateVox(x,y,z,VecRGBAToIntRGBA(u8vec4(255))); spr->Rebuild();
+    loop(x,2)loop(y,2)loop(z,2)spr->CreateVox(x,y,z,VecRGBAToIntRGBA(u8vec4(255)));
+    spr->Rebuild();
 
     return true;
 }
@@ -162,25 +163,15 @@ void InitPlaneMesh(AppContext * ctx)
 //    env->get_font_renderer()->create_font("bits-bolditalic","res/gui/fonts/OpenSans-BoldItalic.ttf",36);
     env->get_font_renderer()->CreateFontFamily("polygon",36,std::string("res/gui/fonts/polygon.ttf"));
     env->get_font_renderer()->CreateFontFamily("default36",36,
-                                               "res/gui/fonts/OpenSans-Regular.ttf","res/gui/fonts/OpenSans-Bold.ttf",
-                                               "res/gui/fonts/OpenSans-Italic.ttf","res/gui/fonts/OpenSans-BoldItalic.ttf");
-    GUIPane* pan=new GUIPane(env,Rect2D<int>(0,0,200,200),true);
+            "res/gui/fonts/OpenSans-Regular.ttf","res/gui/fonts/OpenSans-Bold.ttf",
+            "res/gui/fonts/OpenSans-Italic.ttf","res/gui/fonts/OpenSans-BoldItalic.ttf");
+    GUIPane* pan=new GUIPane(env,Rect2D<int>(0,0,256,512),true);
 
-    GUIStaticText* texts[10];
-
-    GUIButton* tbtn=new GUIButton(env,Rect2D<int>(200,0,64,64),L"Button");
-
-    GUICheckbox* chk = new GUICheckbox(env,Rect2D<int>(200,160,16,16),false);
-
-    GUIEditBox* eb = new GUIEditBox(env, Rect2D<int>(210,60,128,32),L"Editboxas",glm::vec4(1),true,true,false);
-
-    GUISlider* slid=new GUISlider(env,Rect2D<int>(200,200,128,16),0,100,50);
-
-    GUIColorPicker* gcpk=new GUIColorPicker(env,Rect2D<int>(0,300,128,128));
+    GUIStaticText* texts[25];
 
     std::stringstream ss;
 
-    loop(i,10)
+    loop(i,25)
     {
         ss<<i;
         texts[i]=new GUIStaticText(env,Rect2D<int>(0,i*20,200,20),L"",glm::vec4(1),false,true);
@@ -189,8 +180,8 @@ void InitPlaneMesh(AppContext * ctx)
         ss.str(std::string()); ///clear stream
     }
 
-    #define SSAOTWEAK
-    #ifdef SSAO_TWEAK
+#define SSAOTWEAK
+#ifdef SSAO_TWEAK
 
     GUIWindow *wssao=new GUIWindow(env,Rect2D<int>(512,0,512,256),L"Ayyy.. SSAO!",true,false,false,true);
 
@@ -233,7 +224,7 @@ void InitPlaneMesh(AppContext * ctx)
     srad->SetParent(wssao);
     srad->SetName("ssao_bias");
     seb->SetName("ssao_bias_eb");
-    #endif // SSAO_TWEAK
+#endif // SSAO_TWEAK
 
     cub=new CubeMesh(1);
     smallcub=new CubeMesh(0.25);
@@ -244,9 +235,9 @@ void InitPlaneMesh(AppContext * ctx)
     chkmgr=new ChunkManager();
     ctx->_input=new InputHandler(ctx->_window);
 
-    plr=new Player(chkmgr,glm::vec3(10,256,10));
+    plr=new Player(chkmgr,glm::vec3(61,128,161));
 
-    cam=share(new Camera(ctx,glm::vec3(0,128,-128),plr->GetPosition(),glm::vec3(0,1,0),1.777777f,45.0f,1.0f,4096.f));
+    cam=share(new Camera(ctx,glm::vec3(0,128,-128),plr->GetPosition(),glm::vec3(0,1,0),1.777777f,45.0f,0.1f,512.f));
     cam->SetFPS(false);
     //cam->SetFPS(false);
 }
@@ -280,9 +271,15 @@ bool VoxelzApp::Update()
         _appContext->_timer->tick();
         float dt=(float)_appContext->_timer->get_delta_time()/1000.f;
         cam->Update(dt);
-        plr->Update(dt);
+        plr->Update(dt,cam);
         plr->HandleInput(_appContext->_input);
-        cam->Orbit(plr->GetPosition()+glm::vec3(0,1.5,0),1,90,180);
+        wchar_t buf[256];
+        swprintf(buf,255,L"['s]Player Pos: %.2f %.2f %.2f[s']",plr->GetFeetPos().x,plr->GetFeetPos().y,plr->GetFeetPos().z);
+        env->get_element_by_name_t<GUIStaticText>("8")->set_text(buf);
+        swprintf(buf,255,L"['s]Player's speed: %.2f %.2f %.2f (%.2f)[s']",plr->GetVelocity().x,plr->GetVelocity().y,plr->GetVelocity().z,glm::length(plr->GetVelocity()));
+        env->get_element_by_name_t<GUIStaticText>("9")->set_text(buf);
+
+        cam->SetPosition(plr->GetEyePos()-cam->GetLook()*5.f);
 
         GBuffer->Set();
         GBuffer->EnableBuffer(0);
@@ -356,7 +353,7 @@ bool VoxelzApp::Update()
         if(ssaosh->getparam("invP")!=-1) MVar<glm::mat4>(ssaosh->getparam("invP"), "invP", glm::inverse(cam->GetProjectionMat())).Set();
         if(ssaosh->getparam("MV")!=-1) MVar<glm::mat4>(ssaosh->getparam("MV"), "MV", cam->GetViewMat()*glm::mat4(1)).Set();
 
-        #ifdef SSAO_TWEAK
+#ifdef SSAO_TWEAK
         if(ssaosh->getparam("g_sample_rad")!=-1) MVar<float>(ssaosh->getparam("g_sample_rad"), "g_sample_rad", env->get_element_by_name_t<GUISlider>("ssao_rad")->get_value()).Set();
         if(ssaosh->getparam("g_intensity")!=-1) MVar<float>(ssaosh->getparam("g_intensity"), "g_intensity", env->get_element_by_name_t<GUISlider>("ssao_intens")->get_value()).Set();
         if(ssaosh->getparam("g_scale")!=-1) MVar<float>(ssaosh->getparam("g_scale"), "g_scale", env->get_element_by_name_t<GUISlider>("ssao_scale")->get_value()).Set();
@@ -366,19 +363,12 @@ bool VoxelzApp::Update()
         env->get_element_by_name_t<GUIEditBox>("ssao_intens_eb")->set_text(helpers::to_wstr(env->get_element_by_name_t<GUISlider>("ssao_intens")->get_value()));
         env->get_element_by_name_t<GUIEditBox>("ssao_scale_eb")->set_text(helpers::to_wstr(env->get_element_by_name_t<GUISlider>("ssao_scale")->get_value()));
         env->get_element_by_name_t<GUIEditBox>("ssao_bias_eb")->set_text(helpers::to_wstr(env->get_element_by_name_t<GUISlider>("ssao_bias")->get_value()));
-        #endif // SSAO_TWEAK
+#endif // SSAO_TWEAK
 
         mesh->Render();
 
         env->Render();
 
-        glDisable(GL_DEPTH_TEST);
-        //env->get_font_renderer()->render_string_formatted(L"Im ['c 0,0,255,255]blue[c']\n['c 255,0,0,255]da[c']['c 0,255,0,255]bu[c']['c 0,0,255,255]dee[c']['c 255,255,0,255]da[c']['c 0,255,255,255]bu[c']['c 255,0,255,255]dam[c']",glm::vec2(0,256),200,true);
-//        env->get_font_renderer()->use_font("bits");
-        env->get_font_renderer()->RenderString(L"['s]The ['b]quick[b'] ['c 155,125,0,255]brown[c'] fox ['i]jumps[i'] over the ['i]['b]lazy[b'][i'] dog.[s']",glm::ivec2(0,256),0,"default36");
-        env->get_font_renderer()->RenderString(L"['s]Tags ['s]['c 128,128,255,64]['b]inside[b'][c'] tags[s'] ['s]by the side of inside tags[s'][s']",glm::ivec2(0,296),0,"polygon");
-//        env->get_font_renderer()->use_font("default");
-        glEnable(GL_DEPTH_TEST);
         _appContext->_window->SwapBuffers();
         HandleMovement((float)_appContext->_timer->get_delta_time()/1000.f);
         return true;

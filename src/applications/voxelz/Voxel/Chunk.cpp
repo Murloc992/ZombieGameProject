@@ -52,8 +52,8 @@ void Chunk::UpdateNeighbours(uint32_t x, uint32_t y, uint32_t z)
     }
     if(x==CHUNK_SIZE-1&&rightN!=nullptr)
     {
-        leftN->built=false;
-        leftN->uploaded=false;
+        rightN->built=false;
+        rightN->uploaded=false;
     }
 
     if(y==0&&botN!=nullptr)
