@@ -373,10 +373,10 @@ bool VoxMeshEditorApp::Init(const std::string & title, uint32_t width, uint32_t 
     //_voxMesh->UpdateMesh();
 
     _colWall=new CollisionObject(glm::vec3(0,0,0),glm::vec3(0.25,50,50));
-    _colWallMesh=new CubeMesh(_colWall->_colShape);
+    _colWallMesh=new CubeMesh(_colWall->GetCollissionShape());
     _colWall->Translate(glm::vec3(10,0,0));
     _colBox=new CollisionObject(glm::vec3(0,0,0),glm::vec3(0.5,1,0.5));
-    _colBoxMesh=new CubeMesh(_colBox->_colShape);
+    _colBoxMesh=new CubeMesh(_colBox->GetCollissionShape());
     InitGUI();
 
     glEnable(GL_DEPTH_TEST);
@@ -417,13 +417,13 @@ bool VoxMeshEditorApp::Update()
             b->Render(true);
         }
         Model=glm::mat4(1.0f);
-        Model=glm::translate(Model,CCDtoGLM(_colWall->_pos));
+        Model=glm::translate(Model,_colWall->GetPosition());
         MVP   = _cam->GetViewProjMat() * Model;
         MVar<glm::mat4>(0, "mvp", MVP).Set();
         _colWallMesh->Render(false);
 
         Model=glm::mat4(1.0f);
-        Model=glm::translate(Model,CCDtoGLM(_colBox->_pos));
+        Model=glm::translate(Model,_colBox->GetPosition());
         MVP   = _cam->GetViewProjMat() * Model;
         MVar<glm::mat4>(0, "mvp", MVP).Set();
         _colBoxMesh->Render(false);

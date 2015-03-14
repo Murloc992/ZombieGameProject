@@ -29,7 +29,7 @@ bool CollisionTestApp::Init(const std::string & title, uint32_t width, uint32_t 
     two=new CollisionObject(glm::vec3(0,0,0),glm::vec3(0.5f));
 
     bool res=MPRCollide(one,two);
-    printf("Collision result: %s\n%s\n%s\n",res?"true":"false",GLMVec3ToStr(CCDtoGLM(one->_pos)).c_str(),GLMVec3ToStr(CCDtoGLM(two->_pos)).c_str());
+    printf("Collision result: %s\n%s\n%s\n",res?"true":"false",GLMVec3ToStr(one->GetPosition()).c_str(),GLMVec3ToStr(two->GetPosition()).c_str());
     CollisionInfo colinf=MPRPenetration(one,two);
     printf("Collision info:\nColliding:%s\nDepth:%f\nPos: %s\nDir: %s\n",colinf.colliding?"true":"false",colinf.depth,GLMVec3ToStr(CCDtoGLM(colinf.pos)).c_str(),GLMVec3ToStr(CCDtoGLM(colinf.dir)).c_str());
     while(MPRCollide(one,two))

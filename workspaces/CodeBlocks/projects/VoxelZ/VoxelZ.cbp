@@ -14,7 +14,7 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="-pg" />
+					<Add option="-g" />
 					<Add directory="src/engine/application" />
 					<Add directory="src/applications/voxelz" />
 					<Add directory="src/applications/voxelz/game" />
@@ -22,7 +22,6 @@
 					<Add directory="src/applications/voxelz/physics" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg -lgmon" />
 					<Add library="engined" />
 					<Add library="boost_system-mgw49-mt-1_57" />
 					<Add library="ccd" />
@@ -190,6 +189,7 @@
 		<Unit filename="../../../../src/applications/voxelz/VoxelzProfilingApp.h" />
 		<Unit filename="../../../../src/applications/voxelz/game/AttractFocusAffector.cpp" />
 		<Unit filename="../../../../src/applications/voxelz/game/AttractFocusAffector.h" />
+		<Unit filename="../../../../src/applications/voxelz/game/Entity.cpp" />
 		<Unit filename="../../../../src/applications/voxelz/game/Entity.h" />
 		<Unit filename="../../../../src/applications/voxelz/game/GravityAffector.cpp" />
 		<Unit filename="../../../../src/applications/voxelz/game/GravityAffector.h" />

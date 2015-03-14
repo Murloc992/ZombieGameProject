@@ -1,56 +1,39 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Physics/CollisionObject.h"
+#include "Entity.h"
 
 #define PLAYER_HEIGHT 2.f
 #define PLAYER_WIDTH 1.f
+#define GRAVITY_CONSTANT 9.807f
+
+#include "Opengl/CubeMesh.h"
 
 class ChunkManager;
+class VoxelMesh;
+class InputHandler;
 
 class Player:public Entity
 {
-    public:
-        Player(ChunkManager* chunkManager, const glm::vec3 &feetPos);
-        virtual ~Player();
+public:
+    Player(ChunkManager* chunkManager, const glm::vec3 &feetPos);
+    virtual ~Player();
 
-        void Update(float dt);
-        void Render(float dt);
-    protected:
-    private:
-        ChunkManager* _chunkManager;
-        VoxelMesh* _playerMesh;
-        glm::vec3 _playerPos;
-        SuperChunkPtr _oldSuperChunk;
-        ChunkPtr _oldChunk;
+    void Update(float dt);
+    void Render(float dt);
+
+    bool OnCollision(Entity* ent);
+    void OnCollisionWithWorld(const Block &blk);
+
+    void HandleInput(InputHandler* input);
+protected:
+private:
+    ChunkManager* _chunkManager;
+    VoxelMesh* _playerMesh;
+    CubeMesh* _tempMesh;
+    glm::vec3 _velocity;
+
+    void CalculateSpeed();
 };
-
-Player::Player(ChunkManager* chunkManager, const glm::vec3 &feetPos)
-{
-    CollisionObject(glm::vec3(feetPos.x,feetPos.y,feetPos.z),glm::vec3(PLAYER_WIDTH/2.f,PLAYER_HEIGHT/2.f,PLAYER_WIDTH/2.f));
-    _chunkManager=chunkManager;
-}
-
-Player::~Player()
-{
-
-}
-
-Player::OnCollision(Entity* ent)
-{
-    switch(ent->GetType())
-    {
-    case EET_WORLD:
-        break;
-    default:
-        break;
-    }
-}
-
-void Player::Update(float dt)
-{
-    Translate(glm::vec3(0,-9.81f,0)*dt);
-    CheckCollisions(dt);
-}
 
 #endif // PLAYER_H

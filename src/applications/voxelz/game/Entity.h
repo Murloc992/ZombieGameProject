@@ -13,47 +13,32 @@ enum E_ENTITY_TYPE:uint32_t
     EET_COUNT
 };
 
+class ChunkManager;
+class Block;
+
 class Entity:public CollisionObject
 {
 public:
-    Entity(std::string id,const glm::vec3 &pos)
-    {
-        CollisionObject(pos,glm::vec3(1));
-        _type=EET_DEFAULT;
-        _id=id;
-    }
-    ~Entity(){}
+    Entity(std::string id,const glm::vec3 &pos,const glm::vec3 &size,bool colliding=true,bool collidingWorld=true,bool dynamic=true);
+    virtual ~Entity();
 
-    std::string GetId()
-    {
-        return id;
-    }
+    uint32_t GetType();
 
-    glm::vec3 GetPosition()
-    {
-        return pos;
-    }
+    std::string GetId();
 
-    void SetPosition(const glm::vec3 &other)
-    {
-        pos=other;
-    }
+    void CheckCollision(Entity* ent);
 
-    void CheckCollision(Entity* ent)
-    {
-        if(MPRCollide(ent, this))
-        {
-            OnCollision(ent);
-            ent->OnCollision(this);
-        }
-    }
+    virtual void Update(float dt) = 0;
 
-    virtual bool OnCollision(Entity* ent);
+    virtual void OnCollisionWithWorld(const Block &blk) = 0;
+    virtual bool OnCollision(Entity* ent) = 0;
 private:
 protected:
+    bool _isDynamic,_isColliding,_isCollidingWorld;
     uint32_t _type;
     std::string _id;
-    glm::vec3 _pos;
+
+    void CollideWithWorld(float dt,ChunkManager* chkmgr);
 };
 
 #endif // ENTITY_H_INCLUDED

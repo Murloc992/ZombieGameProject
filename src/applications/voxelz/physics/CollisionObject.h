@@ -7,16 +7,13 @@
 inline ccd_vec3_t GLMtoCCD(const glm::vec3 &in)
 {
     ccd_vec3_t ret;
-    ret.v[0]=in.x;
-    ret.v[1]=in.y;
-    ret.v[2]=in.z;
-
+    ccdVec3Set(&ret,in.x,in.y,in.z);
     return ret;
 }
 
 inline glm::vec3 CCDtoGLM(const ccd_vec3_t &in)
 {
-    return glm::vec3(in.v[0],in.v[1],in.v[2]);
+    return glm::vec3((float)ccdVec3X(&in),(float)ccdVec3Y(&in),(float)ccdVec3Z(&in));
 }
 
 struct CollisionInfo
@@ -54,9 +51,18 @@ public:
         ccdVec3Add(&_pos,&asd);
     }
 
+    glm::vec3 GetPosition()
+    {
+        return CCDtoGLM(_pos);
+    }
+
+    AABB GetCollissionShape() const
+    {
+        return _colShape;
+    }
+protected:
     ccd_vec3_t _pos,_dir;
     AABB _colShape;
-protected:
 private:
 };
 
@@ -69,8 +75,7 @@ inline bool MPRCollide(CollisionObject * obj1, CollisionObject * obj2)
     ccd.support2=obj2->Support;
     ccd.center1=obj1->Center;
     ccd.center2=obj2->Center;
-    ccd.mpr_tolerance=0.000001;
-    ccd.max_iterations=100;
+    ccd.mpr_tolerance=0.00001;
 
     return ccdMPRIntersect(obj1,obj2,&ccd);
 }
@@ -84,8 +89,7 @@ inline CollisionInfo MPRPenetration(CollisionObject * obj1, CollisionObject * ob
     ccd.support2=obj2->Support;
     ccd.center1=obj1->Center;
     ccd.center2=obj2->Center;
-    ccd.mpr_tolerance=0.000001;
-    ccd.max_iterations=100;
+    ccd.mpr_tolerance=0.00001;
 
     CollisionInfo ret;
 

@@ -33,6 +33,11 @@ struct Block
         return this->active==other.active && this->type==other.type;
     }
 
+    bool operator!=(const Block& other) const
+    {
+        return this->active!=other.active || this->type!=other.type;
+    }
+
     bool active;
     uint32_t type;
 };

@@ -19,6 +19,8 @@
 #include "gui/GUI.h"
 #include "gui/custom_elements/GUIColorPicker.h"
 
+#include "Game/Player.h"
+
 VoxelzApp::VoxelzApp(uint32_t argc, const char ** argv): Application(argc,argv)
 {
 
@@ -42,6 +44,7 @@ static glm::vec3 voxpos,newvoxpos,pointpos;
 static bool validvoxel,wireframe;
 static int face;
 static VoxelSprite *spr;
+static Player* plr;
 
 bool InitPostProc(AppContext* ctx)
 {
@@ -152,9 +155,6 @@ void InitPlaneMesh(AppContext * ctx)
     gbsh = (new shader_loader(ctx->_logger))->load("res/engine/shaders/gbuffer");
     ssaosh = (new shader_loader(ctx->_logger))->load("res/engine/shaders/SSAO");
 
-    cam=share(new Camera(ctx,glm::vec3(0,128,0),glm::vec3(0,128,32),glm::vec3(0,1,0),1.777777f,45.0f,1.0f,4096.f));
-    //cam->SetFPS(false);
-
     env=new GUIEnvironment(ctx);
 //    env->get_font_renderer()->create_font("bits","res/gui/fonts/OpenSans-Regular.ttf",36);
 //    env->get_font_renderer()->create_font("bits-bold","res/gui/fonts/OpenSans-Bold.ttf",36);
@@ -243,6 +243,11 @@ void InitPlaneMesh(AppContext * ctx)
     ctx->_timer->tick();
     chkmgr=new ChunkManager();
     ctx->_input=new InputHandler(ctx->_window);
+
+    plr=new Player(chkmgr,glm::vec3(10,256,10));
+
+    cam=share(new Camera(ctx,glm::vec3(0,128,-128),plr->GetPosition(),glm::vec3(0,1,0),1.777777f,45.0f,1.0f,4096.f));
+    //cam->SetFPS(false);
 }
 
 bool VoxelzApp::Init(const std::string & title, uint32_t width, uint32_t height)
@@ -272,8 +277,11 @@ bool VoxelzApp::Update()
     if(_appContext->_window->Update() && !_appContext->_window->GetShouldClose() && !_appContext->_window->GetKey(GLFW_KEY_ESCAPE))
     {
         _appContext->_timer->tick();
+        float dt=(float)_appContext->_timer->get_delta_time()/1000.f;
+        cam->Update(dt);
+        plr->Update(dt);
+        plr->HandleInput(_appContext->_input);
 
-        cam->Update(0);
         GBuffer->Set();
         GBuffer->EnableBuffer(0);
         GBuffer->EnableBuffer(1);
@@ -292,6 +300,14 @@ bool VoxelzApp::Update()
         MVP   = cam->GetViewProjMat() * Model;
         MVar<glm::mat4>(0, "mvp", MVP).Set();
         cub->Render(true);
+
+        ////////////
+        Model = glm::mat4(1.0f);
+        Model = glm::translate(plr->GetPosition());
+        MVP   = cam->GetViewProjMat() * Model;
+        MVar<glm::mat4>(0, "mvp", MVP).Set();
+        plr->Render(dt);
+        ////////////
 
         Model = glm::mat4(1.0f);
         Model = glm::translate(newvoxpos);

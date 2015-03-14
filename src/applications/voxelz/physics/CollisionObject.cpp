@@ -5,10 +5,8 @@
 void CollisionObject::Center(const void *_obj, ccd_vec3_t *center)
 {
     CollisionObject *obj = (CollisionObject *)_obj;
-    ccd_vec3_t cnt;
-    cnt.v[0]=obj->_colShape.GetCenter().x;
-    cnt.v[1]=obj->_colShape.GetCenter().y;
-    cnt.v[2]=obj->_colShape.GetCenter().z;
+
+    ccd_vec3_t cnt=GLMtoCCD(obj->GetCollissionShape().GetCenter());
     ccdVec3Copy(center, &cnt);
 }
 

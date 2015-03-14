@@ -21,7 +21,7 @@ inline std::string GLMVec3ToStr(const T & in)
 {
     glm::vec3 vec=(glm::vec3)in;
     char *buf=new char[256];
-    sprintf(buf,"vec3(%f %f %f)",vec.x,vec.y,vec.z);
+    sprintf(buf,"vec3(%.3G %.3G %.3G)",vec.x,vec.y,vec.z);
     return std::string(buf);
 }
 
