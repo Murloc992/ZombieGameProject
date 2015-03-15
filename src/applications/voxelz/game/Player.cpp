@@ -14,6 +14,8 @@ Player::Player(ChunkManager* chunkManager, const glm::vec3 &feetPos):Entity("Pla
     _isJumping=false;
     _isFalling=false;
     _isFlying=false;
+    _isSwimming=false;
+    _fallingSpeed=GRAVITY_CONSTANT;
     _jumpHeight=1.f;
 }
 
@@ -56,31 +58,44 @@ void Player::CalculateSpeed()
 {
     if(!_isFlying)
     {
-        if(_isJumping&&GetFeetPos().y<_jumpStartPos.y+_jumpHeight)
+        if(_isJumping)
         {
-            _velocity+=glm::vec3(0,GRAVITY_CONSTANT,0);
+            if(GetFeetPos().y < _jumpStartPos.y+_jumpHeight && !_hitCeiling)
+            {
+                _velocity+=glm::vec3(0,_fallingSpeed,0);
+            }
+            else
+            {
+                _isJumping=false;
+                _isFalling=true;
+            }
         }
-        else if(!_isOnGround&&_velocity.y<GRAVITY_CONSTANT)
+        else
         {
-            _velocity+=glm::vec3(0,-GRAVITY_CONSTANT,0);
-        }
-        else if(_isOnGround||_hitCeiling||_velocity.y>0)
-        {
-            _isJumping=false;
-        }
-    }
+            _isFalling=!_isOnGround;
 
-    if(!_isFlying)
-    _velocity*=0.75f;
+            if(_isFalling)
+            {
+                if(_velocity.y<_fallingSpeed)
+                {
+                    _velocity-=glm::vec3(0,_fallingSpeed,0);
+                }
+            }
+        }
+
+        _velocity*=0.75f;
+    }
     else
-    _velocity*=0.95f;
+    {
+        _velocity*=0.95f;
+    }
 }
 
 void Player::Update(float dt,CameraPtr cam)
 {
     glm::vec3 d=cam->GetLook();
 
-    _walkingDir=_isFlying?d:glm::vec3(d.x,0,d.z);
+    _walkingDir=_isFlying||_isSwimming?d:glm::vec3(d.x,0,d.z);
     _strafingDir=cam->GetRight();
 
     if(_isDynamic)
@@ -108,28 +123,42 @@ void Player::Update(float dt,CameraPtr cam)
 
 void Player::HandleInput(InputHandler* input)
 {
+    float forward=1.f;
+    float backward=-1.f;
+    float direction=forward;
+
     if(input->IsKeyDown(GLFW_KEY_W))
     {
-        _velocity+=_walkingDir*2.f;
+        direction=forward;
+        _velocity+=_walkingDir*2.f*direction;
     }
 
     if(input->IsKeyDown(GLFW_KEY_S))
     {
-        _velocity+=_walkingDir*-2.f;
+        direction=backward;
+        _velocity+=_walkingDir*2.f*direction;
     }
 
     if(input->IsKeyDown(GLFW_KEY_A))
     {
-        _velocity+=_strafingDir*-2.f;
+        direction=backward;
+        _velocity+=_strafingDir*2.f*direction;
     }
 
     if(input->IsKeyDown(GLFW_KEY_D))
     {
-        _velocity+=_strafingDir*2.f;
+        direction=forward;
+        _velocity+=_strafingDir*2.f*direction;
+    }
+
+    if(input->IsKeyDown(GLFW_KEY_LEFT_SHIFT)&&direction==forward&&(!_isSwimming&&_isOnGround&&!_isJumping))
+    {
+        _velocity+=_walkingDir*2.f;
     }
 
     if(input->IsKeyDown(GLFW_KEY_SPACE)&&(_isSwimming||(_isOnGround&&!_isJumping)))
     {
+        //_velocity+=_walkingDir*_jumpHeight*2.f;
         _jumpStartPos=GetFeetPos();
         _isJumping=true;
     }

@@ -612,6 +612,10 @@ void VoxelzApp::OnMouseKey(int32_t button, int32_t action, int32_t mod)
             if(validvoxel)
                 chkmgr->SetBlock(glm::ivec3(newvoxpos),currentVoxelType,currentVoxelActive);
             break;
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            if(validvoxel)
+                chkmgr->SetBlock(glm::ivec3(voxpos),EBT_AIR,false);
+            break;
         }
     }
 }

@@ -80,7 +80,9 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
                 {
                     CollisionObject b=CollisionObject(glm::vec3(x,y,z)+glm::vec3(0.5f),glm::vec3(0.5f));
 
-                    if(MPRCollide(this,&b))
+                    bool collision=MPRCollide(this,&b);
+
+                    if(collision)
                     {
                         CollisionInfo cinf=MPRPenetration(this,&b);
                         if(cinf.colliding&&cinf.depth==cinf.depth&&ccdVec3Eq(&cinf.dir,&cinf.dir))
