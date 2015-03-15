@@ -35,12 +35,12 @@ public:
 protected:
 private:
     bool _isJumping,_isFalling,_isSwimming;
-    float _fallingSpeed,_jumpHeight;
+    float _fallingSpeed,_jumpHeight,_isFlying;
 
     ChunkManager* _chunkManager;
     VoxelMesh* _playerMesh;
     CubeMesh* _tempMesh;
-    glm::vec3 _velocity,_walkingDir,_jumpStartPos;
+    glm::vec3 _velocity,_walkingDir,_jumpStartPos,_strafingDir;
 
     void CalculateSpeed();
 };

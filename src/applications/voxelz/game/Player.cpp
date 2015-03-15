@@ -13,6 +13,7 @@ Player::Player(ChunkManager* chunkManager, const glm::vec3 &feetPos):Entity("Pla
     _tempMesh=new CubeMesh(AABB(glm::vec3(0),_colShape.GetHalfSize()));
     _isJumping=false;
     _isFalling=false;
+    _isFlying=false;
     _jumpHeight=1.f;
 }
 
@@ -26,6 +27,7 @@ bool Player::OnCollision(Entity* ent)
     switch(ent->GetType())
     {
     default:
+        printf("entity.\n");
         break;
     }
 }
@@ -52,25 +54,35 @@ void Player::OnCollisionWithWorld(const Block &blk)
 
 void Player::CalculateSpeed()
 {
-    if(_isJumping&&GetFeetPos().y<_jumpStartPos.y+_jumpHeight)
+    if(!_isFlying)
     {
-        _velocity+=glm::vec3(0,GRAVITY_CONSTANT,0);
+        if(_isJumping&&GetFeetPos().y<_jumpStartPos.y+_jumpHeight)
+        {
+            _velocity+=glm::vec3(0,GRAVITY_CONSTANT,0);
+        }
+        else if(!_isOnGround&&_velocity.y<GRAVITY_CONSTANT)
+        {
+            _velocity+=glm::vec3(0,-GRAVITY_CONSTANT,0);
+        }
+        else if(_isOnGround||_hitCeiling||_velocity.y>0)
+        {
+            _isJumping=false;
+        }
     }
-    else if(!_isOnGround&&_velocity.y<GRAVITY_CONSTANT)
-    {
-        _velocity+=glm::vec3(0,-GRAVITY_CONSTANT,0);
-    }
-    else if(_isOnGround||_hitCeiling||_velocity.y>0)
-    {
-        _isJumping=false;
-    }
-    _velocity*=0.75;
+
+    if(!_isFlying)
+    _velocity*=0.75f;
+    else
+    _velocity*=0.95f;
 }
 
 void Player::Update(float dt,CameraPtr cam)
 {
     glm::vec3 d=cam->GetLook();
-    _walkingDir=glm::vec3(d.x,0,d.z);
+
+    _walkingDir=_isFlying?d:glm::vec3(d.x,0,d.z);
+    _strafingDir=cam->GetRight();
+
     if(_isDynamic)
     {
         CalculateSpeed();
@@ -91,7 +103,6 @@ void Player::Update(float dt,CameraPtr cam)
                 CollideWithWorld(dt,_chunkManager);
             }
         }
-
     }
 }
 
@@ -107,10 +118,25 @@ void Player::HandleInput(InputHandler* input)
         _velocity+=_walkingDir*-2.f;
     }
 
+    if(input->IsKeyDown(GLFW_KEY_A))
+    {
+        _velocity+=_strafingDir*-2.f;
+    }
+
+    if(input->IsKeyDown(GLFW_KEY_D))
+    {
+        _velocity+=_strafingDir*2.f;
+    }
+
     if(input->IsKeyDown(GLFW_KEY_SPACE)&&(_isSwimming||(_isOnGround&&!_isJumping)))
     {
         _jumpStartPos=GetFeetPos();
         _isJumping=true;
+    }
+
+    if(input->IsKeyDown(GLFW_KEY_O))
+    {
+        _isFlying=!_isFlying;
     }
 }
 

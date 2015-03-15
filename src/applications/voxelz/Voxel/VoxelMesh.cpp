@@ -126,3 +126,40 @@ void VoxelMesh::RemoveVox(int32_t x, int32_t y, int32_t z)
     _vox[x+_size.x*(y+_size.y*z)]=EMPTY_VOXEL;
 }
 
+void VoxelMesh::SaveToFile(const std::string &filename)
+{
+    auto file=PHYSFS_openWrite(filename.c_str());
+
+    uint32_t sizerino=_vox.size();
+    PHYSFS_write(file,(void*)&_size,sizeof(u16vec3),1);
+    PHYSFS_write(file,(void*)&sizerino,sizeof(sizerino),1);
+    PHYSFS_write(file,(void*)&_vox[0],sizeof(Voxel),_vox.size());
+
+    PHYSFS_close(file);
+}
+
+VoxelMesh* VoxelMesh::LoadFromFile(const std::string &filename)
+{
+    auto file=PHYSFS_openRead(filename.c_str());
+
+    u16vec3 meshSize;
+    PHYSFS_read(file,&meshSize,sizeof(u16vec3),1);
+
+    VoxelMesh* ret=new VoxelMesh(meshSize);
+
+    uint32_t size=0;
+    PHYSFS_read(file,&size,sizeof(uint32_t),1);
+    PHYSFS_read(file,&ret->_vox[0],sizeof(Voxel),size);
+
+    ret->_empty=false;
+
+    if(size>0)
+    {
+        return ret;
+    }
+    else
+    {
+        delete ret;
+    }
+    return nullptr;
+}

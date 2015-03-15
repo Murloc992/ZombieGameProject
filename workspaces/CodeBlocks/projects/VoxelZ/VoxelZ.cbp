@@ -194,6 +194,8 @@
 		<Unit filename="../../../../src/applications/voxelz/game/GravityAffector.cpp" />
 		<Unit filename="../../../../src/applications/voxelz/game/GravityAffector.h" />
 		<Unit filename="../../../../src/applications/voxelz/game/IParticleAffector.h" />
+		<Unit filename="../../../../src/applications/voxelz/game/ItemEntity.cpp" />
+		<Unit filename="../../../../src/applications/voxelz/game/ItemEntity.h" />
 		<Unit filename="../../../../src/applications/voxelz/game/Particle.h" />
 		<Unit filename="../../../../src/applications/voxelz/game/ParticleEmitter.cpp" />
 		<Unit filename="../../../../src/applications/voxelz/game/ParticleEmitter.h" />

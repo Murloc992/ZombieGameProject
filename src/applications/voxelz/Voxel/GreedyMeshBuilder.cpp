@@ -452,7 +452,8 @@ void GreedyMeshBuilder::GreedyBuild(VoxelMesh* vxm)
 
     uint32_t faceCount = 0;
 
-    for(uint32_t dim=0; dim<6; dim++)
+    ///Z
+    loop(dim,2)
     {
         _clearMask(mask,m_size);
         loop(z, m_size.z)
@@ -470,7 +471,7 @@ void GreedyMeshBuilder::GreedyBuild(VoxelMesh* vxm)
                     if(tmpVox.active)
                     {
                         const Voxel& tmpVox=vxm->GetVoxel(x,y,z-1);
-                        n.exists = !(tmpVox.active==1);
+                        n.exists = !(tmpVox.active==1)||tmpVox==VoxelMesh::EMPTY_VOXEL;
                     }
                 }
                 break;
@@ -486,77 +487,11 @@ void GreedyMeshBuilder::GreedyBuild(VoxelMesh* vxm)
                     if(tmpVox.active)
                     {
                         const Voxel& tmpVox=vxm->GetVoxel(x,y,z+1);
-                        n.exists = !(tmpVox.active==1);
+                        n.exists = !(tmpVox.active==1)||tmpVox==VoxelMesh::EMPTY_VOXEL;
                     }
                 }
                 break;
             }
-            case 2: //y-
-            {
-                loop(y,m_size.y) loop(x,m_size.x)
-                {
-                    MaskNode & n = mask[x][y];
-
-                    const Voxel& tmpVox=vxm->GetVoxel(x,z,y);
-                    n.color=tmpVox.color;
-                    if(tmpVox.active)
-                    {
-                        const Voxel& tmpVox=vxm->GetVoxel(x,z+1,y);
-                        n.exists = !(tmpVox.active==1);
-                    }
-                }
-                break;
-            }
-            case 3: //y+
-            {
-                loop(y,m_size.y) loop(x,m_size.x)
-                {
-                    MaskNode & n = mask[x][y];
-
-                    const Voxel& tmpVox=vxm->GetVoxel(x,z,y);
-                    n.color=tmpVox.color;
-                    if(tmpVox.active)
-                    {
-                        const Voxel& tmpVox=vxm->GetVoxel(x,z-1,y);
-                        n.exists = !(tmpVox.active==1);
-                    }
-                }
-                break;
-            }
-            case 4: //x+
-            {
-                loop(y,m_size.y) loop(x,m_size.x)
-                {
-                    MaskNode & n = mask[x][y];
-
-                    const Voxel& tmpVox=vxm->GetVoxel(z,y,x);
-                    n.color=tmpVox.color;
-                    if(tmpVox.active)
-                    {
-                        const Voxel& tmpVox=vxm->GetVoxel(z+1,y,x);
-                        n.exists = !(tmpVox.active==1);
-                    }
-                }
-                break;
-            }
-            case 5: //x-
-            {
-                loop(y,m_size.y) loop(x,m_size.x)
-                {
-                    MaskNode & n = mask[x][y];
-
-                    const Voxel& tmpVox=vxm->GetVoxel(z,y,x);
-                    n.color=tmpVox.color;
-                    if(tmpVox.active)
-                    {
-                        const Voxel& tmpVox=vxm->GetVoxel(z-1,y,x);
-                        n.exists = !(tmpVox.active==1);
-                    }
-                }
-                break;
-            }
-            default:
-                break;
             }
 
             loop(y, m_size.y)
@@ -596,48 +531,180 @@ void GreedyMeshBuilder::GreedyBuild(VoxelMesh* vxm)
                             faceCount++;
                             break;
                         }
-                        case 2: //y+
+                        }
+                        _clearMaskRanged(mask,qstart.x,qstart.y,qstart.x+qdims.x,qstart.y+qdims.y);
+                    }
+                }
+            }
+        }
+    }
+
+    ///Y
+    loop(dim,2)
+    {
+        _clearMask(mask,m_size);
+        loop(y, m_size.y)
+        {
+            switch(dim)
+            {
+            case 0: //y-
+            {
+                loop(z,m_size.z) loop(x,m_size.x)
+                {
+                    MaskNode & n = mask[x][z];
+
+                    const Voxel& tmpVox=vxm->GetVoxel(x,y,z);
+                    n.color=tmpVox.color;
+                    if(tmpVox.active)
+                    {
+                        const Voxel& tmpVox=vxm->GetVoxel(x,y+1,z);
+                        n.exists = !(tmpVox.active==1)||tmpVox==VoxelMesh::EMPTY_VOXEL;
+                    }
+                }
+                break;
+            }
+            case 1: //y+
+            {
+                loop(z,m_size.z) loop(x,m_size.x)
+                {
+                    MaskNode & n = mask[x][z];
+
+                    const Voxel& tmpVox=vxm->GetVoxel(x,y,z);
+                    n.color=tmpVox.color;
+                    if(tmpVox.active)
+                    {
+                        const Voxel& tmpVox=vxm->GetVoxel(x,y-1,z);
+                        n.exists = !(tmpVox.active==1)||tmpVox==VoxelMesh::EMPTY_VOXEL;
+                    }
+                }
+                break;
+            }
+            }
+
+            loop(z, m_size.z)
+            {
+                loop(x, m_size.x)
+                {
+                    MaskNode& mn = mask[x][z];
+                    if(mn)
+                    {
+                        /*
+                        *    We found our victim, lets find out how fat he is.
+                        */
+                        qstart.x=x;
+                        qstart.y=z;
+                        qdims.x =_quadLength(x,z,mask,m_size);
+                        qdims.y =_quadHeight(x,z,qdims.x,mask,m_size);
+
+                        switch(dim)
                         {
-                            face[3]=glm::ivec3(qstart.x,         z+1,                qstart.y);
-                            face[2]=glm::ivec3(qstart.x+qdims.x, z+1,                qstart.y);
-                            face[1]=glm::ivec3(qstart.x+qdims.x, z+1,                qstart.y+qdims.y);
-                            face[0]=glm::ivec3(qstart.x,         z+1,                qstart.y+qdims.y);
+                        case 0: //y+
+                        {
+                            face[3]=glm::ivec3(qstart.x,         y+1,                qstart.y);
+                            face[2]=glm::ivec3(qstart.x+qdims.x, y+1,                qstart.y);
+                            face[1]=glm::ivec3(qstart.x+qdims.x, y+1,                qstart.y+qdims.y);
+                            face[0]=glm::ivec3(qstart.x,         y+1,                qstart.y+qdims.y);
                             AddQuadToMesh(vxm,face,mn.color);
                             faceCount++;
                             break;
                         }
-                        case 3: //y-
+                        case 1: //y-
                         {
-                            face[0]=glm::ivec3(qstart.x,         z,                  qstart.y);
-                            face[1]=glm::ivec3(qstart.x+qdims.x, z,                  qstart.y);
-                            face[2]=glm::ivec3(qstart.x+qdims.x, z,                  qstart.y+qdims.y);
-                            face[3]=glm::ivec3(qstart.x,         z,                  qstart.y+qdims.y);
+                            face[0]=glm::ivec3(qstart.x,         y,                  qstart.y);
+                            face[1]=glm::ivec3(qstart.x+qdims.x, y,                  qstart.y);
+                            face[2]=glm::ivec3(qstart.x+qdims.x, y,                  qstart.y+qdims.y);
+                            face[3]=glm::ivec3(qstart.x,         y,                  qstart.y+qdims.y);
                             AddQuadToMesh(vxm,face,mn.color);
                             faceCount++;
                             break;
                         }
-                        case 4: //x+
+                        }
+                        _clearMaskRanged(mask,qstart.x,qstart.y,qstart.x+qdims.x,qstart.y+qdims.y);
+                    }
+                }
+            }
+        }
+    }
+
+    ///X
+    loop(dim,2)
+    {
+        _clearMask(mask,m_size);
+        loop(x, m_size.x)
+        {
+            switch(dim)
+            {
+            case 0: //x+
+            {
+                loop(y,m_size.y) loop(z,m_size.z)
+                {
+                    MaskNode & n = mask[z][y];
+
+                    const Voxel& tmpVox=vxm->GetVoxel(x,y,z);
+                    n.color=tmpVox.color;
+                    if(tmpVox.active)
+                    {
+                        const Voxel& tmpVox=vxm->GetVoxel(x+1,y,z);
+                        n.exists = !(tmpVox.active==1)||tmpVox==VoxelMesh::EMPTY_VOXEL;
+                    }
+                }
+                break;
+            }
+            case 1: //x-
+            {
+                loop(y,m_size.y) loop(z,m_size.z)
+                {
+                    MaskNode & n = mask[z][y];
+
+                    const Voxel& tmpVox=vxm->GetVoxel(x,y,z);
+                    n.color=tmpVox.color;
+                    if(tmpVox.active)
+                    {
+                        const Voxel& tmpVox=vxm->GetVoxel(x-1,y,z);
+                        n.exists = !(tmpVox.active==1)||tmpVox==VoxelMesh::EMPTY_VOXEL;
+                    }
+                }
+                break;
+            }
+            }
+
+            loop(y, m_size.y)
+            {
+                loop(z, m_size.z)
+                {
+                    MaskNode& mn = mask[z][y];
+                    if(mn)
+                    {
+                        /*
+                        *    We found our victim, lets find out how fat he is.
+                        */
+                        qstart.x=z;
+                        qstart.y=y;
+                        qdims.x =_quadLength(z,y,mask,m_size);
+                        qdims.y =_quadHeight(z,y,qdims.x,mask,m_size);
+
+                        switch(dim)
                         {
-                            face[3]=glm::ivec3(z+1,              qstart.y,           qstart.x);
-                            face[2]=glm::ivec3(z+1,              qstart.y,           qstart.x+qdims.x);
-                            face[1]=glm::ivec3(z+1,              qstart.y+qdims.y,   qstart.x+qdims.x);
-                            face[0]=glm::ivec3(z+1,              qstart.y+qdims.y,   qstart.x);
+                        case 0: //x+
+                        {
+                            face[3]=glm::ivec3(x+1,              qstart.y,           qstart.x);
+                            face[2]=glm::ivec3(x+1,              qstart.y,           qstart.x+qdims.x);
+                            face[1]=glm::ivec3(x+1,              qstart.y+qdims.y,   qstart.x+qdims.x);
+                            face[0]=glm::ivec3(x+1,              qstart.y+qdims.y,   qstart.x);
                             AddQuadToMesh(vxm,face,mn.color);
                             faceCount++;
                             break;
                         }
-                        case 5: //x-
+                        case 1: //x-
                         {
-                            face[0]=glm::ivec3(z,                qstart.y,           qstart.x);
-                            face[1]=glm::ivec3(z,                qstart.y,           qstart.x+qdims.x);
-                            face[2]=glm::ivec3(z,                qstart.y+qdims.y,   qstart.x+qdims.x);
-                            face[3]=glm::ivec3(z,                qstart.y+qdims.y,   qstart.x);
+                            face[0]=glm::ivec3(x,                qstart.y,           qstart.x);
+                            face[1]=glm::ivec3(x,                qstart.y,           qstart.x+qdims.x);
+                            face[2]=glm::ivec3(x,                qstart.y+qdims.y,   qstart.x+qdims.x);
+                            face[3]=glm::ivec3(x,                qstart.y+qdims.y,   qstart.x);
                             AddQuadToMesh(vxm,face,mn.color);
                             faceCount++;
                             break;
                         }
-                        default:
-                            break;
                         }
                         _clearMaskRanged(mask,qstart.x,qstart.y,qstart.x+qdims.x,qstart.y+qdims.y);
                     }

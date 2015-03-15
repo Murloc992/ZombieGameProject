@@ -44,8 +44,12 @@ public:
     void Cleanup();
 
     bool Empty();
+
+    void SaveToFile(const std::string &filename);
+    static VoxelMesh* LoadFromFile(const std::string &filename);
 protected:
     vector<Voxel> _vox;
+
     bool _empty;
 
     int32_t _faceCount;

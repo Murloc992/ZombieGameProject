@@ -20,6 +20,7 @@
 #include "gui/custom_elements/GUIColorPicker.h"
 
 #include "Game/Player.h"
+#include "Game/ItemEntity.h"
 
 VoxelzApp::VoxelzApp(uint32_t argc, const char ** argv): Application(argc,argv)
 {
@@ -45,6 +46,7 @@ static bool validvoxel,wireframe;
 static int face;
 static VoxelSprite *spr;
 static Player* plr;
+static ItemEntity* testitem;
 
 bool InitPostProc(AppContext* ctx)
 {
@@ -69,6 +71,7 @@ bool InitPostProc(AppContext* ctx)
     SSAONormal=share(new Texture());
     image_loader* loader=new image_loader(ctx->_logger);
     std::shared_ptr<image> img=std::shared_ptr<image>(loader->load("res/SSAO_noise.png"));
+    delete loader;
     SSAONormal->Init(img->data,GL_TEXTURE_2D,GL_RGB,GL_RGB,64,64);
 //    uint32_t sx=1280/64;
 //    uint32_t sy=768/64;
@@ -111,9 +114,9 @@ bool InitPostProc(AppContext* ctx)
     if(!GBuffer->IsComplete()) return false;
 
     //spr=VoxelSprite::LoadFromImage(loader->load("res/tile.png"),loader->load("res/tile_disp.png"),1);
-    spr=new VoxelSprite(u16vec3(2,2,2));
-    loop(x,2)loop(y,2)loop(z,2)spr->CreateVox(x,y,z,VecRGBAToIntRGBA(u8vec4(255)));
-    spr->Rebuild();
+//    spr=new VoxelSprite(u16vec3(2,2,2));
+//    loop(x,2)loop(y,2)loop(z,2)spr->CreateVox(x,y,z,VecRGBAToIntRGBA(u8vec4(255)));
+//    spr->Rebuild();
 
     return true;
 }
@@ -240,6 +243,19 @@ void InitPlaneMesh(AppContext * ctx)
     cam=share(new Camera(ctx,glm::vec3(0,128,-128),plr->GetPosition(),glm::vec3(0,1,0),1.777777f,45.0f,0.1f,512.f));
     cam->SetFPS(false);
     //cam->SetFPS(false);
+
+
+    image_loader* loader=new image_loader(ctx->_logger);
+    std::shared_ptr<image> img=std::shared_ptr<image>(loader->load("res/shroom.png"));
+    delete loader;
+    spr=VoxelSprite::LoadFromImage(img);
+//    spr->SaveToFile("res/shroom.voxmesh");
+    spr->Rebuild();
+
+//    spr=(VoxelSprite*)VoxelSprite::LoadFromFile("res/shroom.voxmesh");
+//    spr->Rebuild();
+
+    testitem=new ItemEntity(chkmgr,glm::vec3(62,128,162),"res/shroom.voxmesh");
 }
 
 bool VoxelzApp::Init(const std::string & title, uint32_t width, uint32_t height)
@@ -321,11 +337,16 @@ bool VoxelzApp::Update()
         MVar<glm::mat4>(0, "mvp", MVP).Set();
         grid->render_lines();
 
-//        vsh->Set();
-//        Model = glm::mat4(1.0f);
-//        MVP   = cam->GetViewProjMat() * Model;
-//        MVar<glm::mat4>(0, "mvp", MVP).Set();
-//        spr->Render(wireframe);
+        vsh->Set();
+        Model = glm::mat4(1.0f);
+        Model = glm::translate(Model,glm::vec3(61,128,165));
+        MVP   = cam->GetViewProjMat() * Model;
+        MVar<glm::mat4>(0, "mvp", MVP).Set();
+        spr->Render(wireframe);
+
+        testitem->Update(dt);
+        vsh->Set();
+        testitem->Render(wireframe,cam);
 
         /// G BUFFER
         gbsh->Set();
