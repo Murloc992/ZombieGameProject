@@ -6,10 +6,9 @@
 
 #include "Player.h"
 
-Player::Player(ChunkManager* chunkManager, const glm::vec3 &feetPos):Entity("Player",glm::vec3(feetPos.x,feetPos.y,feetPos.z),glm::vec3(PLAYER_WIDTH,PLAYER_HEIGHT,PLAYER_WIDTH))
+Player::Player(ChunkManager* chunkManager, const glm::vec3 &feetPos):Entity(chunkManager,"Player",glm::vec3(feetPos.x,feetPos.y,feetPos.z),glm::vec3(PLAYER_WIDTH,PLAYER_HEIGHT,PLAYER_WIDTH))
 {
     _type=EET_PLAYER;
-    _chunkManager=chunkManager;
     _tempMesh=new CubeMesh(AABB(glm::vec3(0),_colShape.GetHalfSize()));
     _isJumping=false;
     _isFalling=false;
@@ -32,11 +31,11 @@ bool Player::OnCollision(Entity* ent)
         switch(ent->GetType())
         {
         case EET_ITEM:
-            printf("Took an item.\n");
+            //printf("Took an item.\n");
             //ent->Die();
             break;
         default:
-            printf("entity.\n");
+            //printf("entity.\n");
             break;
         }
     }
@@ -109,24 +108,9 @@ void Player::Update(float dt,CameraPtr cam)
     if(_isDynamic)
     {
         CalculateSpeed();
-
-        float spd=
-            glm::max(glm::abs(_velocity.x),
-                     glm::max(glm::abs(_velocity.y),
-                              glm::abs(_velocity.z)));
-
-        int substeps=glm::ceil(spd*dt)*2;
-        glm::vec3 stepsteed=(_velocity*dt)/(float)substeps;
-
-        loopi(substeps)
-        {
-            Translate(stepsteed);
-            if(_isCollidingWorld)
-            {
-                CollideWithWorld(dt,_chunkManager);
-            }
-        }
     }
+
+    Entity::Update(dt);
 }
 
 void Player::HandleInput(InputHandler* input)

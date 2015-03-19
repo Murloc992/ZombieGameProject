@@ -6,8 +6,9 @@
 
 #include "Entity.h"
 
-Entity::Entity(std::string id,const glm::vec3 &pos,const glm::vec3 &size,bool colliding,bool collidingWorld,bool dynamic):CollisionObject(pos,size/2.f)
+Entity::Entity(ChunkManager* chkmgr,std::string id,const glm::vec3 &pos,const glm::vec3 &size,bool colliding,bool collidingWorld,bool dynamic):CollisionObject(pos,size/2.f)
 {
+    _chunkManager=chkmgr;
     _type=EET_DEFAULT;
     _id=id;
     _isColliding=colliding;
@@ -16,6 +17,7 @@ Entity::Entity(std::string id,const glm::vec3 &pos,const glm::vec3 &size,bool co
     _isOnGround=false;
     _alive=true;
     _containingChunks.reserve(8);
+    _velocity=glm::vec3(0.f);
 }
 
 Entity::~Entity()
@@ -44,7 +46,7 @@ void Entity::CheckCollision(Entity* ent)
     }
 }
 
-void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
+void Entity::CollideWithWorld(float dt)
 {
     glm::ivec3 amn=(glm::ivec3)_colShape.GetMin();
     glm::ivec3 amx=(glm::ivec3)_colShape.GetMax();
@@ -65,8 +67,8 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
     glm::ivec3 epos=(glm::ivec3)_colShape.GetCenter();
     //printf("Collision ranges: PLAYERPOS: %d %d %d START: %d %d %d END: %d %d %d\n",epos.x,epos.y,epos.z,sx,sy,sz,ex,ey,ez);
 
-    const Block &blockBelow=chkmgr->GetBlock(glm::ivec3(cen.x,sy,cen.z));
-    const Block &blockAbove=chkmgr->GetBlock(glm::ivec3(cen.x,ey,cen.z));
+    const Block &blockBelow=_chunkManager->GetBlock(glm::ivec3(cen.x,sy,cen.z));
+    const Block &blockAbove=_chunkManager->GetBlock(glm::ivec3(cen.x,ey,cen.z));
     _isOnGround=blockBelow.active&&blockBelow.type!=EBT_WATER;
     _hitCeiling=blockAbove.active&&blockAbove.type!=EBT_WATER;
 
@@ -82,7 +84,7 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
                 /// Chunk coordinates
                 glm::ivec3 pos=glm::ivec3(x,y,z);
 
-                ChunkPtr chunk=chkmgr->GetChunk(pos);
+                ChunkPtr chunk=_chunkManager->GetChunk(pos);
 
                 if(chunk!=nullptr)
                 {
@@ -105,7 +107,7 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
         {
             for(int32_t z=sz; z<=ez; z++)
             {
-                const Block &blk=chkmgr->GetBlock(glm::ivec3(x,y,z));
+                const Block &blk=_chunkManager->GetBlock(glm::ivec3(x,y,z));
                 if(blk!=Chunk::EMPTY_BLOCK&&blk.active&&blk.type!=EBT_WATER)
                 {
                     CollisionObject b=CollisionObject(glm::vec3(x,y,z)+glm::vec3(0.5f),glm::vec3(0.5f));
@@ -146,7 +148,6 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
 
 void Entity::OnEnterChunk(Chunk* chunk)
 {
-    //printf("Entering chunk at: %s\n", GLMVec3ToStr(chunk->position).c_str());
 }
 
 void Entity::OnExitChunk(Chunk* chunk)
@@ -155,13 +156,26 @@ void Entity::OnExitChunk(Chunk* chunk)
 
     if(chunkIter!=_containingChunks.end())
         chunkIter=_containingChunks.erase(chunkIter);
-
-    //printf("Exitting chunk at: %s\n", GLMVec3ToStr(chunk->position).c_str());
 }
 
 void Entity::Update(float dt)
 {
+    if(_isDynamic)
+    {
+        float maxAxisSpeed = glm::max(glm::abs(_velocity.x),glm::max(glm::abs(_velocity.y),glm::abs(_velocity.z)));
 
+        int substeps=glm::ceil(maxAxisSpeed*dt)*2;
+        glm::vec3 stepsteed=(_velocity*dt)/(float)substeps;
+
+        loopi(substeps)
+        {
+            Translate(stepsteed);
+            if(_isCollidingWorld)
+            {
+                CollideWithWorld(dt);
+            }
+        }
+    }
 }
 
 bool Entity::OnCollision(Entity* ent)

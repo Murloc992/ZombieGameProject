@@ -5,7 +5,7 @@
 
 #define PLAYER_HEIGHT 1.75f
 #define PLAYER_WIDTH 0.75f
-#define GRAVITY_CONSTANT 4.807f
+
 
 #include "Opengl/CubeMesh.h"
 
@@ -37,10 +37,9 @@ private:
     bool _isJumping,_isFalling,_isSwimming;
     float _fallingSpeed,_jumpHeight,_isFlying;
 
-    ChunkManager* _chunkManager;
     VoxelMesh* _playerMesh;
     CubeMesh* _tempMesh;
-    glm::vec3 _velocity,_walkingDir,_jumpStartPos,_strafingDir;
+    glm::vec3 _walkingDir,_jumpStartPos,_strafingDir;
 
     void CalculateSpeed();
 };

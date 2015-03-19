@@ -22,7 +22,7 @@ typedef std::shared_ptr<Chunk> ChunkPtr;
 class Entity:public CollisionObject
 {
 public:
-    Entity(std::string id,const glm::vec3 &pos,const glm::vec3 &size,bool colliding=true,bool collidingWorld=true,bool dynamic=true);
+    Entity(ChunkManager* chkmgr, std::string id,const glm::vec3 &pos,const glm::vec3 &size,bool colliding=true,bool collidingWorld=true,bool dynamic=true);
     virtual ~Entity();
 
     uint32_t GetType();
@@ -55,13 +55,15 @@ public:
     void OnExitChunk(Chunk* chunk);
 private:
 protected:
+    ChunkManager* _chunkManager;
     bool _alive,_isDynamic,_isColliding,_isCollidingWorld,_isOnGround,_hitCeiling;
     uint32_t _type;
     std::string _id;
+    glm::vec3 _velocity;
 
     vector<Chunk*> _containingChunks;
 
-    void CollideWithWorld(float dt,ChunkManager* chkmgr);
+    void CollideWithWorld(float dt);
 };
 
 #endif // ENTITY_H_INCLUDED

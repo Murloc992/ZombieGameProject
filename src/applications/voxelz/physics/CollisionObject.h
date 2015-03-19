@@ -1,6 +1,8 @@
 #ifndef COLLISIONOBJECT_H
 #define COLLISIONOBJECT_H
 
+#define GRAVITY_CONSTANT 4.807f
+
 #include <ccd/ccd.h>
 #include "opengl/AABB.h"
 

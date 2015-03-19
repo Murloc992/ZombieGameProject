@@ -27,8 +27,6 @@ public:
 protected:
     ChunkManager* _chkmgr;
     VoxelSprite* _sprite;
-
-    glm::vec3 _pos;
 private:
 };
 
