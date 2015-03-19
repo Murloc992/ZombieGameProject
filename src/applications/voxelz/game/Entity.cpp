@@ -15,11 +15,11 @@ Entity::Entity(std::string id,const glm::vec3 &pos,const glm::vec3 &size,bool co
     _isDynamic=dynamic;
     _isOnGround=false;
     _alive=true;
+    _containingChunks.reserve(8);
 }
 
 Entity::~Entity()
 {
-
 }
 
 uint32_t Entity::GetType()
@@ -74,23 +74,30 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
     glm::ivec3 endChunkCoords=WorldToChunkCoords(glm::ivec3(ex,ey,ez));
 
     for(uint32_t x=startChunkCoords.x; x<=endChunkCoords.x; x++)
+    {
         for(uint32_t y=startChunkCoords.y; y<=endChunkCoords.y; y++)
+        {
             for(uint32_t z=startChunkCoords.z; z<=endChunkCoords.z; z++)
             {
+                /// Chunk coordinates
                 glm::ivec3 pos=glm::ivec3(x,y,z);
-
-                //printf("Getting chunk at: %s\n", GLMVec3ToStr(pos).c_str());
 
                 ChunkPtr chunk=chkmgr->GetChunk(pos);
 
-                /// only add chunks not found
-                if(std::find(_containingChunks.begin(),_containingChunks.end(),chunk)==_containingChunks.end())
+                if(chunk!=nullptr)
                 {
-                    chunk->AddEntity(this);
-                    _containingChunks.push_back(chunk);
-                    OnEnterChunk(chunk);
+                    auto chunkpointer=chunk.get();
+                    /// only add chunks not found
+                    if(std::find(_containingChunks.begin(),_containingChunks.end(),chunkpointer)==_containingChunks.end())
+                    {
+                        chunkpointer->AddEntity(this);
+                        _containingChunks.push_back(chunkpointer);
+                        OnEnterChunk(chunkpointer);
+                    }
                 }
             }
+        }
+    }
 
     for(int32_t x=sx; x<=ex; x++)
     {
@@ -99,7 +106,7 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
             for(int32_t z=sz; z<=ez; z++)
             {
                 const Block &blk=chkmgr->GetBlock(glm::ivec3(x,y,z));
-                if(blk.active&&blk.type!=EBT_WATER)
+                if(blk!=Chunk::EMPTY_BLOCK&&blk.active&&blk.type!=EBT_WATER)
                 {
                     CollisionObject b=CollisionObject(glm::vec3(x,y,z)+glm::vec3(0.5f),glm::vec3(0.5f));
 
@@ -137,20 +144,42 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
     }
 }
 
-void Entity::OnEnterChunk(ChunkPtr chunk)
+void Entity::OnEnterChunk(Chunk* chunk)
 {
-
+    //printf("Entering chunk at: %s\n", GLMVec3ToStr(chunk->position).c_str());
 }
 
-void Entity::OnExitChunk(ChunkPtr chunk)
+void Entity::OnExitChunk(Chunk* chunk)
 {
     auto chunkIter=std::find(_containingChunks.begin(),_containingChunks.end(),chunk);
 
     if(chunkIter!=_containingChunks.end())
-        _containingChunks.erase(chunkIter);
+        chunkIter=_containingChunks.erase(chunkIter);
+
+    //printf("Exitting chunk at: %s\n", GLMVec3ToStr(chunk->position).c_str());
 }
 
 void Entity::Update(float dt)
 {
 
+}
+
+bool Entity::OnCollision(Entity* ent)
+{
+    if(ent->_alive&&ent->_isDynamic&&ent->_isColliding)
+    {
+        bool collision=MPRCollide(this,ent);
+
+        if(collision)
+        {
+            CollisionInfo cinf=MPRPenetration(this,ent);
+            if(cinf.colliding&&cinf.depth==cinf.depth&&ccdVec3Eq(&cinf.dir,&cinf.dir))
+            {
+                glm::vec3 direction=CCDtoGLM(cinf.dir);
+                this->Translate(-direction*cinf.depth);
+
+                if(ent->GetTopPosition().y<=this->GetBottomPosition().y) _isOnGround=true;
+            }
+        }
+    }
 }

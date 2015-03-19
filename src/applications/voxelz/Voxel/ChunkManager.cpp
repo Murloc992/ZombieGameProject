@@ -49,10 +49,10 @@ ChunkManager::ChunkManager()
 
     for(int x=0; x<2; x++)
         for(int z=0; z<2; z++)
-    {
-        AddSuperChunk(glm::ivec3(x,0,z));
-        _superChunks[glm::ivec3(x,0,z)]->Fill();
-    }
+        {
+            AddSuperChunk(glm::ivec3(x,0,z));
+            _superChunks[glm::ivec3(x,0,z)]->Fill();
+        }
 }
 
 ChunkManager::~ChunkManager()
@@ -124,11 +124,14 @@ ChunkPtr ChunkManager::GetChunkWorld(const glm::ivec3 &pos)
 ChunkPtr ChunkManager::GetChunk(const glm::ivec3 &pos)
 {
     glm::ivec3 superchunkPos=ChunkToSuperChunkCoords(pos);
+    glm::ivec3 chunkPos=SuperChunkSpaceChunkCoords(pos);
 
     if(_superChunks.count(superchunkPos)!=0)
     {
-        return _superChunks[superchunkPos]->GetChunk(pos);
+        return _superChunks[superchunkPos]->GetChunk(chunkPos);
     }
+
+    return nullptr;
 }
 
 const Block &ChunkManager::GetBlock(const glm::ivec3 &pos)
@@ -140,6 +143,14 @@ const Block &ChunkManager::GetBlock(const glm::ivec3 &pos)
         return Chunk::EMPTY_BLOCK;
 }
 
+void ChunkManager::Update(float dt)
+{
+    BOOST_FOREACH(SuperChunkMap::value_type a,_superChunks)
+    {
+        a.second->Update(dt);
+    }
+}
+
 void ChunkManager::Render(Camera *cam,ShaderPtr vsh,bool wireframe)
 {
     glm::mat4 Model;
@@ -149,7 +160,6 @@ void ChunkManager::Render(Camera *cam,ShaderPtr vsh,bool wireframe)
     }
     BOOST_FOREACH(SuperChunkMap::value_type a,_superChunks)
     {
-        a.second->Update();
         //if(!a.second->Empty())
         {
             glm::vec3 pos=glm::vec3(a.first)*SUPERCHUNK_SIZE_BLOCKSF;

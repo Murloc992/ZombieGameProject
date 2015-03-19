@@ -39,7 +39,9 @@ public:
         _colShape=AABB(center,halfsize);
         _pos=GLMtoCCD(center);
     }
-    virtual ~CollisionObject(){};
+    virtual ~CollisionObject()
+    {
+    }
 
     static void Support(const void *obj, const ccd_vec3_t *dir, ccd_vec3_t *vec);
     static void Center(const void *_obj, ccd_vec3_t *center);
@@ -56,7 +58,17 @@ public:
         return CCDtoGLM(_pos);
     }
 
-    AABB GetCollissionShape() const
+    glm::vec3 GetTopPosition()
+    {
+        return _colShape.GetCenter()+glm::vec3(0.f,_colShape.GetHalfSize().y,0.f);
+    }
+
+    glm::vec3 GetBottomPosition()
+    {
+        return _colShape.GetCenter()-glm::vec3(0.f,_colShape.GetHalfSize().y,0.f);
+    }
+
+    AABB GetCollissionShape()
     {
         return _colShape;
     }

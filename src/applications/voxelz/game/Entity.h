@@ -9,6 +9,7 @@ enum E_ENTITY_TYPE:uint32_t
     EET_PLAYER,
     EET_ITEM,
     EET_ENEMY,
+    EET_BLOCK_ENTITY,
 
     EET_COUNT
 };
@@ -38,22 +39,27 @@ public:
         return _alive;
     }
 
+    void Die()
+    {
+        _alive=false;
+    }
+
     void CheckCollision(Entity* ent);
 
     virtual void Update(float dt);
 
     virtual void OnCollisionWithWorld(const Block &blk) = 0;
-    virtual bool OnCollision(Entity* ent) = 0;
+    virtual bool OnCollision(Entity* ent);
 
-    void OnEnterChunk(ChunkPtr chunk);
-    void OnExitChunk(ChunkPtr chunk);
+    void OnEnterChunk(Chunk* chunk);
+    void OnExitChunk(Chunk* chunk);
 private:
 protected:
     bool _alive,_isDynamic,_isColliding,_isCollidingWorld,_isOnGround,_hitCeiling;
     uint32_t _type;
     std::string _id;
 
-    vector<ChunkPtr> _containingChunks;
+    vector<Chunk*> _containingChunks;
 
     void CollideWithWorld(float dt,ChunkManager* chkmgr);
 };

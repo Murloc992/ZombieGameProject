@@ -9,6 +9,8 @@
 #include <boost/foreach.hpp>
 
 #include "Game/Entity.h"
+#include "Game/Player.h"
+#include "Game/ItemEntity.h"
 
 const Block Chunk::EMPTY_BLOCK=Block();
 
@@ -39,14 +41,21 @@ Chunk::~Chunk()
 
 void Chunk::Update(float dt)
 {
-    for(auto it=_entities.begin(); it!=_entities.end(); it++)
+    for(auto it=_entities.begin(); it!=_entities.end();)
     {
+        int asd=_entities.size();
         Entity* ent=(*it);
-        if(SuperChunkSpaceChunkCoords((glm::ivec3)ent->GetCollissionShape().GetCenter())!=position||!ent->IsAlive())
+        glm::ivec3 entpos=SuperChunkSpaceChunkCoords(WorldToChunkCoords((glm::ivec3)ent->GetCollissionShape().GetCenter()));
+        glm::ivec3 chunkpos=WorldToChunkCoords(position);
+//        printf("Chunkpos: %s\n",GLMVec3ToStr(chunkpos).c_str());
+//        printf("Entpos: %s\n",GLMVec3ToStr(entpos).c_str());
+        if(entpos!=chunkpos||!ent->IsAlive())
         {
-            if(ent->IsAlive()) ent->OnExitChunk(share(this));
+            if(ent->IsAlive()) ent->OnExitChunk(this);
             it=_entities.erase(it);
+            continue;
         }
+        it++;
     }
     loop(i,_entities.size())
     {

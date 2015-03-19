@@ -44,6 +44,7 @@ public:
         }
     }
 
+    void Update(float dt);
     void Render(Camera *cam,ShaderPtr vsh,bool wireframe=false);
 protected:
 private:

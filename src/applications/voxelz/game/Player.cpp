@@ -21,16 +21,24 @@ Player::Player(ChunkManager* chunkManager, const glm::vec3 &feetPos):Entity("Pla
 
 Player::~Player()
 {
-
 }
 
 bool Player::OnCollision(Entity* ent)
 {
-    switch(ent->GetType())
+    Entity::OnCollision(ent);
+
+    if(ent->IsAlive())
     {
-    default:
-        printf("entity.\n");
-        break;
+        switch(ent->GetType())
+        {
+        case EET_ITEM:
+            printf("Took an item.\n");
+            //ent->Die();
+            break;
+        default:
+            printf("entity.\n");
+            break;
+        }
     }
 }
 

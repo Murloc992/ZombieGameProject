@@ -8,6 +8,7 @@
 
 ItemEntity::ItemEntity(ChunkManager* chkmgr,const glm::vec3 &pos,const std::string &filename):Entity("item",pos,glm::vec3(1.f))
 {
+    _type=EET_ITEM;
     _sprite=(VoxelSprite*)VoxelSprite::LoadFromFile(filename);
     _sprite->Rebuild();
     _chkmgr=chkmgr;

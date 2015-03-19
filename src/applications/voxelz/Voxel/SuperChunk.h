@@ -186,7 +186,7 @@ public:
         }
     }
 
-    void Update()
+    void Update(float dt)
     {
         int32_t chunksPerFrame=0;
         if(!built)
@@ -228,6 +228,19 @@ public:
                 else
                 {
                     break;
+                }
+            }
+        }
+        loop(x,SUPERCHUNK_SIZE)
+        loop(y,SUPERCHUNK_SIZE)
+        loop(z,SUPERCHUNK_SIZE)
+        {
+            if(_chunks.count(glm::ivec3(x,y,z))!=0)
+            {
+                auto chk=_chunks[glm::ivec3(x,y,z)];
+                if(chk->built&&chk->generated)
+                {
+                    chk->Update(dt);
                 }
             }
         }
@@ -338,7 +351,14 @@ public:
                 chunkCoords.z<SUPERCHUNK_SIZE&&chunkCoords.z>=0)
         {
             if(_chunks.count(chunkCoords)!=0)
-                return _chunks[chunkCoords];
+            {
+                auto chk=_chunks[chunkCoords];
+                if(chk->built&&chk->generated)
+                {
+                    return chk;
+                }
+            }
+
         }
         return nullptr;
     }
