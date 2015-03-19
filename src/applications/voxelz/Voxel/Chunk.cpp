@@ -39,6 +39,15 @@ Chunk::~Chunk()
 
 void Chunk::Update(float dt)
 {
+    for(auto it=_entities.begin(); it!=_entities.end(); it++)
+    {
+        Entity* ent=(*it);
+        if(SuperChunkSpaceChunkCoords((glm::ivec3)ent->GetCollissionShape().GetCenter())!=position||!ent->IsAlive())
+        {
+            if(ent->IsAlive()) ent->OnExitChunk(share(this));
+            it=_entities.erase(it);
+        }
+    }
     loop(i,_entities.size())
     {
         loop(j,_entities.size())

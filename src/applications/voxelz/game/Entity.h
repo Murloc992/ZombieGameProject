@@ -33,15 +33,23 @@ public:
         return _isOnGround;
     }
 
+    bool IsAlive()
+    {
+        return _alive;
+    }
+
     void CheckCollision(Entity* ent);
 
     virtual void Update(float dt);
 
     virtual void OnCollisionWithWorld(const Block &blk) = 0;
     virtual bool OnCollision(Entity* ent) = 0;
+
+    void OnEnterChunk(ChunkPtr chunk);
+    void OnExitChunk(ChunkPtr chunk);
 private:
 protected:
-    bool _isDynamic,_isColliding,_isCollidingWorld,_isOnGround,_hitCeiling;
+    bool _alive,_isDynamic,_isColliding,_isCollidingWorld,_isOnGround,_hitCeiling;
     uint32_t _type;
     std::string _id;
 

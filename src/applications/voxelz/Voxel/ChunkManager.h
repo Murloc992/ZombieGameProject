@@ -23,6 +23,7 @@ public:
     SuperChunkPtr GetSuperChunk(const glm::ivec3 &pos);
     void RemoveSuperChunk(const glm::ivec3 &pos);
     ChunkPtr GetChunkWorld(const glm::ivec3 &pos);
+    ChunkPtr GetChunk(const glm::ivec3 &pos);
 
     uint32_t GetChunkCount();
     uint32_t GetTotalBlocks()

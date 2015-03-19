@@ -86,6 +86,14 @@ public:
 
     const Block & ElementAt(int32_t x,int32_t y, int32_t z);
 
+    void AddEntity(Entity* ent)
+    {
+        _entities.push_back(ent);
+    }
+    void RemoveEntity(Entity* ent)
+    {
+    }
+
     static intRGBA getTypeCol(uint32_t typ)
     {
         switch(typ)

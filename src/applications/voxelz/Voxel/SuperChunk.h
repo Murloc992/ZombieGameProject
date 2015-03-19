@@ -30,6 +30,34 @@ inline glm::ivec3 SuperChunkToWorldCoords(const glm::ivec3 &other)
     return glm::ivec3(cx,cy,cz);
 }
 
+inline glm::ivec3 ChunkToSuperChunkCoords(const glm::ivec3 &pos)
+{
+    int cx = glm::floor(pos.x / SUPERCHUNK_SIZEF);
+    int cy = glm::floor(pos.y / SUPERCHUNK_SIZEF);
+    int cz = glm::floor(pos.z / SUPERCHUNK_SIZEF);
+
+    return glm::ivec3(cx,cy,cz);
+}
+
+inline glm::ivec3 SuperChunkSpaceChunkCoords(const glm::ivec3 &pos)
+{
+    glm::ivec3 ats;
+
+    ats.x = pos.x % SUPERCHUNK_SIZE;
+    if(pos.x<0&&ats.x!=0)
+        ats.x= SUPERCHUNK_SIZE+ats.x;
+
+    ats.y = pos.y % SUPERCHUNK_SIZE;
+    if(pos.y<0&&ats.y!=0)
+        ats.y=SUPERCHUNK_SIZE+ats.y;
+
+    ats.z = pos.z % SUPERCHUNK_SIZE;
+    if(pos.z<0&&ats.z!=0)
+        ats.z=SUPERCHUNK_SIZE+ats.z;
+
+    return ats;
+}
+
 inline glm::ivec3 SuperChunkSpaceCoords(const glm::ivec3 &pos)
 {
     glm::ivec3 ats;

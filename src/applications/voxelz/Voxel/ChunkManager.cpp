@@ -107,6 +107,7 @@ SuperChunkPtr ChunkManager::GetSuperChunk(const glm::ivec3 &pos)
         return nullptr;
 }
 
+//! pos in WORLD coordinates
 ChunkPtr ChunkManager::GetChunkWorld(const glm::ivec3 &pos)
 {
     glm::ivec3 superchunkPos=WorldToSuperChunkCoords(pos);
@@ -116,6 +117,17 @@ ChunkPtr ChunkManager::GetChunkWorld(const glm::ivec3 &pos)
     if(_superChunks.count(superchunkPos)!=0)
     {
         return _superChunks[superchunkPos]->GetChunk(chunkCoords);
+    }
+}
+
+//! pos in CHUNK INDEX coordinates
+ChunkPtr ChunkManager::GetChunk(const glm::ivec3 &pos)
+{
+    glm::ivec3 superchunkPos=ChunkToSuperChunkCoords(pos);
+
+    if(_superChunks.count(superchunkPos)!=0)
+    {
+        return _superChunks[superchunkPos]->GetChunk(pos);
     }
 }
 

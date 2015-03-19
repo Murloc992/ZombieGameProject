@@ -14,6 +14,7 @@ Entity::Entity(std::string id,const glm::vec3 &pos,const glm::vec3 &size,bool co
     _isCollidingWorld=collidingWorld;
     _isDynamic=dynamic;
     _isOnGround=false;
+    _alive=true;
 }
 
 Entity::~Entity()
@@ -69,20 +70,27 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
     _isOnGround=blockBelow.active&&blockBelow.type!=EBT_WATER;
     _hitCeiling=blockAbove.active&&blockAbove.type!=EBT_WATER;
 
-    glm::ivec3 startSuperChunkCoords=SuperChunkSpaceCoords(glm::ivec3(sx,sy,sz));
-    glm::ivec3 startChunkCoords=WorldToChunkCoords(startSuperChunkCoords);
-
-    glm::ivec3 endSuperChunkCoords=SuperChunkSpaceCoords(glm::ivec3(ex,ey,ez));
-    glm::ivec3 endChunkCoords=WorldToChunkCoords(startSuperChunkCoords);
-
-    for(auto chk:_containingChunks)
-    {
-        //chk->OnEntityLeave(this);
-    }
+    glm::ivec3 startChunkCoords=WorldToChunkCoords(glm::ivec3(sx,sy,sz));
+    glm::ivec3 endChunkCoords=WorldToChunkCoords(glm::ivec3(ex,ey,ez));
 
     for(uint32_t x=startChunkCoords.x; x<=endChunkCoords.x; x++)
         for(uint32_t y=startChunkCoords.y; y<=endChunkCoords.y; y++)
-            for(uint32_t z=startChunkCoords.y; z<=endChunkCoords.y; z++)
+            for(uint32_t z=startChunkCoords.z; z<=endChunkCoords.z; z++)
+            {
+                glm::ivec3 pos=glm::ivec3(x,y,z);
+
+                //printf("Getting chunk at: %s\n", GLMVec3ToStr(pos).c_str());
+
+                ChunkPtr chunk=chkmgr->GetChunk(pos);
+
+                /// only add chunks not found
+                if(std::find(_containingChunks.begin(),_containingChunks.end(),chunk)==_containingChunks.end())
+                {
+                    chunk->AddEntity(this);
+                    _containingChunks.push_back(chunk);
+                    OnEnterChunk(chunk);
+                }
+            }
 
     for(int32_t x=sx; x<=ex; x++)
     {
@@ -127,6 +135,19 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
             }
         }
     }
+}
+
+void Entity::OnEnterChunk(ChunkPtr chunk)
+{
+
+}
+
+void Entity::OnExitChunk(ChunkPtr chunk)
+{
+    auto chunkIter=std::find(_containingChunks.begin(),_containingChunks.end(),chunk);
+
+    if(chunkIter!=_containingChunks.end())
+        _containingChunks.erase(chunkIter);
 }
 
 void Entity::Update(float dt)
