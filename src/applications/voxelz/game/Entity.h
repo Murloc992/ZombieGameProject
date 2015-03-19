@@ -15,6 +15,8 @@ enum E_ENTITY_TYPE:uint32_t
 
 class ChunkManager;
 class Block;
+class Chunk;
+typedef std::shared_ptr<Chunk> ChunkPtr;
 
 class Entity:public CollisionObject
 {
@@ -42,6 +44,8 @@ protected:
     bool _isDynamic,_isColliding,_isCollidingWorld,_isOnGround,_hitCeiling;
     uint32_t _type;
     std::string _id;
+
+    vector<ChunkPtr> _containingChunks;
 
     void CollideWithWorld(float dt,ChunkManager* chkmgr);
 };

@@ -8,6 +8,8 @@
 #include "resources/ResourceCache.h"
 #include <boost/foreach.hpp>
 
+#include "Game/Entity.h"
+
 const Block Chunk::EMPTY_BLOCK=Block();
 
 Chunk::Chunk(ChunkManager *chunkManager,const glm::ivec3 &position, const uint32_t & offset)
@@ -37,9 +39,13 @@ Chunk::~Chunk()
 
 void Chunk::Update(float dt)
 {
-    for(auto ent:_entities)
+    loop(i,_entities.size())
     {
-
+        loop(j,_entities.size())
+        {
+            if(i==j) continue; //don't check yourself, dummy
+            _entities[i]->CheckCollision(_entities[j]);
+        }
     }
 }
 

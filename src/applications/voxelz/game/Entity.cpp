@@ -69,6 +69,21 @@ void Entity::CollideWithWorld(float dt,ChunkManager* chkmgr)
     _isOnGround=blockBelow.active&&blockBelow.type!=EBT_WATER;
     _hitCeiling=blockAbove.active&&blockAbove.type!=EBT_WATER;
 
+    glm::ivec3 startSuperChunkCoords=SuperChunkSpaceCoords(glm::ivec3(sx,sy,sz));
+    glm::ivec3 startChunkCoords=WorldToChunkCoords(startSuperChunkCoords);
+
+    glm::ivec3 endSuperChunkCoords=SuperChunkSpaceCoords(glm::ivec3(ex,ey,ez));
+    glm::ivec3 endChunkCoords=WorldToChunkCoords(startSuperChunkCoords);
+
+    for(auto chk:_containingChunks)
+    {
+        //chk->OnEntityLeave(this);
+    }
+
+    for(uint32_t x=startChunkCoords.x; x<=endChunkCoords.x; x++)
+        for(uint32_t y=startChunkCoords.y; y<=endChunkCoords.y; y++)
+            for(uint32_t z=startChunkCoords.y; z<=endChunkCoords.y; z++)
+
     for(int32_t x=sx; x<=ex; x++)
     {
         for(int32_t y=sy; y<=ey; y++)

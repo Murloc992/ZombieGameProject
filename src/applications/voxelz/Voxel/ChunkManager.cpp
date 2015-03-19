@@ -107,6 +107,18 @@ SuperChunkPtr ChunkManager::GetSuperChunk(const glm::ivec3 &pos)
         return nullptr;
 }
 
+ChunkPtr ChunkManager::GetChunkWorld(const glm::ivec3 &pos)
+{
+    glm::ivec3 superchunkPos=WorldToSuperChunkCoords(pos);
+    glm::ivec3 superchunkspaceCoords=SuperChunkSpaceCoords(pos);
+    glm::ivec3 chunkCoords=WorldToChunkCoords(superchunkspaceCoords);
+
+    if(_superChunks.count(superchunkPos)!=0)
+    {
+        return _superChunks[superchunkPos]->GetChunk(chunkCoords);
+    }
+}
+
 const Block &ChunkManager::GetBlock(const glm::ivec3 &pos)
 {
     glm::ivec3 chunkCoords=WorldToSuperChunkCoords(pos),voxelCoords=SuperChunkSpaceCoords(pos);
