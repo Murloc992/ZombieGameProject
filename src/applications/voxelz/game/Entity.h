@@ -3,6 +3,8 @@
 
 #include "Physics/CollisionObject.h"
 
+#define DEBUG_ENTITIES
+
 enum E_ENTITY_TYPE:uint32_t
 {
     EET_DEFAULT,
@@ -15,6 +17,7 @@ enum E_ENTITY_TYPE:uint32_t
 };
 
 class ChunkManager;
+class CubeMesh;
 class Block;
 class Chunk;
 typedef std::shared_ptr<Chunk> ChunkPtr;
@@ -64,6 +67,7 @@ protected:
     vector<Chunk*> _containingChunks;
 
     void CollideWithWorld(float dt);
+    CubeMesh* _debugAABBMesh;
 };
 
 #endif // ENTITY_H_INCLUDED

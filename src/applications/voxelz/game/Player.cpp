@@ -117,7 +117,7 @@ void Player::HandleInput(InputHandler* input)
 {
     float forward=1.f;
     float backward=-1.f;
-    float direction=forward;
+    float direction=0.f;
 
     if(input->IsKeyDown(GLFW_KEY_W))
     {

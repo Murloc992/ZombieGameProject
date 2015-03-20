@@ -84,10 +84,8 @@ void VoxelMesh::UpdateMesh()
     {
         GreedyMeshBuilder::GreedyBuild(this);
         UploadBuffers();
-        ClearBuffers();
-
-
         RecalculateAABB<glm::ivec3>();
+        ClearBuffers();
     }
 }
 

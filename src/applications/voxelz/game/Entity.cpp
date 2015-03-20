@@ -109,11 +109,6 @@ void Entity::CollideWithWorld(float dt)
     }
 
     /// BLOCK TRACKING
-    const Block &blockBelow=_chunkManager->GetBlock(glm::ivec3(center.x,startCoord.y,center.z));
-    const Block &blockAbove=_chunkManager->GetBlock(glm::ivec3(center.x,endCoord.y,center.z));
-    _isOnGround=blockBelow.active&&blockBelow.type!=EBT_WATER;
-    _hitCeiling=blockAbove.active&&blockAbove.type!=EBT_WATER;
-
     for(int32_t x=startCoord.x; x<=endCoord.x; x++)
     {
         for(int32_t y=startCoord.y; y<=endCoord.y; y++)
@@ -135,6 +130,11 @@ void Entity::CollideWithWorld(float dt)
                             glm::vec3 direction=CCDtoGLM(cinf.dir);
                             this->Translate(-direction*cinf.depth);
 
+                            if(y==startCoord.y&&x==center.x&&z==center.z)
+                                _isOnGround=true;
+                            if(y==endCoord.y&&x==center.x&&z==center.z)
+                                _hitCeiling=true;
+
                             OnCollisionWithWorld(blk);
                         }
                     }
@@ -150,6 +150,11 @@ void Entity::CollideWithWorld(float dt)
                 }
                 else if(blk.type==EBT_AIR)
                 {
+                    if(y==startCoord.y&&x==center.x&&z==center.z)
+                        _isOnGround=false;
+                    if(y==endCoord.y&&x==center.x&&z==center.z)
+                        _hitCeiling=false;
+
                     OnCollisionWithWorld(blk);
                 }
                 else
@@ -157,6 +162,11 @@ void Entity::CollideWithWorld(float dt)
             }
         }
     }
+
+//    const Block &blockBelow=_chunkManager->GetBlock(glm::ivec3(center.x,startCoord.y,center.z));
+//    const Block &blockAbove=_chunkManager->GetBlock(glm::ivec3(center.x,endCoord.y,center.z));
+//    _isOnGround=blockBelow!=Chunk::EMPTY_BLOCK&&blockBelow.active&&blockBelow.type!=EBT_WATER;
+//    _hitCeiling=blockAbove!=Chunk::EMPTY_BLOCK&&blockAbove.active&&blockAbove.type!=EBT_WATER;
 }
 
 void Entity::OnEnterChunk(Chunk* chunk)
@@ -202,9 +212,9 @@ bool Entity::OnCollision(Entity* ent)
             {
                 glm::vec3 direction=CCDtoGLM(cinf.dir);
                 this->Translate(-direction*cinf.depth);
-
-                if(ent->GetTopPosition().y<=this->GetBottomPosition().y) _isOnGround=true;
             }
         }
+        if(ent->GetTopPosition().y<=this->GetBottomPosition().y) _isOnGround=true;
+        if(ent->GetBottomPosition().y>=this->GetTopPosition().y) _hitCeiling=true;
     }
 }
