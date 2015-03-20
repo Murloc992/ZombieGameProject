@@ -4,11 +4,11 @@
 
 class WorldGenerator
 {
-    public:
-        WorldGenerator();
-        virtual ~WorldGenerator();
-    protected:
-    private:
+public:
+    WorldGenerator();
+    virtual ~WorldGenerator();
+protected:
+private:
 };
 
 #endif // WORLDGENERATOR_H

@@ -36,10 +36,13 @@ bool ItemEntity::OnCollision(Entity* ent)
 
 void ItemEntity::Render(float dt,CameraPtr cam)
 {
-    glm::mat4 Model=glm::mat4(1.0f);
-    Model=glm::translate(Model,_colShape.GetCenter()-_colShape.GetHalfSize());
-    Model=glm::scale(Model,glm::vec3(1.f/64.f,1.f/64.f,1.f/32.f));
-    glm::mat4 MVP=cam->GetViewProjMat()*Model;
-    MVar<glm::mat4>(0, "mvp", MVP).Set();
-    _sprite->Render(false);
+    if(_alive)
+    {
+        glm::mat4 Model=glm::mat4(1.0f);
+        Model=glm::translate(Model,_colShape.GetCenter()-_colShape.GetHalfSize());
+        Model=glm::scale(Model,glm::vec3(1.f/64.f,1.f/64.f,1.f/32.f));
+        glm::mat4 MVP=cam->GetViewProjMat()*Model;
+        MVar<glm::mat4>(0, "mvp", MVP).Set();
+        _sprite->Render(false);
+    }
 }

@@ -30,11 +30,15 @@ void AABB::AddPoint(const glm::vec3 &point)
 {
     glm::vec3 mi(m_center - m_halfSize), mx(m_center+m_halfSize);
 
-    #define DOMIN(axis) mi.axis = point.axis < mi.axis ? (point.axis) : (mi.axis)
-    #define DOMAX(axis) mx.axis = point.axis > mx.axis ? (point.axis) : (mx.axis)
+#define DOMIN(axis) mi.axis = point.axis < mi.axis ? (point.axis) : (mi.axis)
+#define DOMAX(axis) mx.axis = point.axis > mx.axis ? (point.axis) : (mx.axis)
 
-    DOMIN(x);DOMIN(y);DOMIN(z);
-    DOMAX(x);DOMAX(y);DOMAX(z);
+    DOMIN(x);
+    DOMIN(y);
+    DOMIN(z);
+    DOMAX(x);
+    DOMAX(y);
+    DOMAX(z);
 
     m_halfSize = glm::abs((mx-mi)*0.5f);
     m_center = (mi + mx) *0.5f;
@@ -50,15 +54,15 @@ bool AABB::ContainsPoint(const glm::vec3 & point) const
     glm::vec3 distance( m_center - point );
 
     return ( glm::abs( distance.x ) <= m_halfSize.x ) &
-            ( glm::abs( distance.y ) <= m_halfSize.y ) &
-            ( glm::abs( distance.z ) <= m_halfSize.z );
+           ( glm::abs( distance.y ) <= m_halfSize.y ) &
+           ( glm::abs( distance.z ) <= m_halfSize.z );
 }
 
 bool AABB::IntersectsWith(const AABB &other) const
 {
-   return (glm::abs(m_center.x - other.GetCenter().x) <= m_halfSize.x + other.GetHalfSize().x)
-        &&(glm::abs(m_center.y - other.GetCenter().y) <= m_halfSize.y + other.GetHalfSize().y)
-        &&(glm::abs(m_center.z - other.GetCenter().z) <= m_halfSize.z + other.GetHalfSize().z);
+    return (glm::abs(m_center.x - other.GetCenter().x) <= m_halfSize.x + other.GetHalfSize().x)
+           &&(glm::abs(m_center.y - other.GetCenter().y) <= m_halfSize.y + other.GetHalfSize().y)
+           &&(glm::abs(m_center.z - other.GetCenter().z) <= m_halfSize.z + other.GetHalfSize().z);
 }
 
 float AABB::SweepCollidesWith(const AABB & other, const glm::vec3 & vel, glm::vec3 & normal) const
@@ -70,7 +74,7 @@ float AABB::SweepCollidesWith(const AABB & other, const glm::vec3 & vel, glm::ve
     p2s=other.m_center-other.m_halfSize;
     p2e=other.m_center+other.m_halfSize;
 
-    #define INV_ENTRY_EXIT(axis)\
+#define INV_ENTRY_EXIT(axis)\
     if (vel.axis > 0.0f)\
     {\
     invEntry.axis = p2s.axis - p1e.axis;\
@@ -85,10 +89,10 @@ float AABB::SweepCollidesWith(const AABB & other, const glm::vec3 & vel, glm::ve
     INV_ENTRY_EXIT(x)
     INV_ENTRY_EXIT(y)
     INV_ENTRY_EXIT(z)
-    #undef INV_ENTRY_EXIT
+#undef INV_ENTRY_EXIT
     // find time of collision and time of leaving for each axis (if statement is to prevent divide by zero)
     glm::vec3 entry, exit;
-    #define ENTRY_EXIT(axis)\
+#define ENTRY_EXIT(axis)\
     if (vel.axis == 0.0f)\
     {\
     entry.axis = -std::numeric_limits<float>::infinity();\
@@ -102,7 +106,7 @@ float AABB::SweepCollidesWith(const AABB & other, const glm::vec3 & vel, glm::ve
     ENTRY_EXIT(x)
     ENTRY_EXIT(y)
     ENTRY_EXIT(z)
-    #undef ENTRY_EXIT
+#undef ENTRY_EXIT
     // find the earliest/latest times of collision
     float entryTime = std::max(std::max(entry.x, entry.y),entry.z);
     float exitTime = std::min(std::min(exit.x, exit.y),exit.z);
@@ -116,7 +120,7 @@ float AABB::SweepCollidesWith(const AABB & other, const glm::vec3 & vel, glm::ve
     }
     else // if there was a collision
     {
-    // calculate normal of collided surface
+        // calculate normal of collided surface
         if (entry.x > entry.y && entry.x > entry.z)
         {
             if (invEntry.x < 0.0f)
@@ -170,8 +174,8 @@ float AABB::SweepCollidesWith(const AABB & other, const glm::vec3 & vel, glm::ve
 bool AABB::IntersectsWith(const glm::vec3 & center, const glm::vec3 & halfsize) const
 {
     return (glm::abs(m_center.x - center.x) <= m_halfSize.x + halfsize.x)
-        &&(glm::abs(m_center.y - center.y) <= m_halfSize.y + halfsize.y)
-        &&(glm::abs(m_center.z - center.z) <= m_halfSize.z + halfsize.z);
+           &&(glm::abs(m_center.y - center.y) <= m_halfSize.y + halfsize.y)
+           &&(glm::abs(m_center.z - center.z) <= m_halfSize.z + halfsize.z);
 }
 
 bool AABB::CollidesWithRay(const glm::vec3 & rayStart, const glm::vec3 & rayDirectionInverse) const

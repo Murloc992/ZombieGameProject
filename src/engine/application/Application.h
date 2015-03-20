@@ -33,7 +33,7 @@ public:
     Application(int32_t argc, const char ** argv);
     virtual ~Application();
 
-    virtual void InitVariables(){}
+    virtual void InitVariables() {}
     virtual bool Init(const std::string  &title, uint32_t width, uint32_t height);
     virtual bool Update() = 0;
     virtual void Exit();

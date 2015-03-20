@@ -51,7 +51,7 @@ private:
 
     void CreateInds()
     {
-        const static uint32_t ind_vec[]{1,3,0,1,2,3,5,2,1,5,6,2,4,6,5,4,7,6,2,14,3,2,15,14,6,15,2,6,10,15,7,10,6,7,11,10,15,12,14,15,13,12,10,13,15,10,9,13,11,9,10,11,8,9};
+        const static uint32_t ind_vec[] {1,3,0,1,2,3,5,2,1,5,6,2,4,6,5,4,7,6,2,14,3,2,15,14,6,15,2,6,10,15,7,10,6,7,11,10,15,12,14,15,13,12,10,13,15,10,9,13,11,9,10,11,8,9};
         indices->data.insert(indices->data.begin(),ind_vec,ind_vec+54);
     }
 public:
@@ -124,7 +124,7 @@ public:
         tex_coords->data[15] = glm::vec2(d.x+tm.x,d.y+tm.y);
     }
 
-    virtual ~SlicedGUIQuad(){};
+    virtual ~SlicedGUIQuad() {};
 
     virtual bool Init()
     {

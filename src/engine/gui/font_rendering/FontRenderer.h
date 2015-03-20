@@ -61,8 +61,8 @@ public:
     ~FontRenderer();
 
     FontFamily* CreateFontFamily(const std::string &name,uint32_t size=12,
-                                std::string regularFileName="", std::string boldFileName="",
-                                std::string italicFileName="", std::string boldItalicFileName="");
+                                 std::string regularFileName="", std::string boldFileName="",
+                                 std::string italicFileName="", std::string boldItalicFileName="");
 
     void UseFontFamily(const std::string &familyName="default");
 

@@ -33,22 +33,22 @@ public:
     {
         if(get_sound(name)==nullptr)
         {
-        char* buf;
-        int len=helpers::read(filename,buf);
-        ISoundSource* src=eng->addSoundSourceFromMemory(buf,len,name.c_str(),true);
-        delete buf;
-        src->setDefaultVolume(volume);
+            char* buf;
+            int len=helpers::read(filename,buf);
+            ISoundSource* src=eng->addSoundSourceFromMemory(buf,len,name.c_str(),true);
+            delete buf;
+            src->setDefaultVolume(volume);
 
-        sound_resource* snd=new sound_resource();
-        snd->name=name;
-        snd->volume=volume;
-        snd->pitch=pitch;
-        snd->sound=src;
-        snd->playing=false;
-        snd->player=nullptr;
+            sound_resource* snd=new sound_resource();
+            snd->name=name;
+            snd->volume=volume;
+            snd->pitch=pitch;
+            snd->sound=src;
+            snd->playing=false;
+            snd->player=nullptr;
 
-        sounds.push_back(snd);
-        return snd;
+            sounds.push_back(snd);
+            return snd;
         }
         else return get_sound(name);
     }

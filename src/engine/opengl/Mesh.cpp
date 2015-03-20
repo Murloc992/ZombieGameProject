@@ -26,7 +26,7 @@ void animation::set_interp_frame(float f)
     frame1 %= this->frames.size();
     frame2 %= this->frames.size();
     frame &mat1 = frames[frame1],
-              &mat2 = frames[frame2];
+           &mat2 = frames[frame2];
     // Interpolate matrixes between the two closest frames and concatenate with parent matrix if necessary.
     // Concatenate the result with the inverse of the base pose.
     // You would normally do animation blending and inter-frame blending here in a 3D engine.

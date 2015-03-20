@@ -54,7 +54,7 @@ public:
     uint32_t id;
     uint32_t offset;
     bool empty,generated,built,uploaded;
-    glm::ivec3 position;
+    glm::ivec3 position,positionWorld;
 
     static const Block EMPTY_BLOCK;
 
@@ -70,7 +70,7 @@ private:
 public:
     BOOST_MOVABLE_BUT_NOT_COPYABLE(Chunk)
 
-    Chunk(ChunkManager *chunkManager,const glm::ivec3 &position, const uint32_t & offset);
+    Chunk(ChunkManager *chunkManager,const glm::ivec3 &position, const glm::ivec3 &positionWorld, const uint32_t & offset);
     virtual ~Chunk();
 
     void Fill();
@@ -88,10 +88,19 @@ public:
 
     void AddEntity(Entity* ent)
     {
-        _entities.push_back(ent);
+        auto foundEnt=std::find(_entities.begin(),_entities.end(),ent);
+        if(foundEnt==_entities.end())
+        {
+            _entities.push_back(ent);
+        }
     }
     void RemoveEntity(Entity* ent)
     {
+        auto foundEnt=std::find(_entities.begin(),_entities.end(),ent);
+        if(foundEnt!=_entities.end())
+        {
+            _entities.erase(foundEnt);
+        }
     }
 
     static intRGBA getTypeCol(uint32_t typ)

@@ -30,7 +30,7 @@ GUIImage::~GUIImage()
 void GUIImage::SetImage(std::shared_ptr<Texture> tex)
 {
     if(tex!=nullptr)
-    m_tex=tex;
+        m_tex=tex;
     else
         return;
 }

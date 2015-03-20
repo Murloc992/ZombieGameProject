@@ -35,20 +35,20 @@ ShaderPtr shader_loader::load(const std::string & vertex_file, const std::string
 
     _logger->log(LOG_LOG, "Shader name: %s", res_name.c_str());
     Shader * sh = new Shader(res_name,vsh,fsh,"");
-	sh->Compile();
-	sh->link();
+    sh->Compile();
+    sh->link();
 
-	if(sh->program)
+    if(sh->program)
     {
         res.resource = ShaderPtr(sh);
         res.path = res_name;
         this->add_resource(res);
     }
 
-	delete [] vsh;
-	delete [] fsh;
+    delete [] vsh;
+    delete [] fsh;
 
-	if(res.resource)
+    if(res.resource)
         _logger->log(LOG_LOG, "Shader '%s' loaded.",res_name.c_str());
 
     return res.resource;
@@ -85,22 +85,22 @@ ShaderPtr shader_loader::load(const std::string & file)
     {
         sh=new Shader(sh_name,vsh,fsh);
     }
-	sh->Compile();
-	//sh->link();
+    sh->Compile();
+    //sh->link();
 
-	if(sh->program)
+    if(sh->program)
     {
         res.resource = ShaderPtr(sh);
         res.path = file;
         this->add_resource(res);
     }
 
-	delete [] vsh;
-	delete [] fsh;
-	if(geom)
+    delete [] vsh;
+    delete [] fsh;
+    if(geom)
         delete [] gsh;
 
-	if(res.resource)
+    if(res.resource)
         _logger->log(LOG_LOG, "Shader '%s' loaded.",file.c_str());
 
     return res.resource;

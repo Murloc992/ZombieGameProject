@@ -32,7 +32,7 @@ inline glm::vec3 rgb2hsv(float r, float g, float b);
 
 inline int wtoi(const wchar_t *str)
 {
-  return (int)wcstol(str, 0, 10);
+    return (int)wcstol(str, 0, 10);
 }
 
 #include "Helpers.inl"

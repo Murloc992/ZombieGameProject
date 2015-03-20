@@ -20,7 +20,10 @@ public:
 
     resource<T> get_resource(const std::string & path)
     {
-        auto it = std::find_if(m_resources.begin(), m_resources.end(), [&path](resource<T> res){return res.path==path;});
+        auto it = std::find_if(m_resources.begin(), m_resources.end(), [&path](resource<T> res)
+        {
+            return res.path==path;
+        });
 
         if(it!=m_resources.end())
         {

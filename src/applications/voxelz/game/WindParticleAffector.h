@@ -7,15 +7,15 @@
 
 class WindParticleAffector:public IParticleAffector
 {
-    public:
-        WindParticleAffector(const AABB &windBox,const glm::vec3 & direction,float speed);
-        virtual ~WindParticleAffector(){};
-        void Affect(float dt,Particle & particleToAffect, ParticleEmitter *emitter);
-    protected:
-    private:
-        AABB _windBox;
-        glm::vec3 _direction;
-        float _speed;
+public:
+    WindParticleAffector(const AABB &windBox,const glm::vec3 & direction,float speed);
+    virtual ~WindParticleAffector() {};
+    void Affect(float dt,Particle & particleToAffect, ParticleEmitter *emitter);
+protected:
+private:
+    AABB _windBox;
+    glm::vec3 _direction;
+    float _speed;
 };
 
 #endif // WINDPARTICLEAFFECTOR_H

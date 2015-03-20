@@ -8,7 +8,7 @@
 struct Material
 {
     Material(ShaderPtr mat_shader, uint32_t Id = 0);
-    virtual ~Material(){}
+    virtual ~Material() {}
 
     virtual void Set();
 

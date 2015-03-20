@@ -33,7 +33,7 @@ struct FrameBufferObject: public GLObject
     ~FrameBufferObject()
     {
         if(Id)
-        glDeleteFramebuffers(1,&Id);
+            glDeleteFramebuffers(1,&Id);
     }
 
     void EnableBuffer(uint32_t Texture)

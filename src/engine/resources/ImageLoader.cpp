@@ -22,7 +22,10 @@ image_loader::~image_loader()
 
 void image_loader::add_loader(iimage_loader * loader)
 {
-    auto it = std::find_if(m_loaders.begin(), m_loaders.end(), [&loader](iimage_loader * l){return l==loader;});
+    auto it = std::find_if(m_loaders.begin(), m_loaders.end(), [&loader](iimage_loader * l)
+    {
+        return l==loader;
+    });
 
     if(it==m_loaders.end())
         m_loaders.push_back(loader);
@@ -43,24 +46,24 @@ image_ptr image_loader::load(const std::string & file)
     _logger->log(LOG_LOG, "Image extension: '%s'", ext.c_str());
 
     if(PHYSFS_exists(file.c_str()))
-    for(iimage_loader * l : m_loaders)
-    {
-        if(l->check_by_extension(ext))
+        for(iimage_loader * l : m_loaders)
         {
-            char * buf;
-            uint32_t len = helpers::read(file,buf);
-
-            if(len!=0)
+            if(l->check_by_extension(ext))
             {
-                _logger->log(LOG_LOG, "Image file size: %u", len);
+                char * buf;
+                uint32_t len = helpers::read(file,buf);
 
-                res.path = file;
-                res.resource = image_ptr(l->load(buf,len));
-                this->add_resource(res);
-                return res.resource;
+                if(len!=0)
+                {
+                    _logger->log(LOG_LOG, "Image file size: %u", len);
+
+                    res.path = file;
+                    res.resource = image_ptr(l->load(buf,len));
+                    this->add_resource(res);
+                    return res.resource;
+                }
             }
         }
-    }
 
     return nullptr;
 }

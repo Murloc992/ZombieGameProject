@@ -16,7 +16,7 @@ Entity::Entity(ChunkManager* chkmgr,std::string id,const glm::vec3 &pos,const gl
     _isDynamic=dynamic;
     _isOnGround=false;
     _alive=true;
-    _containingChunks.reserve(8);
+    _containingChunks.reserve(16);
     _velocity=glm::vec3(0.f);
 }
 
@@ -51,30 +51,20 @@ void Entity::CollideWithWorld(float dt)
     glm::ivec3 amn=(glm::ivec3)_colShape.GetMin();
     glm::ivec3 amx=(glm::ivec3)_colShape.GetMax();
 
-    int32_t sx,ex,sy,ey,sz,ez;
-
-    glm::ivec3 cen=(glm::ivec3)_colShape.GetCenter();
+    glm::ivec3 center=(glm::ivec3)_colShape.GetCenter();
     glm::ivec3 hs=(glm::ivec3)glm::ceil(_colShape.GetHalfSize());
 
-    sx=cen.x-hs.x;
-    sy=cen.y-hs.y;
-    sz=cen.z-hs.z;
-
-    ex=cen.x+hs.x;
-    ey=cen.y+hs.y;
-    ez=cen.z+hs.z;
+    glm::ivec3  startCoord=center-hs,
+                endCoord=center+hs;
 
     glm::ivec3 epos=(glm::ivec3)_colShape.GetCenter();
     //printf("Collision ranges: PLAYERPOS: %d %d %d START: %d %d %d END: %d %d %d\n",epos.x,epos.y,epos.z,sx,sy,sz,ex,ey,ez);
 
-    const Block &blockBelow=_chunkManager->GetBlock(glm::ivec3(cen.x,sy,cen.z));
-    const Block &blockAbove=_chunkManager->GetBlock(glm::ivec3(cen.x,ey,cen.z));
-    _isOnGround=blockBelow.active&&blockBelow.type!=EBT_WATER;
-    _hitCeiling=blockAbove.active&&blockAbove.type!=EBT_WATER;
+    /// CHUNK TRACKING (can use some kind of range for broadphasing later on)
+    glm::ivec3 startChunkCoords=WorldToChunkCoords(startCoord);
+    glm::ivec3 endChunkCoords=WorldToChunkCoords(endCoord);
 
-    glm::ivec3 startChunkCoords=WorldToChunkCoords(glm::ivec3(sx,sy,sz));
-    glm::ivec3 endChunkCoords=WorldToChunkCoords(glm::ivec3(ex,ey,ez));
-
+    // find chunks we are in
     for(uint32_t x=startChunkCoords.x; x<=endChunkCoords.x; x++)
     {
         for(uint32_t y=startChunkCoords.y; y<=endChunkCoords.y; y++)
@@ -89,10 +79,13 @@ void Entity::CollideWithWorld(float dt)
                 if(chunk!=nullptr)
                 {
                     auto chunkpointer=chunk.get();
-                    /// only add chunks not found
-                    if(std::find(_containingChunks.begin(),_containingChunks.end(),chunkpointer)==_containingChunks.end())
+
+                    /// skip already added ones
+                    if(std::find(_containingChunks.begin(),_containingChunks.end(),chunkpointer)!=_containingChunks.end()) continue;
+                    /// if collide/are inside chunk box, add and enter chunk
+                    CollisionObject b=CollisionObject((glm::vec3)(chunkpointer->positionWorld+glm::ivec3(CHUNK_SIZE/2)),glm::vec3(CHUNK_SIZEF/2.f));
+                    if(MPRCollide(this,&b))
                     {
-                        chunkpointer->AddEntity(this);
                         _containingChunks.push_back(chunkpointer);
                         OnEnterChunk(chunkpointer);
                     }
@@ -101,11 +94,31 @@ void Entity::CollideWithWorld(float dt)
         }
     }
 
-    for(int32_t x=sx; x<=ex; x++)
+    // handle addition/removal events
+    for(auto it=_containingChunks.begin(); it!=_containingChunks.end();)
     {
-        for(int32_t y=sy; y<=ey; y++)
+        /// if doesn't collide, erase and leave
+        CollisionObject b=CollisionObject((glm::vec3)((*it)->positionWorld+glm::ivec3(CHUNK_SIZE/2)),glm::vec3(CHUNK_SIZEF/2.f));
+        if(!MPRCollide(&b,this))
         {
-            for(int32_t z=sz; z<=ez; z++)
+            OnExitChunk(*it);
+            it=_containingChunks.erase(it);
+            continue;
+        }
+        it++;
+    }
+
+    /// BLOCK TRACKING
+    const Block &blockBelow=_chunkManager->GetBlock(glm::ivec3(center.x,startCoord.y,center.z));
+    const Block &blockAbove=_chunkManager->GetBlock(glm::ivec3(center.x,endCoord.y,center.z));
+    _isOnGround=blockBelow.active&&blockBelow.type!=EBT_WATER;
+    _hitCeiling=blockAbove.active&&blockAbove.type!=EBT_WATER;
+
+    for(int32_t x=startCoord.x; x<=endCoord.x; x++)
+    {
+        for(int32_t y=startCoord.y; y<=endCoord.y; y++)
+        {
+            for(int32_t z=startCoord.z; z<=endCoord.z; z++)
             {
                 const Block &blk=_chunkManager->GetBlock(glm::ivec3(x,y,z));
                 if(blk!=Chunk::EMPTY_BLOCK&&blk.active&&blk.type!=EBT_WATER)
@@ -148,14 +161,12 @@ void Entity::CollideWithWorld(float dt)
 
 void Entity::OnEnterChunk(Chunk* chunk)
 {
+    chunk->AddEntity(this);
 }
 
 void Entity::OnExitChunk(Chunk* chunk)
 {
-    auto chunkIter=std::find(_containingChunks.begin(),_containingChunks.end(),chunk);
-
-    if(chunkIter!=_containingChunks.end())
-        chunkIter=_containingChunks.erase(chunkIter);
+    chunk->RemoveEntity(this);
 }
 
 void Entity::Update(float dt)

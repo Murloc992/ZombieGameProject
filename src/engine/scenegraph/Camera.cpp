@@ -145,7 +145,7 @@ const glm::vec3 Camera::GetPosition() const
 
 void Camera::SetPosition(glm::vec3 pos)
 {
-  m_pos = pos;
+    m_pos = pos;
 }
 
 void Camera::Update(float dt)

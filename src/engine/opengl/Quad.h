@@ -21,7 +21,7 @@ public:
         this->m_size=size;
     }
 
-    virtual ~Quad(){};
+    virtual ~Quad() {};
 
     virtual bool Init()
     {

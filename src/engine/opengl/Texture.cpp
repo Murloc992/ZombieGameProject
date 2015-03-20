@@ -109,71 +109,71 @@ void Texture::Init(const uint8_t * data, uint32_t target, uint32_t image_format,
 void Texture::SetFilters(FILTER_MIN fmin, FILTER_MAG fmag)
 {
     if(current!=Id)
-    glBindTexture(Type,Id);
+        glBindTexture(Type,Id);
 
     glTexParameteri(Type, GL_TEXTURE_MAG_FILTER, fmag == FILTER_MAG_LINEAR ? GL_LINEAR : GL_NEAREST);
     glTexParameteri(Type, GL_TEXTURE_MIN_FILTER, fmin == FILTER_MIN_LINEAR_MIPMAP ? GL_LINEAR_MIPMAP_LINEAR : (fmin==FILTER_MIN_NEAREST_MIPMAP ? GL_NEAREST_MIPMAP_NEAREST : (fmin==FILTER_MIN_LINEAR ? GL_LINEAR : GL_NEAREST)));
 
     if(current!=Id)
-    glBindTexture(Type,current);
+        glBindTexture(Type,current);
 }
 
 void Texture::SetClampMode(Texture::CLAMP x, Texture::CLAMP y)
 {
     if(current!=Id)
-    glBindTexture(Type,Id);
+        glBindTexture(Type,Id);
 
     glTexParameteri(Type, GL_TEXTURE_WRAP_S, x == CLAMP_EDGE ? GL_CLAMP_TO_EDGE : (x == CLAMP_BORDER ? GL_CLAMP_TO_BORDER : GL_REPEAT));
     glTexParameteri(Type, GL_TEXTURE_WRAP_T, y == CLAMP_EDGE ? GL_CLAMP_TO_EDGE : (y == CLAMP_BORDER ? GL_CLAMP_TO_BORDER : GL_REPEAT));
 
     if(current!=Id)
-    glBindTexture(Type,current);
+        glBindTexture(Type,current);
 }
 
 void Texture::SetBorderColor(const glm::vec4 & color)
 {
     if(current!=Id)
-    glBindTexture(Type,Id);
+        glBindTexture(Type,Id);
 
     glTexParameterfv(GL_TEXTURE_2D,GL_TEXTURE_BORDER_COLOR,&color[0]);
 
     if(current!=Id)
-    glBindTexture(Type,current);
+        glBindTexture(Type,current);
 }
 
 void Texture::InitMipmap()
 {
     if(current!=Id)
-    glBindTexture(Type,Id);
+        glBindTexture(Type,Id);
 
     glGenerateMipmap(Type);
 
     if(current!=Id)
-    glBindTexture(Type,current);
+        glBindTexture(Type,current);
 }
 
 void Texture::InitMipmap(uint32_t base, uint32_t max)
 {
     if(current!=Id)
-    glBindTexture(Type,Id);
+        glBindTexture(Type,Id);
 
     glTexParameteri(Type,GL_TEXTURE_BASE_LEVEL,base);
     glTexParameteri(Type,GL_TEXTURE_MAX_LEVEL,max);
     glGenerateMipmap(Type);
 
     if(current!=Id)
-    glBindTexture(Type,current);
+        glBindTexture(Type,current);
 }
 
 void Texture::UpdateMipmaps()
 {
     if(current!=Id)
-    glBindTexture(Type,Id);
+        glBindTexture(Type,Id);
 
     glGenerateMipmap(Type);
 
     if(current!=Id)
-    glBindTexture(Type,current);
+        glBindTexture(Type,current);
 }
 
 void Texture::Set(uint8_t slot)

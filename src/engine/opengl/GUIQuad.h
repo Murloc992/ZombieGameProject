@@ -21,7 +21,7 @@ public:
         this->m_size=size;
     }
 
-    virtual ~GUIQuad(){};
+    virtual ~GUIQuad() {};
 
     virtual bool Init()
     {

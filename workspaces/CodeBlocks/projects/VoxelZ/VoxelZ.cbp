@@ -5,6 +5,7 @@
 		<Option title="VoxelZ" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="Source\;Include\;Include\Game\;Include\Physics\;Include\Voxel\;Source\Game\;Source\Physics\;Source\Voxel\;Resources\;Include\Game\Particles\;Include\Game\Particles\Affectors\;Include\Game\Entities\;Source\Game\Particles\;Source\Game\Particles\Affectors\;Source\Game\Entities\;Include\Applications\;Source\Applications\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="../../../../bin/Debug/VoxelZ" prefix_auto="1" extension_auto="1" />
@@ -157,59 +158,165 @@
 		<ResourceCompiler>
 			<Add directory="../../../../res" />
 		</ResourceCompiler>
-		<Unit filename="../../../../src/applications/voxelz/CollisionTestApp.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/CollisionTestApp.h" />
-		<Unit filename="../../../../src/applications/voxelz/TemplateApp.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/TemplateApp.h" />
-		<Unit filename="../../../../src/applications/voxelz/VoxMeshEditorApp.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/VoxMeshEditorApp.h" />
-		<Unit filename="../../../../src/applications/voxelz/VoxMeshGrid.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/Block.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/Chunk.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/Chunk.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/ChunkManager.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/ChunkManager.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/GreedyMeshBuilder.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/GreedyMeshBuilder.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/SimplexNoise.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/SimplexNoise.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/SuperChunk.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/Voxel.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/VoxelMesh.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/VoxelMesh.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/VoxelSprite.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/VoxelSprite.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/VoxelTypes.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/VoxelTypes.h" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/WorldGenerator.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/Voxel/WorldGenerator.h" />
-		<Unit filename="../../../../src/applications/voxelz/VoxelzApp.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/VoxelzApp.h" />
-		<Unit filename="../../../../src/applications/voxelz/VoxelzProfilingApp.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/VoxelzProfilingApp.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/AttractFocusAffector.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/game/AttractFocusAffector.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/Entity.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/game/Entity.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/GravityAffector.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/game/GravityAffector.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/IParticleAffector.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/ItemEntity.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/game/ItemEntity.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/Particle.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/ParticleEmitter.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/game/ParticleEmitter.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/ParticleSystem.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/game/ParticleSystem.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/Player.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/game/Player.h" />
-		<Unit filename="../../../../src/applications/voxelz/game/WindParticleAffector.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/game/WindParticleAffector.h" />
-		<Unit filename="../../../../src/applications/voxelz/main.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/physics/CollisionObject.cpp" />
-		<Unit filename="../../../../src/applications/voxelz/physics/CollisionObject.h" />
+		<Unit filename="../../../../src/applications/voxelz/CollisionTestApp.cpp">
+			<Option virtualFolder="Source/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/CollisionTestApp.h">
+			<Option virtualFolder="Include/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/TemplateApp.cpp">
+			<Option virtualFolder="Source/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/TemplateApp.h">
+			<Option virtualFolder="Include/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/VoxMeshEditorApp.cpp">
+			<Option virtualFolder="Source/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/VoxMeshEditorApp.h">
+			<Option virtualFolder="Include/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/VoxMeshGrid.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/VoxelzApp.cpp">
+			<Option virtualFolder="Source/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/VoxelzApp.h">
+			<Option virtualFolder="Include/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/VoxelzProfilingApp.cpp">
+			<Option virtualFolder="Source/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/VoxelzProfilingApp.h">
+			<Option virtualFolder="Include/Applications/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/AttractFocusAffector.cpp">
+			<Option virtualFolder="Source/Game/Particles/Affectors/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/AttractFocusAffector.h">
+			<Option virtualFolder="Include/Game/Particles/Affectors/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/Entity.cpp">
+			<Option virtualFolder="Source/Game/Entities/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/Entity.h">
+			<Option virtualFolder="Include/Game/Entities/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/GravityAffector.cpp">
+			<Option virtualFolder="Source/Game/Particles/Affectors/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/GravityAffector.h">
+			<Option virtualFolder="Include/Game/Particles/Affectors/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/IParticleAffector.h">
+			<Option virtualFolder="Include/Game/Particles/Affectors/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/ItemEntity.cpp">
+			<Option virtualFolder="Source/Game/Entities/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/ItemEntity.h">
+			<Option virtualFolder="Include/Game/Entities/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/Particle.h">
+			<Option virtualFolder="Include/Game/Particles/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/ParticleEmitter.cpp">
+			<Option virtualFolder="Source/Game/Particles/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/ParticleEmitter.h">
+			<Option virtualFolder="Include/Game/Particles/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/ParticleSystem.cpp">
+			<Option virtualFolder="Source/Game/Particles/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/ParticleSystem.h">
+			<Option virtualFolder="Include/Game/Particles/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/Player.cpp">
+			<Option virtualFolder="Source/Game/Entities/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/Player.h">
+			<Option virtualFolder="Include/Game/Entities/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/WindParticleAffector.cpp">
+			<Option virtualFolder="Source/Game/Particles/Affectors/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/game/WindParticleAffector.h">
+			<Option virtualFolder="Include/Game/Particles/Affectors/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/main.cpp">
+			<Option virtualFolder="Source/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/physics/CollisionObject.cpp">
+			<Option virtualFolder="Source/Physics/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/physics/CollisionObject.h">
+			<Option virtualFolder="Include/Physics/" />
+		</Unit>
 		<Unit filename="../../../../src/applications/voxelz/resources.rc">
 			<Option compilerVar="WINDRES" />
+			<Option virtualFolder="Resources/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/Block.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/Chunk.cpp">
+			<Option virtualFolder="Source/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/Chunk.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/ChunkManager.cpp">
+			<Option virtualFolder="Source/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/ChunkManager.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/GreedyMeshBuilder.cpp">
+			<Option virtualFolder="Source/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/GreedyMeshBuilder.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/SimplexNoise.cpp">
+			<Option virtualFolder="Source/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/SimplexNoise.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/SuperChunk.cpp">
+			<Option virtualFolder="Source/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/SuperChunk.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/Voxel.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/VoxelMesh.cpp">
+			<Option virtualFolder="Source/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/VoxelMesh.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/VoxelSprite.cpp">
+			<Option virtualFolder="Source/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/VoxelSprite.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/VoxelTypes.cpp">
+			<Option virtualFolder="Source/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/VoxelTypes.h">
+			<Option virtualFolder="Include/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/WorldGenerator.cpp">
+			<Option virtualFolder="Source/Voxel/" />
+		</Unit>
+		<Unit filename="../../../../src/applications/voxelz/voxel/WorldGenerator.h">
+			<Option virtualFolder="Include/Voxel/" />
 		</Unit>
 		<Extensions>
 			<code_completion />

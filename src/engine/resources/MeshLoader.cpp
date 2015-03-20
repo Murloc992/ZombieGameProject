@@ -18,7 +18,10 @@ mesh_loader::~mesh_loader()
 
 void mesh_loader::add_loader(imesh_loader * loader)
 {
-    auto it = std::find_if(m_loaders.begin(), m_loaders.end(), [&loader](imesh_loader * l){return l==loader;});
+    auto it = std::find_if(m_loaders.begin(), m_loaders.end(), [&loader](imesh_loader * l)
+    {
+        return l==loader;
+    });
 
     if(it==m_loaders.end())
         m_loaders.push_back(loader);
@@ -40,30 +43,30 @@ MeshPtr mesh_loader::load(const std::string & file)
     _logger->log(LOG_LOG, "Mesh extension: '%s'", ext.c_str());
 
     if(PHYSFS_exists(file.c_str()))
-    for(imesh_loader * l : m_loaders)
-    {
-        if(l->check_by_extension(ext))
+        for(imesh_loader * l : m_loaders)
         {
-            found_usable_loader = true;
-            char * buf;
-            uint32_t len = helpers::read(file,buf);
-
-            if(len!=0)
+            if(l->check_by_extension(ext))
             {
-                _logger->log(LOG_LOG, "Mesh file size: %u", len);
+                found_usable_loader = true;
+                char * buf;
+                uint32_t len = helpers::read(file,buf);
 
-                res.path = file;
-                res.resource = MeshPtr(l->load(buf,len));
-                this->add_resource(res);
-                res.resource->Init();
-                return res.resource;
-            }
-            else
-            {
-                _logger->log(LOG_ERROR, "File %s appears to be empty.",file.c_str());
+                if(len!=0)
+                {
+                    _logger->log(LOG_LOG, "Mesh file size: %u", len);
+
+                    res.path = file;
+                    res.resource = MeshPtr(l->load(buf,len));
+                    this->add_resource(res);
+                    res.resource->Init();
+                    return res.resource;
+                }
+                else
+                {
+                    _logger->log(LOG_ERROR, "File %s appears to be empty.",file.c_str());
+                }
             }
         }
-    }
 
     if(!found_usable_loader)
         _logger->log(LOG_ERROR, "No loader can load '%s' mesh files.",ext.c_str());

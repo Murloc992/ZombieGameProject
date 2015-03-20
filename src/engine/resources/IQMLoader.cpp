@@ -40,16 +40,16 @@ std::shared_ptr<Mesh> iqmloader::load (const char* data, const uint32_t size)
     glmesh = std::shared_ptr<Mesh>(new Mesh());
 
     auto positions = new BufferObject<glm::vec3>();
-	auto texcoords = new BufferObject<glm::vec2>();
-	auto normals = new BufferObject<glm::vec3>();
-	auto tangents = new BufferObject<glm::vec4>();
-	auto bindexes = new BufferObject<helpers::u8vec4>();
-	auto bweights = new BufferObject<helpers::u8vec4>();
-	auto colors  = new BufferObject<glm::vec3>();
-	auto indices = new IndexBufferObject<uint32_t>();
+    auto texcoords = new BufferObject<glm::vec2>();
+    auto normals = new BufferObject<glm::vec3>();
+    auto tangents = new BufferObject<glm::vec4>();
+    auto bindexes = new BufferObject<helpers::u8vec4>();
+    auto bweights = new BufferObject<helpers::u8vec4>();
+    auto colors  = new BufferObject<glm::vec3>();
+    auto indices = new IndexBufferObject<uint32_t>();
 
     iqmmesh         * submeshes;
-	iqmvertexarray  * vertexarrays; //IQM vertex array info
+    iqmvertexarray  * vertexarrays; //IQM vertex array info
 
 
     ///big single line of null terminated >strings<
@@ -239,7 +239,8 @@ void iqmloader::loadiqmanims(std::shared_ptr<Mesh> m, const char* data, iqmheade
         animation_info & ai = m->anim->info[i];
         iqmanim &a = anims[i];
         ai.name = &texts[a.name];
-        ai.start = a.first_frame; ai.num = a.num_frames;
+        ai.start = a.first_frame;
+        ai.num = a.num_frames;
         ai.loop = CheckBit(a.flags,IQM_LOOP);
 
         _logger->log(LOG_DEBUG,"Loaded anim: %s.", ai.name.c_str());

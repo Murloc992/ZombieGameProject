@@ -6,10 +6,11 @@ class tgaloader: public iimage_loader
 {
 protected:
 
-    #pragma pack(push)  /* push current alignment to stack */
-    #pragma pack(1)     /* set alignment to 1 byte boundary */
+#pragma pack(push)  /* push current alignment to stack */
+#pragma pack(1)     /* set alignment to 1 byte boundary */
 
-    typedef struct {
+    typedef struct
+    {
         int8_t  idlength;
         int8_t  colourmaptype;
         int8_t  datatypecode;
@@ -24,7 +25,7 @@ protected:
         int8_t  imagedescriptor;
     } HEADER;
 
-    #pragma pack(pop)   /* restore original alignment from stack */
+#pragma pack(pop)   /* restore original alignment from stack */
 
     virtual image * loadUncompressedTGA(void * buffer, const uint32_t size);
 

@@ -80,24 +80,24 @@ bool GUIButton::OnEvent(const GUIEvent & e)
     {
     case gui_event_type::element_hovered:
         cur_style=gui_skin_button_hover;
-            GUI_FIRE_EVENT(GUIEvent(element_hovered,this,this))
+        GUI_FIRE_EVENT(GUIEvent(element_hovered,this,this))
         break;
 
     case gui_event_type::element_exitted:
         cur_style=this->enabled?gui_skin_button_active:gui_skin_button_disabled;
-            GUI_FIRE_EVENT(GUIEvent(element_exitted,this,this))
+        GUI_FIRE_EVENT(GUIEvent(element_exitted,this,this))
         break;
 
     case gui_event_type::mouse_pressed:
         cur_style=gui_skin_button_click;
-            GUI_FIRE_EVENT(GUIEvent(button_pressed,this,this))
+        GUI_FIRE_EVENT(GUIEvent(button_pressed,this,this))
         break;
 
     case gui_event_type::mouse_released:
         if(m_toggle)
             m_toggled=!m_toggled;
         cur_style=hovered?gui_skin_button_hover:gui_skin_button_active;
-            GUI_FIRE_EVENT(GUIEvent(button_released,this,this))
+        GUI_FIRE_EVENT(GUIEvent(button_released,this,this))
         break;
 
     default:

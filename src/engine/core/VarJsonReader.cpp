@@ -31,20 +31,20 @@ void LoadGroup(VarGroup & g, Json::Value & jg, Logger * logger)
         Json::Value jvar = jgroup[var.Name()];
 
         if(!jvar.isNull())
-        switch(var.Type())
-        {
-        case VARI:
-            var.Value(jvar.asInt());
-            break;
-        case VARF:
-            var.Value(jvar.asFloat());
-            break;
-        case VARS:
-            var.Value(jvar.asString().c_str());
-            break;
-        default:
-            break;
-        }
+            switch(var.Type())
+            {
+            case VARI:
+                var.Value(jvar.asInt());
+                break;
+            case VARF:
+                var.Value(jvar.asFloat());
+                break;
+            case VARS:
+                var.Value(jvar.asString().c_str());
+                break;
+            default:
+                break;
+            }
     }
 
     for(VarGroup & group : g.Groups())

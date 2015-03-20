@@ -80,10 +80,10 @@ inline bool equals(const glm::mat3 & v1, const glm::mat3 & v2)
 
 inline float coslerp(float y1,float y2,float mu)
 {
-   float mu2;
+    float mu2;
 
-   mu2 = (1-glm::cos(mu*glm::pi<float>()))/2;
-   return(y1*(1-mu2)+y2*mu2);
+    mu2 = (1-glm::cos(mu*glm::pi<float>()))/2;
+    return(y1*(1-mu2)+y2*mu2);
 }
 
 inline glm::vec3 hsv2rgb(float h,float s,float v)

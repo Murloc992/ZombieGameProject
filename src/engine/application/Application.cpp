@@ -17,8 +17,8 @@ void Application::OutputPhysFSVersions()
 
     printf("Compiled against PhysicsFS version %d.%d.%d,\n"
            " and linked against %d.%d.%d.\n\n",
-            (int) compiled.major, (int) compiled.minor, (int) compiled.patch,
-            (int) linked.major, (int) linked.minor, (int) linked.patch);
+           (int) compiled.major, (int) compiled.minor, (int) compiled.patch,
+           (int) linked.major, (int) linked.minor, (int) linked.patch);
 } /* output_versions */
 
 Application::Application(int32_t argc, const char ** argv): VarGroup("settings")
@@ -54,7 +54,8 @@ void Application::SetWriteDirectory(const std::string & dir)
 {
     int32_t changeWriteDirStatus = PHYSFS_setWriteDir(dir.c_str());
 
-    if(changeWriteDirStatus == 0){
+    if(changeWriteDirStatus == 0)
+    {
         printf("Write dir change to '%s' failed.", dir.c_str());
         exit(-1);
     }
@@ -62,7 +63,8 @@ void Application::SetWriteDirectory(const std::string & dir)
 
 void RemoveFromEnd(std::string & stringToSearch, const std::string & toRemove)
 {
-    if(&stringToSearch[stringToSearch.length()-toRemove.length()]==toRemove){
+    if(&stringToSearch[stringToSearch.length()-toRemove.length()]==toRemove)
+    {
         stringToSearch.erase((stringToSearch.length()-toRemove.length()),toRemove.length());
     }
 }
@@ -72,8 +74,8 @@ std::string Application::GetAbsoluteDir(const std::string & absolutePart, const 
 {
     ///Maybe add regex path validations, throw exceptions?
     std::string dir = relativePart,
-        absoluteDir = absolutePart,
-        backStr = std::string("..") + DSP();
+                absoluteDir = absolutePart,
+                backStr = std::string("..") + DSP();
 
     RemoveFromEnd(dir,DSP());
     RemoveFromEnd(absoluteDir,DSP());

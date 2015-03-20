@@ -29,19 +29,19 @@ struct Shader
 
     Shader ( const std::string & name, const std::string & vsstr, const std::string & psstr)
         : name ( name ), vsstr ( vsstr ), psstr ( psstr ) , program ( 0 ), vsobj ( 0 ), psobj ( 0 ), geom(false)
-        {
-        };
+    {
+    };
 
     Shader ( const std::string & name, const std::string & vsstr, const std::string & psstr, const std::string & gsstr)
         : name ( name ), vsstr ( vsstr ), psstr ( psstr ) , gsstr (gsstr) , program ( 0 ), vsobj ( 0 ), psobj ( 0 ), gsobj ( 0 ), geom ( true )
-        {
+    {
 
-        };
+    };
 
     ~Shader()
     {
         if(program)
-        glDeleteProgram(program);
+            glDeleteProgram(program);
     }
 
     static Shader * LoadShader(const std::string & name, const Binding *uniforms = nullptr, const Binding *texs = nullptr)
@@ -220,7 +220,7 @@ struct Shader
             GLenum Type = GL_ZERO;
             char name[100];
             glGetActiveUniform( program, GLuint(i), sizeof(name)-1,
-                &name_len, &num, &Type, name );
+                                &name_len, &num, &Type, name );
             name[name_len] = 0;
             GLuint location = glGetUniformLocation( program, name );
 

@@ -76,7 +76,7 @@ void ChunkManager::SetBlock(const glm::ivec3 &pos,EBlockType type,bool active)
     }
 }
 
-//! pos: in CHUNK coordinates
+//! pos: in SUPERCHUNK coordinates
 SuperChunkPtr ChunkManager::AddSuperChunk(const glm::ivec3 &pos)
 {
     if(_superChunks.count(pos)!=0)
