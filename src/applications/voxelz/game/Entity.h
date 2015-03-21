@@ -67,6 +67,9 @@ protected:
     vector<Chunk*> _containingChunks;
 
     void CollideWithWorld(float dt);
+    void TrackChunks(const glm::ivec3 &startCoord,const glm::ivec3 &endCoord);
+    void TrackBlocks(const glm::ivec3 &startCoord,const glm::ivec3 &endCoord);
+
     CubeMesh* _debugAABBMesh;
 };
 

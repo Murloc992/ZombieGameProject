@@ -84,13 +84,16 @@ public:
     ChunkMap _chunks;
 private:
     ChunkManager* _chunkManager;
-
+    bool alive;
     uint32_t _occlusion;
     uint32_t _offsetTrack;
     glm::ivec3 _pos;
     float noises[SUPERCHUNK_SIZE_BLOCKS][SUPERCHUNK_SIZE_BLOCKS];
-    vector<Chunk> _genList;
+    vector<ChunkPtr> _genList;
+    vector<ChunkPtr> _buildList;
     bool built;
+
+    std::mutex _generationLock,_buildingLock;
 public:
     typedef std::shared_ptr<SuperChunk> _SuperChunkPtr;
 
@@ -127,6 +130,11 @@ public:
     void UpdateChunkData(ChunkPtr chunk);
 
     void RebuildIndices();
+
+
+    void GenerationLoop();
+
+    void BuildingLoop();
 protected:
 };
 typedef SuperChunk::_SuperChunkPtr SuperChunkPtr;

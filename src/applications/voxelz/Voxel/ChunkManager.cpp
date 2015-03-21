@@ -47,17 +47,22 @@ ChunkManager::ChunkManager()
 //
 //    }
 
-    for(int x=0; x<2; x++)
-        for(int z=0; z<2; z++)
-        {
-            AddSuperChunk(glm::ivec3(x,0,z));
-            _superChunks[glm::ivec3(x,0,z)]->Fill();
-        }
+    usedThreads=0;
+    generated=false;
+    loopi(GENERATION_THREAD_COUNT)
+    {
+        generationThreads[i]=std::thread(AsyncGeneration,this,std::ref(i));
+        _generationPools.push_back(vector<SuperChunkPtr>());
+    }
 }
 
 ChunkManager::~ChunkManager()
 {
     _superChunks.clear();
+    loopi(32)
+    {
+        generationThreads[i].join();
+    }
 }
 
 void ChunkManager::SetBlock(const glm::ivec3 &pos,EBlockType type,bool active)
@@ -143,11 +148,40 @@ const Block &ChunkManager::GetBlock(const glm::ivec3 &pos)
         return Chunk::EMPTY_BLOCK;
 }
 
+vector<SuperChunkPtr> ChunkManager::GetLeastBusyGenerationPool()
+{
+    vector<SuperChunkPtr> retPool;
+    uint32_t size=9999;
+    for(auto p:_generationPools)
+    {
+        uint32_t ps=p.size();
+        if(glm::min(size,ps)<size)
+            retPool=p;
+    }
+    return retPool;
+}
+
+void ChunkManager::AsyncGeneration(int id)
+{
+    while(true)
+    {
+        auto generationPool=_generationPools[id];
+        for(auto sc:generationPool)
+        {
+            //sc->UpdateGeneration();
+        }
+    }
+}
+
 void ChunkManager::Update(float dt)
 {
     BOOST_FOREACH(SuperChunkMap::value_type a,_superChunks)
     {
         a.second->Update(dt);
+        if(!a.second->built)
+        {
+            GetLeastBusyGenerationPool().push_back(a.second);
+        }
     }
 }
 

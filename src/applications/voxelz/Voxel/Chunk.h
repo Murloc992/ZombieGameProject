@@ -63,6 +63,7 @@ public:
 
     typedef std::shared_ptr<Chunk> _ChunkPtr;
     _ChunkPtr leftN,rightN,botN,topN,backN,frontN;
+    std::mutex _internalLock;
 private:
     ChunkManager *_chunkManager;
     vector<Block> _blocks;

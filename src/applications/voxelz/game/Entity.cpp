@@ -46,20 +46,8 @@ void Entity::CheckCollision(Entity* ent)
     }
 }
 
-void Entity::CollideWithWorld(float dt)
+void Entity::TrackChunks(const glm::ivec3 &startCoord,const glm::ivec3 &endCoord)
 {
-    glm::ivec3 amn=(glm::ivec3)_colShape.GetMin();
-    glm::ivec3 amx=(glm::ivec3)_colShape.GetMax();
-
-    glm::ivec3 center=(glm::ivec3)_colShape.GetCenter();
-    glm::ivec3 hs=(glm::ivec3)glm::ceil(_colShape.GetHalfSize());
-
-    glm::ivec3  startCoord=center-hs,
-                endCoord=center+hs;
-
-    glm::ivec3 epos=(glm::ivec3)_colShape.GetCenter();
-    //printf("Collision ranges: PLAYERPOS: %d %d %d START: %d %d %d END: %d %d %d\n",epos.x,epos.y,epos.z,sx,sy,sz,ex,ey,ez);
-
     /// CHUNK TRACKING (can use some kind of range for broadphasing later on)
     glm::ivec3 startChunkCoords=WorldToChunkCoords(startCoord);
     glm::ivec3 endChunkCoords=WorldToChunkCoords(endCoord);
@@ -107,7 +95,11 @@ void Entity::CollideWithWorld(float dt)
         }
         it++;
     }
+}
 
+void Entity::TrackBlocks(const glm::ivec3 &startCoord,const glm::ivec3 &endCoord)
+{
+    glm::ivec3 center=(glm::ivec3)_colShape.GetCenter();
     /// BLOCK TRACKING
     for(int32_t x=startCoord.x; x<=endCoord.x; x++)
     {
@@ -116,10 +108,9 @@ void Entity::CollideWithWorld(float dt)
             for(int32_t z=startCoord.z; z<=endCoord.z; z++)
             {
                 const Block &blk=_chunkManager->GetBlock(glm::ivec3(x,y,z));
-                if(blk!=Chunk::EMPTY_BLOCK&&blk.active&&blk.type!=EBT_WATER)
+                if(blk!=Chunk::EMPTY_BLOCK)
                 {
                     CollisionObject b=CollisionObject(glm::vec3(x,y,z)+glm::vec3(0.5f),glm::vec3(0.5f));
-
                     bool collision=MPRCollide(this,&b);
 
                     if(collision)
@@ -130,43 +121,44 @@ void Entity::CollideWithWorld(float dt)
                             glm::vec3 direction=CCDtoGLM(cinf.dir);
                             this->Translate(-direction*cinf.depth);
 
-                            if(y==startCoord.y&&x==center.x&&z==center.z)
-                                _isOnGround=true;
-                            if(y==endCoord.y&&x==center.x&&z==center.z)
-                                _hitCeiling=true;
-
+                            switch(blk.type)
+                            {
+                            case EBT_AIR:
+                                break;
+                            case EBT_WATER:
+                                OnCollisionWithWorld(blk);
+                                continue;
+                            default:
+                                break;
+                            }
                             OnCollisionWithWorld(blk);
                         }
                     }
                 }
-                else if(blk.active&&blk.type==EBT_WATER)
-                {
-                    CollisionObject b=CollisionObject(glm::vec3(x,y,z)+glm::vec3(0.5f),glm::vec3(0.5f));
-
-                    if(MPRCollide(this,&b))
-                    {
-                        OnCollisionWithWorld(blk);
-                    }
-                }
-                else if(blk.type==EBT_AIR)
-                {
-                    if(y==startCoord.y&&x==center.x&&z==center.z)
-                        _isOnGround=false;
-                    if(y==endCoord.y&&x==center.x&&z==center.z)
-                        _hitCeiling=false;
-
-                    OnCollisionWithWorld(blk);
-                }
-                else
-                    continue;
             }
         }
     }
 
-//    const Block &blockBelow=_chunkManager->GetBlock(glm::ivec3(center.x,startCoord.y,center.z));
-//    const Block &blockAbove=_chunkManager->GetBlock(glm::ivec3(center.x,endCoord.y,center.z));
-//    _isOnGround=blockBelow!=Chunk::EMPTY_BLOCK&&blockBelow.active&&blockBelow.type!=EBT_WATER;
-//    _hitCeiling=blockAbove!=Chunk::EMPTY_BLOCK&&blockAbove.active&&blockAbove.type!=EBT_WATER;
+    const Block &blockBelow=_chunkManager->GetBlock(glm::ivec3(center.x,startCoord.y,center.z));
+    const Block &blockAbove=_chunkManager->GetBlock(glm::ivec3(center.x,endCoord.y,center.z));
+    _isOnGround=blockBelow!=Chunk::EMPTY_BLOCK&&blockBelow.active&&blockBelow.type!=EBT_WATER;
+    _hitCeiling=blockAbove!=Chunk::EMPTY_BLOCK&&blockAbove.active&&blockAbove.type!=EBT_WATER;
+}
+
+void Entity::CollideWithWorld(float dt)
+{
+    glm::ivec3 amn=(glm::ivec3)_colShape.GetMin();
+    glm::ivec3 amx=(glm::ivec3)_colShape.GetMax();
+
+    glm::ivec3 center=(glm::ivec3)_colShape.GetCenter();
+    glm::ivec3 hs=(glm::ivec3)glm::ceil(_colShape.GetHalfSize());
+
+    glm::ivec3  startCoord=center-hs,
+                endCoord=center+hs;
+
+    TrackChunks(startCoord,endCoord);
+
+    TrackBlocks(startCoord,endCoord);
 }
 
 void Entity::OnEnterChunk(Chunk* chunk)

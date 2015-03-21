@@ -25,7 +25,7 @@ inline std::string GLMVec3ToStr(const T & in)
     return std::string(buf);
 }
 
-#define PrintGLMVec3(varname,vec) printf("%s: %s\n",(varname),GLMVec3ToStr((vec)).c_str());
+#define PrintGLMVec3(varname,vec) printf("%s: %s\n",(varname),GLMVec3ToStr((vec)).c_str())
 
 inline uint32_t VecRGBToIntRGB(const u8vec3& col)
 {

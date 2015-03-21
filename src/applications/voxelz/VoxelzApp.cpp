@@ -395,6 +395,7 @@ bool VoxelzApp::Update()
 
         _appContext->_window->SwapBuffers();
         HandleMovement((float)_appContext->_timer->get_delta_time()/1000.f);
+
         return true;
     }
     return false;
@@ -449,6 +450,11 @@ void VoxelzApp::OnKeyEvent(int32_t key, int32_t scan_code, int32_t action, int32
     if(key==GLFW_KEY_F5&&action==GLFW_RELEASE)
     {
         thirdperson=!thirdperson;
+    }
+
+    if(key==GLFW_KEY_F3&&action==GLFW_RELEASE)
+    {
+        chkmgr->Generate();
     }
 
     if(action==GLFW_RELEASE)

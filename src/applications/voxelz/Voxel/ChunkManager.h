@@ -1,5 +1,8 @@
 #ifndef CHUNKMANAGER_H
 #define CHUNKMANAGER_H
+
+#define GENERATION_THREAD_COUNT 2
+
 #define WORLD_HEIGHT 128
 #define WORLD_HEIGHTF 128.f
 
@@ -12,6 +15,11 @@ enum EBlockType;
 
 class ChunkManager
 {
+public:
+    std::thread generationThreads[GENERATION_THREAD_COUNT];
+    uint32_t usedThreads;
+    bool generated;
+
 public:
     ChunkManager();
     virtual ~ChunkManager();
@@ -44,11 +52,29 @@ public:
         }
     }
 
+    void Generate()
+    {
+        if(!generated)
+        {
+            for(int x=0; x<2; x++)
+        for(int z=0; z<2; z++)
+        {
+            AddSuperChunk(glm::ivec3(x,0,z));
+            _superChunks[glm::ivec3(x,0,z)]->Fill();
+        }
+        generated=true;
+        }
+    }
+
     void Update(float dt);
     void Render(Camera *cam,ShaderPtr vsh,bool wireframe=false);
 protected:
 private:
     SuperChunkMap _superChunks;
+    vector<vector<SuperChunkPtr>> _generationPools;
+    vector<SuperChunkPtr> GetLeastBusyGenerationPool();
+    void AsyncGeneration(int id);
+
     static SuperChunk NULL_SUPERCHUNK;
 };
 

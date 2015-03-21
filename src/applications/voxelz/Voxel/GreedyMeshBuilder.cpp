@@ -434,9 +434,7 @@ void GreedyMeshBuilder::GreedyBuild(ChunkPtr chk)
     uint32_t possize=chk->meshData.positions.size();
     uint32_t colsize=chk->meshData.colors.size();
     uint32_t indsize=chk->meshData.indices.size();
-
     //printf("Faces: %u\nChunk data:\noffset %d\nvertices %d\ncolors %d\nindices %d\n",faceCount*2,chk->offset,possize,colsize,indsize);
-
 }
 
 template <>

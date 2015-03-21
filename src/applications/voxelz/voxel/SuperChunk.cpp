@@ -13,6 +13,7 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr,const glm::ivec3 &pos)
     this->_pos=pos;
     this->_offsetTrack=0;
     built=false;
+    alive=true;
     _offsetTrack=0;
 
     BufferObject<u8vec3> *vert=new BufferObject<u8vec3>();
@@ -38,11 +39,13 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr,const glm::ivec3 &pos)
     Init();
     freeVector(((BufferObject<u8vec3>*)buffers[Mesh::POSITION])->data);
     freeVector(((BufferObject<u8vec4>*)buffers[Mesh::COLOR])->data);
+    _chunkManager->generationThreads[chkmgr->usedThreads]=std::thread(&GenerationLoop,this);
+    chkmgr->usedThreads++;
 }
 
 SuperChunk::~SuperChunk()
 {
-
+    this->alive=false;
 }
 
 void SuperChunk::SaveToFile()
@@ -94,25 +97,77 @@ void SuperChunk::SetChunkNeighbours(glm::ivec3 chunkIndex,ChunkPtr chunk)
     chunk->frontN=GetChunk(chunkIndex+glm::ivec3(0,0,1));
 }
 
+void SuperChunk::GenerationLoop()
+{
+    while(alive)
+    {
+        bool hasWork=false;
+
+        _generationLock.lock();
+        if(_genList.size()>0)
+        {
+            hasWork=true;
+            for(auto chk:_genList)
+            {
+                Generate(chk);
+            }
+            _generationLock.unlock();
+        }
+        else
+        {
+            _generationLock.unlock();
+        }
+
+        _buildingLock.lock();
+        if(_buildList.size()>0)
+        {
+            hasWork=true;
+            for(auto chk:_buildList)
+            {
+                GreedyMeshBuilder::GreedyBuild(chk);
+            }
+            _buildingLock.unlock();
+        }
+        else
+        {
+            _buildingLock.unlock();
+        }
+
+        if(!hasWork) std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+}
+
+void SuperChunk::BuildingLoop()
+{
+
+}
+
 void SuperChunk::Update(float dt)
 {
     int32_t chunksPerFrame=0;
+
+    std::lock_guard<std::mutex> gl(_generationLock);
+    std::lock_guard<std::mutex> bl(_buildingLock);
+
+    _genList.clear();
+    _buildList.clear();
+
     if(!built)
     {
         for(auto a:_chunks)
         {
+            std::lock_guard<std::mutex> cl(a.second->_internalLock);
             if(a.second->empty&&!a.second->generated)
             {
-                Generate(a.second);
-                chunksPerFrame++;
+                _genList.push_back(a.second);
             }
         }
         built=true;
     }
     else
     {
+        for(uint32_t y=SUPERCHUNK_SIZE-1; y>=0; y++)
         loop(x,SUPERCHUNK_SIZE)
-        loop(y,SUPERCHUNK_SIZE)
         loop(z,SUPERCHUNK_SIZE)
         {
             if(chunksPerFrame!=CHUNK_UPDATES_PER_FRAME)
@@ -121,12 +176,13 @@ void SuperChunk::Update(float dt)
                 {
                     glm::ivec3 chunkIndex=glm::ivec3(x,y,z);
                     ChunkPtr currentChunk=_chunks[chunkIndex];
+                    std::lock_guard<std::mutex> cl(currentChunk->_internalLock);
                     if(!currentChunk->empty)
                     {
                         if(currentChunk->generated&&!currentChunk->built)
                         {
                             SetChunkNeighbours(chunkIndex,currentChunk);
-                            GreedyMeshBuilder::GreedyBuild(currentChunk);
+                            _buildList.push_back(currentChunk);
                             chunksPerFrame++;
                         }
                         else if(currentChunk->generated&&currentChunk->built&&!currentChunk->uploaded)
@@ -161,11 +217,12 @@ void SuperChunk::Update(float dt)
 
 void SuperChunk::Generate(ChunkPtr chunk)
 {
+    std::lock_guard<std::mutex> cl(chunk->_internalLock);
     loop(x,CHUNK_SIZE)
     {
         loop(z,CHUNK_SIZE)
         {
-            float noiseval=80;//noises[x+chunk->position.x][z+chunk->position.z];
+            float noiseval=noises[x+chunk->position.x][z+chunk->position.z];
 
             loop(y,CHUNK_SIZE)
             {
@@ -203,6 +260,7 @@ void SuperChunk::Generate(ChunkPtr chunk)
         }
     }
     chunk->generated=true;
+    //std::cout<<"Chunk "<<chunk->position.x<<","<<chunk->position.y<<","<<chunk->position.z<<" generated"<<std::endl;
 }
 
 void SuperChunk::Set(uint32_t x,uint32_t y,uint32_t z,EBlockType type,bool active)
@@ -292,8 +350,8 @@ void SuperChunk::RebuildIndices()
     IndexBufferObject<uint32_t> *inds = (IndexBufferObject<uint32_t>*)buffers[Mesh::INDICES];
     inds->data.clear();
 
-    uint32_t finalsize=0;
-
+//    uint32_t finalsize=0;
+//
 //        for(auto a:_chunks)
 //        {
 //            finalsize+=a.second->meshData.indices.size();
