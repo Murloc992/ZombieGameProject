@@ -47,6 +47,7 @@ public:
 
     void FlagGenerated()
     {
+        generated=true;
         for(auto sc:_superChunks)
         {
             sc.second->FlagGenerated();

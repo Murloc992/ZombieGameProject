@@ -188,11 +188,12 @@ void ChunkManager::Generate()
 {
     if(!generated)
     {
-        for(int x=0; x<8; x++)
-        for(int z=0; z<8; z++)
+        for(int x=0; x<4; x++)
+        for(int z=0; z<4; z++)
+        for(int y=0; y<1; y++)
         {
-            auto sc=AddSuperChunk(glm::ivec3(x,0,z));
-            _superChunks[glm::ivec3(x,0,z)]->Fill();
+            auto sc=AddSuperChunk(glm::ivec3(x,y,z));
+            _superChunks[glm::ivec3(x,y,z)]->Fill();
         }
         generated=true;
     }

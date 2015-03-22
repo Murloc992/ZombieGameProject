@@ -79,6 +79,7 @@ void SuperChunk::Fill()
 
 void SuperChunk::FlagGenerated()
 {
+    generated=true;
     for(auto ch:_chunks)
     {
         ch.second->generated=true;
@@ -256,6 +257,7 @@ void SuperChunk::Set(uint32_t x,uint32_t y,uint32_t z,EBlockType type,bool activ
         _offsetTrack=_offsetTrack+CHUNK_MESH_SIZE;
         _chunks[chunkCoords]->generated=true;
         _chunks[chunkCoords]->SetBlock(voxelCoords.x,voxelCoords.y,voxelCoords.z,type,active);
+        built=false;
     }
 }
 
