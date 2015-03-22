@@ -13,7 +13,8 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr,const glm::ivec3 &pos)
     this->_pos=pos;
     this->_offsetTrack=0;
     built=false;
-    alive=true;
+    generated=false;
+
     _offsetTrack=0;
 
     BufferObject<u8vec3> *vert=new BufferObject<u8vec3>();
@@ -24,28 +25,27 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr,const glm::ivec3 &pos)
     col->data.resize(VRAM_BLOCK_SIZE);
     inds->data.resize(0);
 
-    printf("RESERVED RAM BLOCK: %f Mb\n",(float)(vert->data.size()*sizeof(vert->data[0])+col->data.size()*sizeof(col->data[0]))/1000000.f);
+    //printf("RESERVED RAM BLOCK: %f Mb\n",(float)(vert->data.size()*sizeof(vert->data[0])+col->data.size()*sizeof(col->data[0]))/1000000.f);
 
     buffers[Mesh::POSITION]=vert;
     buffers[Mesh::COLOR]=col;
     buffers[Mesh::INDICES]=inds;
 
+    Init();
+    freeVector(((BufferObject<u8vec3>*)buffers[Mesh::POSITION])->data);
+    freeVector(((BufferObject<u8vec4>*)buffers[Mesh::COLOR])->data);
+
+
+    /// temporary generation data
     loop(x,SUPERCHUNK_SIZE_BLOCKS)
     loop(y,SUPERCHUNK_SIZE_BLOCKS)
     {
         noises[x][y]=scaled_raw_noise_2d(0,WORLD_HEIGHT,(x+_pos.x)/WORLD_HEIGHTF/2,(y+_pos.z)/WORLD_HEIGHTF/2);
     }
-
-    Init();
-    freeVector(((BufferObject<u8vec3>*)buffers[Mesh::POSITION])->data);
-    freeVector(((BufferObject<u8vec4>*)buffers[Mesh::COLOR])->data);
-    _chunkManager->generationThreads[chkmgr->usedThreads]=std::thread(&GenerationLoop,this);
-    chkmgr->usedThreads++;
 }
 
 SuperChunk::~SuperChunk()
 {
-    this->alive=false;
 }
 
 void SuperChunk::SaveToFile()
@@ -99,99 +99,18 @@ void SuperChunk::SetChunkNeighbours(glm::ivec3 chunkIndex,ChunkPtr chunk)
 
 void SuperChunk::GenerationLoop()
 {
-    while(alive)
+    if(!generated)
     {
-        bool hasWork=false;
-
-        _generationLock.lock();
-        if(_genList.size()>0)
-        {
-            hasWork=true;
-            for(auto chk:_genList)
-            {
-                Generate(chk);
-            }
-            _generationLock.unlock();
-        }
-        else
-        {
-            _generationLock.unlock();
-        }
-
-        _buildingLock.lock();
-        if(_buildList.size()>0)
-        {
-            hasWork=true;
-            for(auto chk:_buildList)
-            {
-                GreedyMeshBuilder::GreedyBuild(chk);
-            }
-            _buildingLock.unlock();
-        }
-        else
-        {
-            _buildingLock.unlock();
-        }
-
-        if(!hasWork) std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    }
-}
-
-void SuperChunk::BuildingLoop()
-{
-
-}
-
-void SuperChunk::Update(float dt)
-{
-    int32_t chunksPerFrame=0;
-
-    std::lock_guard<std::mutex> gl(_generationLock);
-    std::lock_guard<std::mutex> bl(_buildingLock);
-
-    _genList.clear();
-    _buildList.clear();
-
-    if(!built)
-    {
+        //printf("Generation loop.\n");
+        int32_t chunksPerFrame=0;
         for(auto a:_chunks)
-        {
-            std::lock_guard<std::mutex> cl(a.second->_internalLock);
-            if(a.second->empty&&!a.second->generated)
-            {
-                _genList.push_back(a.second);
-            }
-        }
-        built=true;
-    }
-    else
-    {
-        for(uint32_t y=SUPERCHUNK_SIZE-1; y>=0; y++)
-        loop(x,SUPERCHUNK_SIZE)
-        loop(z,SUPERCHUNK_SIZE)
         {
             if(chunksPerFrame!=CHUNK_UPDATES_PER_FRAME)
             {
-                if(_chunks.count(glm::ivec3(x,y,z))!=0)
+                if(a.second->empty&&!a.second->generated)
                 {
-                    glm::ivec3 chunkIndex=glm::ivec3(x,y,z);
-                    ChunkPtr currentChunk=_chunks[chunkIndex];
-                    std::lock_guard<std::mutex> cl(currentChunk->_internalLock);
-                    if(!currentChunk->empty)
-                    {
-                        if(currentChunk->generated&&!currentChunk->built)
-                        {
-                            SetChunkNeighbours(chunkIndex,currentChunk);
-                            _buildList.push_back(currentChunk);
-                            chunksPerFrame++;
-                        }
-                        else if(currentChunk->generated&&currentChunk->built&&!currentChunk->uploaded)
-                        {
-                            UpdateChunkData(currentChunk);
-                            chunksPerFrame++;
-                        }
-                    }
-
+                    Generate(a.second);
+                    chunksPerFrame++;
                 }
             }
             else
@@ -199,17 +118,75 @@ void SuperChunk::Update(float dt)
                 break;
             }
         }
+        if(chunksPerFrame==0)
+            generated=true;
     }
-    loop(x,SUPERCHUNK_SIZE)
-    loop(y,SUPERCHUNK_SIZE)
-    loop(z,SUPERCHUNK_SIZE)
+}
+
+void SuperChunk::BuildingLoop()
+{
+    if(!built)
     {
-        if(_chunks.count(glm::ivec3(x,y,z))!=0)
+        //printf("Building loop.\n");
+        int32_t chunksPerFrame=0;
+        for(auto a:_chunks)
         {
-            auto chk=_chunks[glm::ivec3(x,y,z)];
-            if(chk->built&&chk->generated)
+            if(chunksPerFrame!=CHUNK_UPDATES_PER_FRAME)
             {
-                chk->Update(dt);
+                if(a.second->generated&&!a.second->built)
+                {
+                    SetChunkNeighbours(WorldToChunkCoords(a.second->position),a.second);
+                    GreedyMeshBuilder::GreedyBuild(a.second);
+                    chunksPerFrame++;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+        if(chunksPerFrame==0)
+            built=true;
+    }
+}
+
+void SuperChunk::Update(float dt)
+{
+    if(generated)
+    {
+        int32_t chunksPerFrame=0;
+
+        for(auto chunk:_chunks)
+        {
+            if(chunksPerFrame!=CHUNK_UPDATES_PER_FRAME)
+            {
+                auto currentChunk=chunk.second;
+                if(!currentChunk->empty)
+                {
+                    if(currentChunk->generated&&currentChunk->built&&!currentChunk->uploaded)
+                    {
+                        UpdateChunkData(currentChunk);
+                        chunksPerFrame++;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        loop(x,SUPERCHUNK_SIZE)
+        loop(y,SUPERCHUNK_SIZE)
+        loop(z,SUPERCHUNK_SIZE)
+        {
+            if(_chunks.count(glm::ivec3(x,y,z))!=0)
+            {
+                auto chk=_chunks[glm::ivec3(x,y,z)];
+                if(chk->generated)
+                {
+                    chk->Update(dt);
+                }
             }
         }
     }
@@ -217,7 +194,6 @@ void SuperChunk::Update(float dt)
 
 void SuperChunk::Generate(ChunkPtr chunk)
 {
-    std::lock_guard<std::mutex> cl(chunk->_internalLock);
     loop(x,CHUNK_SIZE)
     {
         loop(z,CHUNK_SIZE)
@@ -267,12 +243,12 @@ void SuperChunk::Set(uint32_t x,uint32_t y,uint32_t z,EBlockType type,bool activ
 {
     glm::ivec3 pos(x,y,z);
     glm::ivec3 chunkCoords=WorldToChunkCoords(pos),voxelCoords=ChunkSpaceCoords(pos);
-
     if(_chunks.count(chunkCoords)!=0)
     {
         _chunks[chunkCoords]->SetBlock(voxelCoords.x,voxelCoords.y,voxelCoords.z,type,active);
         _chunks[chunkCoords]->built=false;
         _chunks[chunkCoords]->uploaded=false;
+        built=false;
     }
     else
     {
@@ -298,7 +274,7 @@ uint32_t SuperChunk::GetBlockCount()
     uint32_t ret=0;
     for(auto a:_chunks)
     {
-        if(!a.second->empty)
+        if(!a.second->empty&&a.second->generated)
             ret+=a.second->GetBlockCount();
     }
     return ret;

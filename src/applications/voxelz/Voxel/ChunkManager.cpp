@@ -49,20 +49,23 @@ ChunkManager::ChunkManager()
 
     usedThreads=0;
     generated=false;
+    runAsync=true;
     loopi(GENERATION_THREAD_COUNT)
     {
-        generationThreads[i]=std::thread(AsyncGeneration,this,std::ref(i));
         _generationPools.push_back(vector<SuperChunkPtr>());
+        _generationPools[i].reserve(32);
+        generationThreads[i]=std::thread(AsyncGeneration,this,i);
     }
 }
 
 ChunkManager::~ChunkManager()
 {
-    _superChunks.clear();
-    loopi(32)
+    runAsync=false;
+    loopi(GENERATION_THREAD_COUNT)
     {
         generationThreads[i].join();
     }
+    _superChunks.clear();
 }
 
 void ChunkManager::SetBlock(const glm::ivec3 &pos,EBlockType type,bool active)
@@ -150,37 +153,67 @@ const Block &ChunkManager::GetBlock(const glm::ivec3 &pos)
 
 vector<SuperChunkPtr> ChunkManager::GetLeastBusyGenerationPool()
 {
-    vector<SuperChunkPtr> retPool;
-    uint32_t size=9999;
-    for(auto p:_generationPools)
-    {
-        uint32_t ps=p.size();
-        if(glm::min(size,ps)<size)
-            retPool=p;
-    }
-    return retPool;
+    usedThreads=(usedThreads+1)%GENERATION_THREAD_COUNT;
+    return _generationPools[usedThreads];
+//return *boost::min_element(_generationPools);
 }
 
 void ChunkManager::AsyncGeneration(int id)
 {
-    while(true)
+    while(runAsync)
     {
+        LockGuard(generationLock);
         auto generationPool=_generationPools[id];
-        for(auto sc:generationPool)
+        if(generationPool.size()>0)
         {
-            //sc->UpdateGeneration();
+            for(auto sc:generationPool)
+            {
+                /// For now, generate first, build later
+                /// later: worldGenerator -> generate (superchunk)
+                if(!sc->generated)
+                    sc->GenerationLoop();
+
+                if(sc->generated&&!sc->built)
+                    sc->BuildingLoop();
+            }
         }
+        else
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+    }
+}
+
+void ChunkManager::Generate()
+{
+    if(!generated)
+    {
+        for(int x=0; x<8; x++)
+        for(int z=0; z<8; z++)
+        {
+            auto sc=AddSuperChunk(glm::ivec3(x,0,z));
+            _superChunks[glm::ivec3(x,0,z)]->Fill();
+        }
+        generated=true;
     }
 }
 
 void ChunkManager::Update(float dt)
 {
+    for(auto gp:_generationPools)
+    {
+        if(gp.size()>0)
+            gp.clear();
+    }
+
     BOOST_FOREACH(SuperChunkMap::value_type a,_superChunks)
     {
+        /// Uploads will be handled here as they must be synchronous
         a.second->Update(dt);
-        if(!a.second->built)
+        if(!a.second->generated)
         {
-            GetLeastBusyGenerationPool().push_back(a.second);
+            auto pool=GetLeastBusyGenerationPool();
+            _generationPools[usedThreads].push_back(a.second);
         }
     }
 }

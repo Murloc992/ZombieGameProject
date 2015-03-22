@@ -17,8 +17,9 @@ class ChunkManager
 {
 public:
     std::thread generationThreads[GENERATION_THREAD_COUNT];
+    std::mutex generationLock;
     uint32_t usedThreads;
-    bool generated;
+    bool generated,runAsync;
 
 public:
     ChunkManager();
@@ -37,10 +38,10 @@ public:
     uint32_t GetTotalBlocks()
     {
         uint32_t ret=0;
-        for(auto a:_superChunks)
-        {
-            ret+=a.second->GetBlockCount();
-        }
+//        for(auto a:_superChunks)
+//        {
+//            ret+=a.second->GetBlockCount();
+//        }
         return ret;
     }
 
@@ -52,19 +53,7 @@ public:
         }
     }
 
-    void Generate()
-    {
-        if(!generated)
-        {
-            for(int x=0; x<2; x++)
-        for(int z=0; z<2; z++)
-        {
-            AddSuperChunk(glm::ivec3(x,0,z));
-            _superChunks[glm::ivec3(x,0,z)]->Fill();
-        }
-        generated=true;
-        }
-    }
+    void Generate();
 
     void Update(float dt);
     void Render(Camera *cam,ShaderPtr vsh,bool wireframe=false);

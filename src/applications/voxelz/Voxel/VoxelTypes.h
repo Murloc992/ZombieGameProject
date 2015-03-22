@@ -6,6 +6,11 @@
 #include <utility/vector.h>
 #include "SimplexNoise.h"
 
+#define LockGuard(var) std::lock_guard<std::mutex> lock((var))
+#define LockGuardRecursive(var) std::lock_guard<std::mutex_recursive> lock((var))
+#define MutexLock(var) (var).lock()
+#define MutexUnlock(var) (var).unlock()
+
 typedef glm::detail::tvec4<uint8_t> u8vec4;
 typedef glm::detail::tvec4<uint16_t> u16vec4;
 
