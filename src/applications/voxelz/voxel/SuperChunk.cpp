@@ -34,14 +34,6 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr,const glm::ivec3 &pos)
     Init();
     freeVector(((BufferObject<u8vec3>*)buffers[Mesh::POSITION])->data);
     freeVector(((BufferObject<u8vec4>*)buffers[Mesh::COLOR])->data);
-
-
-    /// temporary generation data
-    loop(x,SUPERCHUNK_SIZE_BLOCKS)
-    loop(y,SUPERCHUNK_SIZE_BLOCKS)
-    {
-        noises[x][y]=scaled_raw_noise_2d(0,WORLD_HEIGHT,(x+_pos.x)/WORLD_HEIGHTF/2,(y+_pos.z)/WORLD_HEIGHTF/2);
-    }
 }
 
 SuperChunk::~SuperChunk()
@@ -100,28 +92,28 @@ void SuperChunk::SetChunkNeighbours(glm::ivec3 chunkIndex,ChunkPtr chunk)
 
 void SuperChunk::GenerationLoop()
 {
-    if(!generated)
-    {
-        //printf("Generation loop.\n");
-        int32_t chunksPerFrame=0;
-        for(auto a:_chunks)
-        {
-            if(chunksPerFrame!=CHUNK_UPDATES_PER_FRAME)
-            {
-                if(a.second->empty&&!a.second->generated)
-                {
-                    Generate(a.second);
-                    chunksPerFrame++;
-                }
-            }
-            else
-            {
-                break;
-            }
-        }
-        if(chunksPerFrame==0)
-            generated=true;
-    }
+//    if(!generated)
+//    {
+//        //printf("Generation loop.\n");
+//        int32_t chunksPerFrame=0;
+//        for(auto a:_chunks)
+//        {
+//            if(chunksPerFrame!=CHUNK_UPDATES_PER_FRAME)
+//            {
+//                if(a.second->empty&&!a.second->generated)
+//                {
+//                    Generate(a.second);
+//                    chunksPerFrame++;
+//                }
+//            }
+//            else
+//            {
+//                break;
+//            }
+//        }
+//        if(chunksPerFrame==0)
+//            generated=true;
+//    }
 }
 
 void SuperChunk::BuildingLoop()
@@ -191,53 +183,6 @@ void SuperChunk::Update(float dt)
             }
         }
     }
-}
-
-void SuperChunk::Generate(ChunkPtr chunk)
-{
-    loop(x,CHUNK_SIZE)
-    {
-        loop(z,CHUNK_SIZE)
-        {
-            float noiseval=noises[x+chunk->position.x][z+chunk->position.z];
-
-            loop(y,CHUNK_SIZE)
-            {
-                float absoluteY=y+chunk->position.y+this->_pos.y;
-
-                if(absoluteY==0)
-                {
-                    chunk->SetBlock(x,y,z,EBT_VOIDROCK,true);
-                    continue;
-                }
-                else if(absoluteY==(int)noiseval)
-                {
-                    chunk->SetBlock(x,y,z,EBT_GRASS,true);
-                    continue;
-                }
-                else if(absoluteY>noiseval)
-                {
-                    if(absoluteY<64)
-                    {
-                        chunk->SetBlock(x,y,z,EBT_WATER,true);
-                    }
-                    else
-                    {
-                        chunk->SetBlock(x,y,z,EBT_AIR,false);
-                        continue;
-                    }
-                    //trees
-
-                }
-                else
-                {
-                    chunk->SetBlock(x,y,z,EBT_STONE,true);
-                }
-            }
-        }
-    }
-    chunk->generated=true;
-    //std::cout<<"Chunk "<<chunk->position.x<<","<<chunk->position.y<<","<<chunk->position.z<<" generated"<<std::endl;
 }
 
 void SuperChunk::Set(uint32_t x,uint32_t y,uint32_t z,EBlockType type,bool active)

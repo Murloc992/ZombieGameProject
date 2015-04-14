@@ -6,6 +6,7 @@
 #include "opengl/MVar.h"
 #include "utility/SimplexNoise.h"
 #include "utility/Timer.h"
+#include "WorldGenerator.h"
 #include <boost/foreach.hpp>
 
 ChunkManager::ChunkManager()
@@ -56,6 +57,7 @@ ChunkManager::ChunkManager()
         _generationPools[i].reserve(32);
         generationThreads[i]=std::thread(AsyncGeneration,this,i);
     }
+    _worldGenerator=new WorldGenerator(rand()%INT_MAX);
 }
 
 ChunkManager::~ChunkManager()
@@ -171,7 +173,7 @@ void ChunkManager::AsyncGeneration(int id)
                 /// For now, generate first, build later
                 /// later: worldGenerator -> generate (superchunk)
                 if(!sc->generated)
-                    sc->GenerationLoop();
+                    _worldGenerator->GenerateSuperChunk(sc);
 
                 if(sc->generated&&!sc->built)
                     sc->BuildingLoop();
@@ -193,7 +195,6 @@ void ChunkManager::Generate()
         for(int y=0; y<1; y++)
         {
             auto sc=AddSuperChunk(glm::ivec3(x,y,z));
-            _superChunks[glm::ivec3(x,y,z)]->Fill();
         }
         generated=true;
     }

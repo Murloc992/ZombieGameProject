@@ -29,7 +29,7 @@
 					<Add library="jsoncpp" />
 					<Add library="glxw" />
 					<Add library="stb_image_lib" />
-					<Add library="libboost_container-mgw49-mt-1_57" />
+					<Add library="libboost_container-mgw49-mt-1_56" />
 					<Add directory="../../../../libs/windows" />
 				</Linker>
 			</Target>
@@ -58,7 +58,7 @@
 					<Add library="jsoncpp" />
 					<Add library="glxw" />
 					<Add library="stb_image_lib" />
-					<Add library="libboost_container-mgw49-mt-1_57" />
+					<Add library="libboost_container-mgw49-mt-1_56" />
 					<Add directory="../../../../libs/windows" />
 				</Linker>
 			</Target>

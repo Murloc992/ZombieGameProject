@@ -45,6 +45,10 @@ static void AddSingleChunk()
 static void AddManyChunks()
 {
     BEGIN_BENCHMARK
+    loopi(10)
+    {
+        chkmgr->AddSuperChunk(glm::ivec3(i));
+    }
     END_BENCHMARK("AddManyChunks")
 }
 
@@ -63,29 +67,15 @@ static void AllChunksRebuild()
 static void RemoveManyChunks()
 {
     BEGIN_BENCHMARK
+    loopi(10)
+    {
+        chkmgr->RemoveSuperChunk(glm::ivec3(i));
+    }
     END_BENCHMARK("AddManyChunks")
 }
 
 void VoxelzProfilingApp::Benchmark()
 {
-    BEGIN_BENCHMARK
-    ChunkManager* cmgr=new ChunkManager();
-    loopi(10)
-    {
-        cmgr->AddSuperChunk(glm::ivec3(i));
-    }
-
-    BENCHMARK_INTERRUPT
-
-    loopi(10)
-    {
-        cmgr->RemoveSuperChunk(glm::ivec3(i));
-    }
-
-    BENCHMARK_INTERRUPT
-    //cmgr->GetSuperChunk(glm::ivec3(0))->SaveToFile();
-    delete cmgr;
-    END_BENCHMARK("fullhdimagegen")
 }
 
 bool VoxelzProfilingApp::Init(const std::string & title, uint32_t width, uint32_t height)
@@ -98,9 +88,7 @@ bool VoxelzProfilingApp::Init(const std::string & title, uint32_t width, uint32_
     glCullFace(GL_BACK);
     glClearColor(0.5,0.5,0.7,0);
 
-    BEGIN_BENCHMARK
-    //chkmgr=new ChunkManager();
-    END_BENCHMARK("chkmgr gen")
+    chkmgr=new ChunkManager();
 
     printf("\n\n--------------------------------\nPROFILE ME TIMBERS!\n--------------------------------\n");
     Benchmark();

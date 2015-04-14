@@ -109,8 +109,6 @@ public:
 
     void Update(float dt);
 
-    void Generate(ChunkPtr chunk);
-
     void Set(uint32_t x,uint32_t y,uint32_t z,EBlockType type,bool active);
 
     const Block &Get(uint32_t x,uint32_t y,uint32_t z);
@@ -131,6 +129,11 @@ public:
     void GenerationLoop();
 
     void BuildingLoop();
+
+    const glm::ivec3 &GetPosition() const
+    {
+        return _pos;
+    }
 protected:
 };
 typedef SuperChunk::_SuperChunkPtr SuperChunkPtr;

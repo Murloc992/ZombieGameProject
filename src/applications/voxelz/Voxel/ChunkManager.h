@@ -1,7 +1,7 @@
 #ifndef CHUNKMANAGER_H
 #define CHUNKMANAGER_H
 
-#define GENERATION_THREAD_COUNT 2
+#define GENERATION_THREAD_COUNT 4
 
 #define WORLD_HEIGHT 128
 #define WORLD_HEIGHTF 128.f
@@ -12,6 +12,8 @@
 
 class Camera;
 enum EBlockType;
+
+class WorldGenerator;
 
 class ChunkManager
 {
@@ -63,6 +65,8 @@ private:
     SuperChunkMap _superChunks;
     vector<vector<SuperChunkPtr>> _generationPools;
     vector<SuperChunkPtr> GetLeastBusyGenerationPool();
+    WorldGenerator *_worldGenerator;
+
     void AsyncGeneration(int id);
 
     static SuperChunk NULL_SUPERCHUNK;

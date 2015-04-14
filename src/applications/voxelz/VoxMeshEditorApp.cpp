@@ -336,7 +336,7 @@ bool VoxMeshEditorApp::Init(const std::string & title, uint32_t width, uint32_t 
     _iqmMesh=meshLoader->load("res/mill.iqm");
     _iqmMesh->RecalculateAABB<glm::vec3>();
 
-    uint32_t gridSize=2048;
+    uint32_t gridSize=512;
     if(_iqmMesh->aabb.GetCenter()!=glm::vec3(0))
     {
         _iqmMesh->HardMove<glm::vec3>(glm::vec3(0)-_iqmMesh->aabb.GetCenter());

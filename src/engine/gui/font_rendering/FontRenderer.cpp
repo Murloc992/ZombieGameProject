@@ -26,6 +26,7 @@ FontRenderer::FontRenderer(AppContext* ctx)
     _defaultFamily=CreateFontFamily("default",12,
                                     "res/gui/fonts/OpenSans-Regular.ttf","res/gui/fonts/OpenSans-Bold.ttf",
                                     "res/gui/fonts/OpenSans-Italic.ttf","res/gui/fonts/OpenSans-BoldItalic.ttf");
+
     if(_defaultFamily==nullptr)
         exit(-1);
     UseFontFamily(_defaultFamily->familyName);
