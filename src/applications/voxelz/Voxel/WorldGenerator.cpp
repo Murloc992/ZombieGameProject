@@ -23,7 +23,7 @@ void WorldGenerator::GenerateSuperChunk(SuperChunkPtr superChunk)
     loop(i,SUPERCHUNK_SIZE_BLOCKS)
     loop(j,SUPERCHUNK_SIZE_BLOCKS)
     {
-        noises[i*SUPERCHUNK_SIZE_BLOCKS+j]=scaled_octave_noise_2d(8,1.f/8.f,0.5f,0.f,128.f,(i+cpos.x)/SUPERCHUNK_SIZE_BLOCKSF,(j+cpos.z)/SUPERCHUNK_SIZE_BLOCKSF);
+        noises[i*SUPERCHUNK_SIZE_BLOCKS+j]=scaled_octave_noise_2d(8,1.f/8.f,0.5f,0.f,128.f,(_worldSeed+i+cpos.x)/SUPERCHUNK_SIZE_BLOCKSF,(_worldSeed+j+cpos.z)/SUPERCHUNK_SIZE_BLOCKSF);
     }
     /// generate the chinky
     loop(x,SUPERCHUNK_SIZE_BLOCKS)
@@ -57,8 +57,6 @@ void WorldGenerator::GenerateSuperChunk(SuperChunkPtr superChunk)
                         superChunk->Set(x,y,z,EBT_AIR,false);
                         continue;
                     }
-                    //trees
-
                 }
                 else
                 {

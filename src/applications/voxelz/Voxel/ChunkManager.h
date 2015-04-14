@@ -15,6 +15,8 @@ enum EBlockType;
 
 class WorldGenerator;
 
+class Player;
+
 class ChunkManager
 {
 public:
@@ -58,7 +60,7 @@ public:
 
     void Generate();
 
-    void Update(float dt);
+    void Update(float dt,Player*player);
     void Render(Camera *cam,ShaderPtr vsh,bool wireframe=false);
 protected:
 private:

@@ -76,6 +76,14 @@ static void RemoveManyChunks()
 
 void VoxelzProfilingApp::Benchmark()
 {
+    AddManyChunks();
+    BENCHMARK_INTERRUPT
+    RemoveManyChunks();
+    BENCHMARK_INTERRUPT
+    AddManyChunks();
+    BENCHMARK_INTERRUPT
+    RemoveManyChunks();
+    BENCHMARK_INTERRUPT
 }
 
 bool VoxelzProfilingApp::Init(const std::string & title, uint32_t width, uint32_t height)

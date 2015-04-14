@@ -290,7 +290,7 @@ bool VoxelzApp::Update()
         float dt=(float)_appContext->_timer->get_delta_time()/1000.f;
         cam->Update(dt);
         plr->Update(dt,cam);
-        chkmgr->Update(dt);
+        chkmgr->Update(dt,plr);
         plr->HandleInput(_appContext->_input);
         wchar_t buf[256];
         swprintf(buf,255,L"['s]Player Pos: %.2f %.2f %.2f[s']",plr->GetFeetPos().x,plr->GetFeetPos().y,plr->GetFeetPos().z);
@@ -345,7 +345,7 @@ bool VoxelzApp::Update()
         MVar<glm::mat4>(0, "mvp", MVP).Set();
         spr->Render(wireframe);
 
-        testitem->Update(dt);
+        //testitem->Update(dt);
         vsh->Set();
         testitem->Render(wireframe,cam);
 

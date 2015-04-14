@@ -7,47 +7,11 @@
 #include "utility/SimplexNoise.h"
 #include "utility/Timer.h"
 #include "WorldGenerator.h"
+#include "Game/Player.h"
 #include <boost/foreach.hpp>
 
 ChunkManager::ChunkManager()
 {
-
-//    char * buf;
-//    uint32_t len;
-//    len=helpers::read("res/test1.bvox",buf);
-//    uint32_t * data = (uint32_t*)((void*)&buf[0]);
-//
-//    uint32_t voxel_count = data[0];
-//    data++;
-//
-//    std::cout << "File len: " << len << std::endl;
-//    std::cout << "Voxel count: " << voxel_count << std::endl;
-//
-//    for(int i = 0; i < voxel_count; i++)
-//    {
-//        uint32_t x = data[0], y = data[1], z = data[2];
-//        SetBlock(glm::ivec3(x,y,z),EBT_CLOUD,true);
-//        data+=3;
-//    }
-//
-//    delete[] buf;
-//
-//    for(auto a:_superChunks)
-//    {
-//        for(auto b:a.second->_chunks)
-//        {
-//            glm::ivec3 pos=b.first;
-//            b.second->leftN=a.second->GetChunk(glm::ivec3(pos.x-1,pos.y,pos.z));
-//            b.second->rightN=a.second->GetChunk(glm::ivec3(pos.x+1,pos.y,pos.z));
-//            b.second->botN=a.second->GetChunk(glm::ivec3(pos.x,pos.y-1,pos.z));
-//            b.second->topN=a.second->GetChunk(glm::ivec3(pos.x,pos.y+1,pos.z));
-//            b.second->frontN=a.second->GetChunk(glm::ivec3(pos.x,pos.y,pos.z+1));
-//            b.second->backN=a.second->GetChunk(glm::ivec3(pos.x,pos.y,pos.z-1));
-//            b.second->generated=true;
-//        }
-//
-//    }
-
     usedThreads=0;
     generated=false;
     runAsync=true;
@@ -57,7 +21,17 @@ ChunkManager::ChunkManager()
         _generationPools[i].reserve(32);
         generationThreads[i]=std::thread(AsyncGeneration,this,i);
     }
-    _worldGenerator=new WorldGenerator(rand()%INT_MAX);
+
+    std::string stri="hakunamytatas";
+    int seed=0;
+    for(char c:stri)
+    {
+        seed+=(int)(c);
+    }
+
+    _worldGenerator=new WorldGenerator(seed);
+
+    //Generate();
 }
 
 ChunkManager::~ChunkManager()
@@ -105,6 +79,7 @@ void ChunkManager::RemoveSuperChunk(const glm::ivec3 &pos)
     if(_superChunks.count(pos)!=0)
     {
         _superChunks.erase(pos);
+        //_superChunks[pos]=nullptr;
     }
 }
 
@@ -190,8 +165,8 @@ void ChunkManager::Generate()
 {
     if(!generated)
     {
-        for(int x=0; x<4; x++)
-        for(int z=0; z<4; z++)
+        for(int x=0; x<2; x++)
+        for(int z=0; z<2; z++)
         for(int y=0; y<1; y++)
         {
             auto sc=AddSuperChunk(glm::ivec3(x,y,z));
@@ -200,7 +175,7 @@ void ChunkManager::Generate()
     }
 }
 
-void ChunkManager::Update(float dt)
+void ChunkManager::Update(float dt,Player *player)
 {
     for(auto gp:_generationPools)
     {
@@ -208,8 +183,31 @@ void ChunkManager::Update(float dt)
             gp.clear();
     }
 
+    glm::ivec3 plPos=(glm::ivec3)player->GetFeetPos();
+
+    for(int x=plPos.x-SUPERCHUNK_SIZE_BLOCKS*2; x<=plPos.x+SUPERCHUNK_SIZE_BLOCKS*2; x+=64)
+    {
+        for(int z=plPos.z-SUPERCHUNK_SIZE_BLOCKS*2; z<=plPos.z+SUPERCHUNK_SIZE_BLOCKS*2; z+=64)
+        {
+            glm::ivec3 scp=WorldToSuperChunkCoords(glm::ivec3(x,0,z));
+            if(GetSuperChunk(scp)!=nullptr)
+                continue;
+            else
+                AddSuperChunk(scp);
+        }
+    }
+
     BOOST_FOREACH(SuperChunkMap::value_type a,_superChunks)
     {
+        if(a.second==nullptr)
+            continue;
+
+//        if(glm::abs(glm::distance((glm::vec3)(a.second->GetPosition())+glm::vec3(64.f),player->GetFeetPos()))>128.f)
+//        {
+//            RemoveSuperChunk(a.first);
+//            continue;
+//        }
+
         /// Uploads will be handled here as they must be synchronous
         a.second->Update(dt);
         if(!a.second->generated)

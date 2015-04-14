@@ -393,7 +393,7 @@ bool VoxMeshEditorApp::Update()
         _appContext->_timer->tick();
         float dt=(float)_appContext->_timer->get_delta_time()/1000.f;
         _cam->Update(dt);
-        cmg->Update(dt);
+        //cmg->Update(dt);
         _particleSystem->Update(dt);
         HandleMovement(dt);
 
