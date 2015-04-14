@@ -12,7 +12,7 @@ Player::Player(ChunkManager* chunkManager, const glm::vec3 &feetPos):Entity(chun
     _tempMesh=new CubeMesh(AABB(glm::vec3(0),_colShape.GetHalfSize()));
     _isJumping=false;
     _isFalling=false;
-    _isFlying=false;
+    _isFlying=true;
     _isSwimming=false;
     _fallingSpeed=GRAVITY_CONSTANT;
     _jumpHeight=1.f;

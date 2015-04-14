@@ -76,13 +76,23 @@ static void RemoveManyChunks()
 
 void VoxelzProfilingApp::Benchmark()
 {
-    AddManyChunks();
-    BENCHMARK_INTERRUPT
-    RemoveManyChunks();
-    BENCHMARK_INTERRUPT
-    AddManyChunks();
-    BENCHMARK_INTERRUPT
-    RemoveManyChunks();
+//    AddManyChunks();
+//    BENCHMARK_INTERRUPT
+//    RemoveManyChunks();
+//    BENCHMARK_INTERRUPT
+//    AddManyChunks();
+//    BENCHMARK_INTERRUPT
+//    RemoveManyChunks();
+//    BENCHMARK_INTERRUPT
+
+    SuperChunkPtr a=chkmgr->AddSuperChunk(glm::ivec3(0));
+    vector<vector<SuperChunkPtr>> someshit;
+    someshit.push_back(vector<SuperChunkPtr>());
+    printf("Use_count before pushing: %d\n",a.use_count());
+    someshit[0].push_back(a);
+    printf("Use_count after pushing: %d\n",a.use_count());
+    someshit[0].clear();
+    printf("Use_count after clearing: %d\n",a.use_count());
     BENCHMARK_INTERRUPT
 }
 

@@ -66,6 +66,7 @@ protected:
 private:
     SuperChunkMap _superChunks;
     vector<vector<SuperChunkPtr>> _generationPools;
+    vector<glm::ivec3> _removableChunks;
     vector<SuperChunkPtr> GetLeastBusyGenerationPool();
     WorldGenerator *_worldGenerator;
 

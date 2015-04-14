@@ -82,7 +82,7 @@ class SuperChunk:public Mesh
 {
 public:
     ChunkMap _chunks;
-    bool built,generated;
+    bool built,generated,generating;
 private:
     ChunkManager* _chunkManager;
     bool alive;

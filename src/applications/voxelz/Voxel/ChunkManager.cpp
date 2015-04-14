@@ -18,7 +18,6 @@ ChunkManager::ChunkManager()
     loopi(GENERATION_THREAD_COUNT)
     {
         _generationPools.push_back(vector<SuperChunkPtr>());
-        _generationPools[i].reserve(32);
         generationThreads[i]=std::thread(AsyncGeneration,this,i);
     }
 
@@ -29,9 +28,11 @@ ChunkManager::ChunkManager()
         seed+=(int)(c);
     }
 
+    printf("Seed is: %d\n",seed);
+
     _worldGenerator=new WorldGenerator(seed);
 
-    //Generate();
+    Generate();
 }
 
 ChunkManager::~ChunkManager()
@@ -78,8 +79,11 @@ void ChunkManager::RemoveSuperChunk(const glm::ivec3 &pos)
 {
     if(_superChunks.count(pos)!=0)
     {
+        printf("Attempting to delete: %d %s\n",_superChunks[pos].use_count(),_superChunks[pos].unique()?"true":"false");
+
+
+        _superChunks[pos]=nullptr;
         _superChunks.erase(pos);
-        //_superChunks[pos]=nullptr;
     }
 }
 
@@ -145,8 +149,6 @@ void ChunkManager::AsyncGeneration(int id)
         {
             for(auto sc:generationPool)
             {
-                /// For now, generate first, build later
-                /// later: worldGenerator -> generate (superchunk)
                 if(!sc->generated)
                     _worldGenerator->GenerateSuperChunk(sc);
 
@@ -165,57 +167,70 @@ void ChunkManager::Generate()
 {
     if(!generated)
     {
-        for(int x=0; x<2; x++)
-        for(int z=0; z<2; z++)
-        for(int y=0; y<1; y++)
-        {
-            auto sc=AddSuperChunk(glm::ivec3(x,y,z));
-        }
+        for(int x=0; x<1; x++)
+            for(int z=0; z<1; z++)
+                for(int y=0; y<1; y++)
+                {
+                    auto sc=AddSuperChunk(glm::ivec3(x,y,z));
+                }
         generated=true;
     }
 }
 
 void ChunkManager::Update(float dt,Player *player)
 {
-    for(auto gp:_generationPools)
+    for(auto pool:_generationPools)
     {
-        if(gp.size()>0)
-            gp.clear();
+        pool.clear();
     }
+
+    for(auto chp:_removableChunks)
+    {
+        RemoveSuperChunk(chp);
+    }
+
+    _removableChunks.clear();
 
     glm::ivec3 plPos=(glm::ivec3)player->GetFeetPos();
 
-    for(int x=plPos.x-SUPERCHUNK_SIZE_BLOCKS*2; x<=plPos.x+SUPERCHUNK_SIZE_BLOCKS*2; x+=64)
-    {
-        for(int z=plPos.z-SUPERCHUNK_SIZE_BLOCKS*2; z<=plPos.z+SUPERCHUNK_SIZE_BLOCKS*2; z+=64)
-        {
-            glm::ivec3 scp=WorldToSuperChunkCoords(glm::ivec3(x,0,z));
-            if(GetSuperChunk(scp)!=nullptr)
-                continue;
-            else
-                AddSuperChunk(scp);
-        }
-    }
-
     BOOST_FOREACH(SuperChunkMap::value_type a,_superChunks)
     {
-        if(a.second==nullptr)
-            continue;
+        if(a.second->generated&&a.second->built)
+        {
+            glm::vec3 chunkCenter=(glm::vec3)(a.second->GetPosition())+glm::vec3(SUPERCHUNK_SIZE_BLOCKSF/2.f);
+            glm::vec3 playerPos=player->GetFeetPos();
+            float dist=glm::distance(chunkCenter,playerPos);
 
-//        if(glm::abs(glm::distance((glm::vec3)(a.second->GetPosition())+glm::vec3(64.f),player->GetFeetPos()))>128.f)
-//        {
-//            RemoveSuperChunk(a.first);
-//            continue;
-//        }
+            //printf("DEBUG: %s %s %f\n",GLMVec3ToStr(chunkCenter).c_str(),GLMVec3ToStr(playerPos).c_str(),dist);
+
+            if(dist>SUPERCHUNK_SIZE_BLOCKSF*2.f)
+            {
+                _removableChunks.push_back(a.first);
+                continue;
+            }
+        }
 
         /// Uploads will be handled here as they must be synchronous
         a.second->Update(dt);
-        if(!a.second->generated)
+        if(!a.second->generated&&!a.second->generating)
         {
+            a.second->generating=true;
             auto pool=GetLeastBusyGenerationPool();
             _generationPools[usedThreads].push_back(a.second);
         }
     }
+
+//    for(int x=plPos.x-SUPERCHUNK_SIZE_BLOCKS*3; x<=plPos.x+SUPERCHUNK_SIZE_BLOCKS*3; x+=64)
+//    {
+//        for(int z=plPos.z-SUPERCHUNK_SIZE_BLOCKS*3; z<=plPos.z+SUPERCHUNK_SIZE_BLOCKS*3; z+=64)
+//        {
+//            glm::ivec3 scp=WorldToSuperChunkCoords(glm::ivec3(x,0,z));
+//            if(GetSuperChunk(scp)!=nullptr)
+//                continue;
+//            else
+//                AddSuperChunk(scp);
+//        }
+//    }
 }
 
 void ChunkManager::Render(Camera *cam,ShaderPtr vsh,bool wireframe)
