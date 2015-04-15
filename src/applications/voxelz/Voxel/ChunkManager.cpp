@@ -12,12 +12,11 @@
 
 ChunkManager::ChunkManager()
 {
-    usedThreads=0;
+    usedThread=0;
     generated=false;
     runAsync=true;
     loopi(GENERATION_THREAD_COUNT)
     {
-        _generationPools.push_back(vector<SuperChunkPtr>());
         generationThreads[i]=std::thread(AsyncGeneration,this,i);
     }
 
@@ -80,9 +79,6 @@ void ChunkManager::RemoveSuperChunk(const glm::ivec3 &pos)
     if(_superChunks.count(pos)!=0)
     {
         printf("Attempting to delete: %d %s\n",_superChunks[pos].use_count(),_superChunks[pos].unique()?"true":"false");
-
-
-        _superChunks[pos]=nullptr;
         _superChunks.erase(pos);
     }
 }
@@ -132,10 +128,9 @@ const Block &ChunkManager::GetBlock(const glm::ivec3 &pos)
         return Chunk::EMPTY_BLOCK;
 }
 
-vector<SuperChunkPtr> ChunkManager::GetLeastBusyGenerationPool()
+void ChunkManager::GetLeastBusyGenerationPool()
 {
-    usedThreads=(usedThreads+1)%GENERATION_THREAD_COUNT;
-    return _generationPools[usedThreads];
+    usedThread=(usedThread+1)%GENERATION_THREAD_COUNT;
 //return *boost::min_element(_generationPools);
 }
 
@@ -143,23 +138,32 @@ void ChunkManager::AsyncGeneration(int id)
 {
     while(runAsync)
     {
-        LockGuard(generationLock);
-        auto generationPool=_generationPools[id];
-        if(generationPool.size()>0)
+        MutexLock(generationLocks[id]);
+        auto genPool=_generationPools[id];
+        if(genPool.size()>0)
         {
-            for(auto sc:generationPool)
+            for(auto it=genPool.begin(); it!=genPool.end();)
             {
+                auto sc=*it;
                 if(!sc->generated)
                     _worldGenerator->GenerateSuperChunk(sc);
 
                 if(sc->generated&&!sc->built)
                     sc->BuildingLoop();
+
+                if(sc->generated&&sc->built)
+                    it=genPool.erase(it);
+                else
+                    it++;
             }
+            if(genPool.size()>0)
+            printf("GenPool %d size %d\n",id,genPool.size());
         }
         else
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
+        MutexUnlock(generationLocks[id]);
     }
 }
 
@@ -167,8 +171,8 @@ void ChunkManager::Generate()
 {
     if(!generated)
     {
-        for(int x=0; x<1; x++)
-            for(int z=0; z<1; z++)
+        for(int x=0; x<2; x++)
+            for(int z=0; z<2; z++)
                 for(int y=0; y<1; y++)
                 {
                     auto sc=AddSuperChunk(glm::ivec3(x,y,z));
@@ -179,17 +183,18 @@ void ChunkManager::Generate()
 
 void ChunkManager::Update(float dt,Player *player)
 {
-    for(auto pool:_generationPools)
+    if(_removableChunks.size()>0)
     {
-        pool.clear();
-    }
+        printf("Removable superchunks: %d\n",_removableChunks.size());
 
-    for(auto chp:_removableChunks)
-    {
-        RemoveSuperChunk(chp);
-    }
+        for(auto chp:_removableChunks)
+        {
+            RemoveSuperChunk(chp);
+        }
+        _removableChunks.clear();
 
-    _removableChunks.clear();
+        printf("Leftover superchunks: %d\n",_superChunks.size());
+    }
 
     glm::ivec3 plPos=(glm::ivec3)player->GetFeetPos();
 
@@ -212,12 +217,15 @@ void ChunkManager::Update(float dt,Player *player)
 
         /// Uploads will be handled here as they must be synchronous
         a.second->Update(dt);
-        if(!a.second->generated&&!a.second->generating)
+
+        GetLeastBusyGenerationPool();
+        MutexLock(generationLocks[usedThread]);
+        if(!a.second->generating&&!a.second->generated)
         {
             a.second->generating=true;
-            auto pool=GetLeastBusyGenerationPool();
-            _generationPools[usedThreads].push_back(a.second);
+            _generationPools[usedThread].push_back(a.second);
         }
+        MutexUnlock(generationLocks[usedThread]);
     }
 
 //    for(int x=plPos.x-SUPERCHUNK_SIZE_BLOCKS*3; x<=plPos.x+SUPERCHUNK_SIZE_BLOCKS*3; x+=64)

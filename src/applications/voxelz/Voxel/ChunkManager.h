@@ -21,8 +21,8 @@ class ChunkManager
 {
 public:
     std::thread generationThreads[GENERATION_THREAD_COUNT];
-    std::mutex generationLock;
-    uint32_t usedThreads;
+    std::mutex generationLocks[GENERATION_THREAD_COUNT];
+    uint32_t usedThread;
     bool generated,runAsync;
 
 public:
@@ -65,9 +65,9 @@ public:
 protected:
 private:
     SuperChunkMap _superChunks;
-    vector<vector<SuperChunkPtr>> _generationPools;
+    vector<SuperChunkPtr> _generationPools[GENERATION_THREAD_COUNT];
     vector<glm::ivec3> _removableChunks;
-    vector<SuperChunkPtr> GetLeastBusyGenerationPool();
+    void GetLeastBusyGenerationPool();
     WorldGenerator *_worldGenerator;
 
     void AsyncGeneration(int id);

@@ -122,7 +122,8 @@ void SuperChunk::BuildingLoop()
 {
     if(!built)
     {
-        //printf("Building loop.\n");
+        //
+        printf("Building loop.\n");
         int32_t chunksPerFrame=0;
         for(auto a:_chunks)
         {

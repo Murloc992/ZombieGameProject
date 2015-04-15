@@ -91,8 +91,10 @@ void VoxelzProfilingApp::Benchmark()
     printf("Use_count before pushing: %d\n",a.use_count());
     someshit[0].push_back(a);
     printf("Use_count after pushing: %d\n",a.use_count());
+    chkmgr->RemoveSuperChunk(glm::ivec3(0));
     someshit[0].clear();
     printf("Use_count after clearing: %d\n",a.use_count());
+    a=nullptr;
     BENCHMARK_INTERRUPT
 }
 
