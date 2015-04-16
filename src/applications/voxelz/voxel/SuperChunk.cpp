@@ -39,6 +39,16 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr,const glm::ivec3 &pos)
 
 SuperChunk::~SuperChunk()
 {
+    for(auto c:_chunks)
+    {
+        c.second->leftN=nullptr;
+        c.second->rightN=nullptr;
+        c.second->topN=nullptr;
+        c.second->botN=nullptr;
+        c.second->frontN=nullptr;
+        c.second->backN=nullptr;
+    }
+    _chunks.clear();
     //printf("Imma gettin' rekt, son.\n");
 }
 

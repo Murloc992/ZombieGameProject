@@ -79,6 +79,7 @@ void ChunkManager::RemoveSuperChunk(const glm::ivec3 &pos)
     if(_superChunks.count(pos)!=0)
     {
         printf("Attempting to delete: %d %s\n",_superChunks[pos].use_count(),_superChunks[pos].unique()?"true":"false");
+        _superChunks[pos]=nullptr;
         _superChunks.erase(pos);
     }
 }
@@ -171,18 +172,19 @@ void ChunkManager::Generate()
 {
     if(!generated)
     {
-        for(int x=0; x<2; x++)
-            for(int z=0; z<2; z++)
+        for(int x=0; x<1; x++)
+            for(int z=0; z<1; z++)
                 for(int y=0; y<1; y++)
                 {
-                    auto sc=AddSuperChunk(glm::ivec3(x,y,z));
+                    AddSuperChunk(glm::ivec3(x,y,z));
                 }
-        generated=true;
+        //generated=true;
     }
 }
 
 void ChunkManager::Update(float dt,Player *player)
 {
+    MutexLock(generationLocks[usedThread]);
     if(_removableChunks.size()>0)
     {
         //printf("Removable superchunks: %d\n",_removableChunks.size());
@@ -195,6 +197,7 @@ void ChunkManager::Update(float dt,Player *player)
 
         //printf("Leftover superchunks: %d\n",_superChunks.size());
     }
+    MutexUnlock(generationLocks[usedThread]);
 
     glm::ivec3 plPos=(glm::ivec3)player->GetFeetPos();
 
@@ -229,17 +232,17 @@ void ChunkManager::Update(float dt,Player *player)
         }
     }
 
-    for(int x=plPos.x-SUPERCHUNK_SIZE_BLOCKS*1; x<=plPos.x+SUPERCHUNK_SIZE_BLOCKS*1; x+=64)
-    {
-        for(int z=plPos.z-SUPERCHUNK_SIZE_BLOCKS*1; z<=plPos.z+SUPERCHUNK_SIZE_BLOCKS*1; z+=64)
-        {
-            glm::ivec3 scp=WorldToSuperChunkCoords(glm::ivec3(x,0,z));
-            if(GetSuperChunk(scp)!=nullptr)
-                continue;
-            else
-                AddSuperChunk(scp);
-        }
-    }
+//    for(int x=plPos.x-SUPERCHUNK_SIZE_BLOCKS*1; x<=plPos.x+SUPERCHUNK_SIZE_BLOCKS*1; x+=64)
+//    {
+//        for(int z=plPos.z-SUPERCHUNK_SIZE_BLOCKS*1; z<=plPos.z+SUPERCHUNK_SIZE_BLOCKS*1; z+=64)
+//        {
+//            glm::ivec3 scp=WorldToSuperChunkCoords(glm::ivec3(x,0,z));
+//            if(GetSuperChunk(scp)!=nullptr)
+//                continue;
+//            else
+//                AddSuperChunk(scp);
+//        }
+//    }
 }
 
 void ChunkManager::Render(Camera *cam,ShaderPtr vsh,bool wireframe)
