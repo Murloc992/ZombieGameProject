@@ -26,7 +26,7 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr,const glm::ivec3 &pos)
     col->data.resize(VRAM_BLOCK_SIZE);
     inds->data.resize(0);
 
-    printf("RESERVED RAM BLOCK: %f Mb\n",(float)(vert->data.size()*sizeof(vert->data[0])+col->data.size()*sizeof(col->data[0]))/1000000.f);
+    //printf("RESERVED RAM BLOCK: %f Mb\n",(float)(vert->data.size()*sizeof(vert->data[0])+col->data.size()*sizeof(col->data[0]))/1000000.f);
 
     buffers[Mesh::POSITION]=vert;
     buffers[Mesh::COLOR]=col;
@@ -39,7 +39,7 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr,const glm::ivec3 &pos)
 
 SuperChunk::~SuperChunk()
 {
-    printf("Imma gettin' rekt, son.\n");
+    //printf("Imma gettin' rekt, son.\n");
 }
 
 void SuperChunk::SaveToFile()
@@ -122,8 +122,7 @@ void SuperChunk::BuildingLoop()
 {
     if(!built)
     {
-        //
-        printf("Building loop.\n");
+        //printf("Building loop.\n");
         int32_t chunksPerFrame=0;
         for(auto a:_chunks)
         {

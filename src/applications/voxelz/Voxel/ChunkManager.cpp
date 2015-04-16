@@ -139,10 +139,10 @@ void ChunkManager::AsyncGeneration(int id)
     while(runAsync)
     {
         MutexLock(generationLocks[id]);
-        auto genPool=_generationPools[id];
-        if(genPool.size()>0)
+        auto genPool=&_generationPools[id];
+        if(genPool->size()>0)
         {
-            for(auto it=genPool.begin(); it!=genPool.end();)
+            for(auto it=genPool->begin(); it!=genPool->end();)
             {
                 auto sc=*it;
                 if(!sc->generated)
@@ -152,12 +152,12 @@ void ChunkManager::AsyncGeneration(int id)
                     sc->BuildingLoop();
 
                 if(sc->generated&&sc->built)
-                    it=genPool.erase(it);
+                    it=genPool->erase(it);
                 else
                     it++;
             }
-            if(genPool.size()>0)
-            printf("GenPool %d size %d\n",id,genPool.size());
+            //if(genPool->size()>0)
+                //printf("GenPool %d size %d\n",id,genPool->size());
         }
         else
         {
@@ -185,7 +185,7 @@ void ChunkManager::Update(float dt,Player *player)
 {
     if(_removableChunks.size()>0)
     {
-        printf("Removable superchunks: %d\n",_removableChunks.size());
+        //printf("Removable superchunks: %d\n",_removableChunks.size());
 
         for(auto chp:_removableChunks)
         {
@@ -193,7 +193,7 @@ void ChunkManager::Update(float dt,Player *player)
         }
         _removableChunks.clear();
 
-        printf("Leftover superchunks: %d\n",_superChunks.size());
+        //printf("Leftover superchunks: %d\n",_superChunks.size());
     }
 
     glm::ivec3 plPos=(glm::ivec3)player->GetFeetPos();
@@ -208,7 +208,7 @@ void ChunkManager::Update(float dt,Player *player)
 
             //printf("DEBUG: %s %s %f\n",GLMVec3ToStr(chunkCenter).c_str(),GLMVec3ToStr(playerPos).c_str(),dist);
 
-            if(dist>SUPERCHUNK_SIZE_BLOCKSF*2.f)
+            if(dist>SUPERCHUNK_SIZE_BLOCKSF*3.f)
             {
                 _removableChunks.push_back(a.first);
                 continue;
@@ -218,27 +218,28 @@ void ChunkManager::Update(float dt,Player *player)
         /// Uploads will be handled here as they must be synchronous
         a.second->Update(dt);
 
-        GetLeastBusyGenerationPool();
-        MutexLock(generationLocks[usedThread]);
+
         if(!a.second->generating&&!a.second->generated)
         {
             a.second->generating=true;
+            GetLeastBusyGenerationPool();
+            MutexLock(generationLocks[usedThread]);
             _generationPools[usedThread].push_back(a.second);
+            MutexUnlock(generationLocks[usedThread]);
         }
-        MutexUnlock(generationLocks[usedThread]);
     }
 
-//    for(int x=plPos.x-SUPERCHUNK_SIZE_BLOCKS*3; x<=plPos.x+SUPERCHUNK_SIZE_BLOCKS*3; x+=64)
-//    {
-//        for(int z=plPos.z-SUPERCHUNK_SIZE_BLOCKS*3; z<=plPos.z+SUPERCHUNK_SIZE_BLOCKS*3; z+=64)
-//        {
-//            glm::ivec3 scp=WorldToSuperChunkCoords(glm::ivec3(x,0,z));
-//            if(GetSuperChunk(scp)!=nullptr)
-//                continue;
-//            else
-//                AddSuperChunk(scp);
-//        }
-//    }
+    for(int x=plPos.x-SUPERCHUNK_SIZE_BLOCKS*1; x<=plPos.x+SUPERCHUNK_SIZE_BLOCKS*1; x+=64)
+    {
+        for(int z=plPos.z-SUPERCHUNK_SIZE_BLOCKS*1; z<=plPos.z+SUPERCHUNK_SIZE_BLOCKS*1; z+=64)
+        {
+            glm::ivec3 scp=WorldToSuperChunkCoords(glm::ivec3(x,0,z));
+            if(GetSuperChunk(scp)!=nullptr)
+                continue;
+            else
+                AddSuperChunk(scp);
+        }
+    }
 }
 
 void ChunkManager::Render(Camera *cam,ShaderPtr vsh,bool wireframe)
@@ -274,4 +275,3 @@ uint32_t ChunkManager::GetChunkCount()
 {
     return _superChunks.size();
 }
-
