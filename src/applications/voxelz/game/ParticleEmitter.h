@@ -13,40 +13,40 @@ struct Particle;
 class ParticleEmitter
 {
 public:
-    glm::vec3 _pos;
-    glm::vec3 _direction;
+	glm::vec3 _pos;
+	glm::vec3 _direction;
 
-    float _speed;
-    float _spread;
+	float _speed;
+	float _spread;
 
-    float _particleLife;
-    float _particleSize;
+	float _particleLife;
+	float _particleSize;
 
-    uint32_t _particleCount,_deadParticleCount,_maxParticles,_lastUsedParticle;
+	uint32_t _particleCount, _deadParticleCount, _maxParticles, _lastUsedParticle;
 
-    bool _loop;
-    bool _finished;
+	bool _loop;
+	bool _finished;
 
-    vector<Particle> _particleContainer;
+	vector<Particle> _particleContainer;
 private:
-    vector<IParticleAffector*> _particleAffectors;
+	vector<IParticleAffector*> _particleAffectors;
 protected:
 public:
-    ParticleEmitter(glm::vec3 pos,glm::vec3 direction, float speed, float spread,float particleLife,uint32_t maxParticles=1024,bool loop=true);
+	ParticleEmitter(glm::vec3 pos, glm::vec3 direction, float speed, float spread, float particleLife, uint32_t maxParticles = 1024, bool loop = true);
 
-    virtual ~ParticleEmitter();
+	virtual ~ParticleEmitter();
 
-    void Update(float dt,uint32_t &particleCount, BufferObject<glm::vec3> *pos, BufferObject<u8vec4> *col, BufferObject<glm::vec4> *rot);
+	void Update(float dt, uint32_t &particleCount, BufferObject<glm::vec3> *pos, BufferObject<u8vec4> *col, BufferObject<glm::vec4> *rot);
 
-    void AddParticleAffector(IParticleAffector* affector);
+	void AddParticleAffector(IParticleAffector* affector);
 
-    void SetSize(const uint32_t &newsize);
+	void SetSize(const uint32_t &newsize);
 
-    void SetParticleLife(const uint32_t &newLife);
+	void SetParticleLife(const uint32_t &newLife);
 
-    void Emit(Particle& p);
+	void Emit(Particle& p);
 
-    int32_t FindUnused();
+	int32_t FindUnused();
 private:
 
 protected:

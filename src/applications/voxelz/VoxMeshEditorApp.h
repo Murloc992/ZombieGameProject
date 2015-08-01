@@ -30,48 +30,48 @@ class ParticleEmitter;
 class VoxMeshEditorApp : public Application, public GUIEventListener
 {
 private:
-    ShaderPtr _defaultShader,_meshShader,_voxShader,_particleShader;
-    ParticleSystem *_particleSystem;
-    VoxMeshGrid * _grid;
-    GridMesh * _axisGrid;
+	ShaderPtr _defaultShader, _meshShader, _voxShader, _particleShader;
+	ParticleSystem *_particleSystem;
+	VoxMeshGrid * _grid;
+	GridMesh * _axisGrid;
 
-    MeshPtr _iqmMesh;
-    VoxelMesh* _voxMesh;
+	MeshPtr _iqmMesh;
+	VoxelMesh* _voxMesh;
 
-    GUIEnvironment* _guiEnv;
-    GUIWindow* _mainWin;
-    GUIColorPicker* _colPicker;
+	GUIEnvironment* _guiEnv;
+	GUIWindow* _mainWin;
+	GUIColorPicker* _colPicker;
 
-    Camera* _cam;
+	Camera* _cam;
 
-    ParticleEmitter* _emitter;
-    std::map<std::string,GUIButton*> _buttons;
-    std::map<std::string,GUIStaticText*> _labels;
-    std::map<std::string,GUISlider*> _sliders;
-    std::map<std::string,GUICheckbox*> _checkboxes;
-    std::map<std::string,bool> _guiSwitches;
+	ParticleEmitter* _emitter;
+	std::map<std::string, GUIButton*> _buttons;
+	std::map<std::string, GUIStaticText*> _labels;
+	std::map<std::string, GUISlider*> _sliders;
+	std::map<std::string, GUICheckbox*> _checkboxes;
+	std::map<std::string, bool> _guiSwitches;
 public:
-    VoxMeshEditorApp(uint32_t argc, const char ** argv);
-    virtual ~VoxMeshEditorApp();
-    bool Init(const std::string & title, uint32_t width, uint32_t height);
-    void InitGUI();
-    virtual bool Update();
-    void HandleMovement(float dt);
-    void Exit();
+	VoxMeshEditorApp(uint32_t argc, const char ** argv);
+	virtual ~VoxMeshEditorApp();
+	bool Init(const std::string & title, uint32_t width, uint32_t height);
+	void InitGUI();
+	virtual bool Update();
+	void HandleMovement(float dt);
+	void Exit();
 
-    void OnWindowClose();
+	void OnWindowClose();
 
-    ///Events
-    void OnKeyEvent(int32_t key, int32_t scan_code, int32_t action, int32_t modifiers);
-    void OnMouseKey(int32_t button, int32_t action, int32_t mod);
-    void OnMouseMove(double x, double y);
+	///Events
+	void OnKeyEvent(int32_t key, int32_t scan_code, int32_t action, int32_t modifiers);
+	void OnMouseKey(int32_t button, int32_t action, int32_t mod);
+	void OnMouseMove(double x, double y);
 
-    bool OnEvent(const GUIEvent & e);
+	bool OnEvent(const GUIEvent & e);
 
-    std::string GetApplicationId()
-    {
-        return "Voxelz";
-    }
+	std::string GetApplicationId()
+	{
+		return "Voxelz";
+	}
 
 protected:
 };

@@ -16,14 +16,12 @@
 #include "Voxel/VoxelSprite.h"
 #include "resources/ImageLoader.h"
 
-VoxelzProfilingApp::VoxelzProfilingApp(uint32_t argc, const char ** argv): Application(argc,argv)
+VoxelzProfilingApp::VoxelzProfilingApp(uint32_t argc, const char ** argv) : Application(argc, argv)
 {
-
 }
 
 VoxelzProfilingApp::~VoxelzProfilingApp()
 {
-
 }
 
 static ChunkManager *chkmgr;
@@ -38,98 +36,97 @@ static const int ManyChunksHeight = 16;
 
 static void AddSingleChunk()
 {
-    BEGIN_BENCHMARK
-    END_BENCHMARK("AddSingleChunk")
+	BEGIN_BENCHMARK
+		END_BENCHMARK("AddSingleChunk")
 }
 
 static void AddManyChunks()
 {
-    BEGIN_BENCHMARK
-    loopi(10)
-    {
-        chkmgr->AddSuperChunk(glm::ivec3(i));
-    }
-    END_BENCHMARK("AddManyChunks")
+	BEGIN_BENCHMARK
+		loopi(10)
+	{
+		chkmgr->AddSuperChunk(glm::ivec3(i));
+	}
+	END_BENCHMARK("AddManyChunks")
 }
 
 static void SingleChunkRebuild()
 {
-    BEGIN_BENCHMARK
-    END_BENCHMARK("RebuildSingle")
+	BEGIN_BENCHMARK
+		END_BENCHMARK("RebuildSingle")
 }
 
 static void AllChunksRebuild()
 {
-    BEGIN_BENCHMARK
-    END_BENCHMARK("RebuildAll")
+	BEGIN_BENCHMARK
+		END_BENCHMARK("RebuildAll")
 }
 
 static void RemoveManyChunks()
 {
-    BEGIN_BENCHMARK
-    loopi(10)
-    {
-        chkmgr->RemoveSuperChunk(glm::ivec3(i));
-    }
-    END_BENCHMARK("AddManyChunks")
+	BEGIN_BENCHMARK
+		loopi(10)
+	{
+		chkmgr->RemoveSuperChunk(glm::ivec3(i));
+	}
+	END_BENCHMARK("AddManyChunks")
 }
 
 void VoxelzProfilingApp::Benchmark()
 {
-//    AddManyChunks();
-//    BENCHMARK_INTERRUPT
-//    RemoveManyChunks();
-//    BENCHMARK_INTERRUPT
-//    AddManyChunks();
-//    BENCHMARK_INTERRUPT
-//    RemoveManyChunks();
-//    BENCHMARK_INTERRUPT
+	//    AddManyChunks();
+	//    BENCHMARK_INTERRUPT
+	//    RemoveManyChunks();
+	//    BENCHMARK_INTERRUPT
+	//    AddManyChunks();
+	//    BENCHMARK_INTERRUPT
+	//    RemoveManyChunks();
+	//    BENCHMARK_INTERRUPT
 
-    SuperChunkPtr a=chkmgr->AddSuperChunk(glm::ivec3(0));
-    vector<vector<SuperChunkPtr>> someshit;
-    someshit.push_back(vector<SuperChunkPtr>());
-    printf("Use_count before pushing: %d\n",a.use_count());
-    someshit[0].push_back(a);
-    printf("Use_count after pushing: %d\n",a.use_count());
-    chkmgr->RemoveSuperChunk(glm::ivec3(0));
-    someshit[0].clear();
-    printf("Use_count after clearing: %d\n",a.use_count());
-    a=nullptr;
-    BENCHMARK_INTERRUPT
+	SuperChunkPtr a = chkmgr->AddSuperChunk(glm::ivec3(0));
+	vector<vector<SuperChunkPtr>> someshit;
+	someshit.push_back(vector<SuperChunkPtr>());
+	printf("Use_count before pushing: %d\n", a.use_count());
+	someshit[0].push_back(a);
+	printf("Use_count after pushing: %d\n", a.use_count());
+	chkmgr->RemoveSuperChunk(glm::ivec3(0));
+	someshit[0].clear();
+	printf("Use_count after clearing: %d\n", a.use_count());
+	a = nullptr;
+	BENCHMARK_INTERRUPT
 }
 
 bool VoxelzProfilingApp::Init(const std::string & title, uint32_t width, uint32_t height)
 {
-    Application::Init(title,width,height);
-    ctx=_appContext;
+	Application::Init(title, width, height);
+	ctx = _appContext;
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glClearColor(0.5,0.5,0.7,0);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glClearColor(0.5, 0.5, 0.7, 0);
 
-    chkmgr=new ChunkManager();
+	chkmgr = new ChunkManager();
 
-    printf("\n\n--------------------------------\nPROFILE ME TIMBERS!\n--------------------------------\n");
-    Benchmark();
-    printf("\n--------------------------------\nTIMBERRRRR!\n--------------------------------\n");
-    Exit();
-    return false;
+	printf("\n\n--------------------------------\nPROFILE ME TIMBERS!\n--------------------------------\n");
+	Benchmark();
+	printf("\n--------------------------------\nTIMBERRRRR!\n--------------------------------\n");
+	Exit();
+	return false;
 }
 
 bool VoxelzProfilingApp::Update()
 {
-    return true;
+	return true;
 }
 
 void VoxelzProfilingApp::Exit()
 {
-    Application::Exit();
+	Application::Exit();
 }
 
 void VoxelzProfilingApp::OnWindowClose()
 {
-
 }
 void VoxelzProfilingApp::OnKeyEvent(int32_t key, int32_t scan_code, int32_t action, int32_t modifiers)
 {
@@ -137,11 +134,8 @@ void VoxelzProfilingApp::OnKeyEvent(int32_t key, int32_t scan_code, int32_t acti
 
 void VoxelzProfilingApp::OnMouseMove(double x, double y)
 {
-
 }
 
 void VoxelzProfilingApp::OnMouseKey(int32_t button, int32_t action, int32_t mod)
 {
-
 }
-

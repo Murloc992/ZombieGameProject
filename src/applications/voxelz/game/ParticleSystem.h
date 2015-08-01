@@ -13,34 +13,34 @@ class ParticleEmitter;
 class ParticleSystem
 {
 public:
-    BufferObject<glm::vec3> *_geometry;
-    BufferObject<glm::vec3> *_pos;
-    BufferObject<u8vec4> *_col;
-    BufferObject<glm::vec4> *_rot;
+	BufferObject<glm::vec3> *_geometry;
+	BufferObject<glm::vec3> *_pos;
+	BufferObject<u8vec4> *_col;
+	BufferObject<glm::vec4> *_rot;
 
-    uint32_t _VAO;
+	uint32_t _VAO;
 
 private:
-    Particle _particlesContainer[MAX_PARTICLES];
-    vector<ParticleEmitter*> _emitters;
-    uint32_t _lastUsedParticle;
-    uint32_t _particleCount;
-    float _rotate;
+	Particle _particlesContainer[MAX_PARTICLES];
+	vector<ParticleEmitter*> _emitters;
+	uint32_t _lastUsedParticle;
+	uint32_t _particleCount;
+	float _rotate;
 protected:
 
 public:
-    ParticleSystem();
-    virtual ~ParticleSystem();
+	ParticleSystem();
+	virtual ~ParticleSystem();
 
-    void Render();
-    void Update(float dt);
+	void Render();
+	void Update(float dt);
 
-    uint32_t FindUnused();
+	uint32_t FindUnused();
 
-    void AddEmitter(ParticleEmitter* emitter);
+	void AddEmitter(ParticleEmitter* emitter);
 protected:
 private:
-    void BuildParticle(Particle& p,ParticleEmitter* e);
+	void BuildParticle(Particle& p, ParticleEmitter* e);
 };
 
 #endif // PARTICLESYSTEM_H

@@ -5,10 +5,10 @@
 
 GravityAffector::~GravityAffector()
 {
-    //dtor
+	//dtor
 }
 
-void GravityAffector::Affect(float dt,Particle & particleToAffect, ParticleEmitter *emitter)
+void GravityAffector::Affect(float dt, Particle & particleToAffect, ParticleEmitter *emitter)
 {
-    particleToAffect.speed+=glm::vec3(0.f,-9.81f,0.f)*dt;
+	particleToAffect.speed += glm::vec3(0.f, -9.81f, 0.f)*dt;
 }

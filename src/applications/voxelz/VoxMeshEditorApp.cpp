@@ -30,12 +30,10 @@
 
 VoxMeshEditorApp::VoxMeshEditorApp(uint32_t argc, const char ** argv) : Application(argc, argv)
 {
-
 }
 
 VoxMeshEditorApp::~VoxMeshEditorApp()
 {
-
 }
 
 void VoxMeshEditorApp::InitGUI()
@@ -168,7 +166,6 @@ void VoxelizeMesh(vector<Triangle<T> > tris, VoxelMesh* voxmesh)
 		//boxes.push_back(new CubeMesh(a));
 		//printf("Tri Points:\n%s\n%s\n%s\n",GLMVec3ToStr(tris[i].points[0]),GLMVec3ToStr(tris[i].points[1]),GLMVec3ToStr(tris[i].points[2]));
 
-
 		//printf("AABB\nmin %s\nmax %s\ncenter %s\nhalfsize %s\n",GLMVec3ToStr(a.GetMin()),GLMVec3ToStr(a.GetMax()),GLMVec3ToStr(a.GetCenter()),GLMVec3ToStr(a.GetHalfSize()));
 		glm::ivec3 amn = (glm::ivec3)glm::round((a.GetMin()));
 		glm::ivec3 amx = (glm::ivec3)glm::round((a.GetMax()));
@@ -242,7 +239,6 @@ void VoxelizeMesh(vector<Triangle<T> > tris, ChunkManager* voxmesh)
 		a.AddPoint(tris[i].points[2]);
 		//boxes.push_back(new CubeMesh(a));
 		//printf("Tri Points:\n%s\n%s\n%s\n",GLMVec3ToStr(tris[i].points[0]),GLMVec3ToStr(tris[i].points[1]),GLMVec3ToStr(tris[i].points[2]));
-
 
 		//printf("AABB\nmin %s\nmax %s\ncenter %s\nhalfsize %s\n",GLMVec3ToStr(a.GetMin()),GLMVec3ToStr(a.GetMax()),GLMVec3ToStr(a.GetCenter()),GLMVec3ToStr(a.GetHalfSize()));
 		glm::ivec3 amn = (glm::ivec3)glm::round((a.GetMin()));
@@ -485,7 +481,6 @@ void VoxMeshEditorApp::HandleMovement(float dt)
 		if (han->IsKeyDown(GLFW_KEY_D))
 			_cam->Strafe(speed*dt);
 
-
 		float spd = 2.f;
 		int substeps = glm::ceil(spd*dt) * 2;
 		float stepsteed = (spd*dt) / substeps;
@@ -521,7 +516,6 @@ void VoxMeshEditorApp::HandleMovement(float dt)
 
 void VoxMeshEditorApp::OnWindowClose()
 {
-
 }
 void VoxMeshEditorApp::OnKeyEvent(int32_t key, int32_t scan_code, int32_t action, int32_t modifiers)
 {
@@ -539,7 +533,6 @@ bool draggingMouse;
 
 void VoxMeshEditorApp::OnMouseMove(double x, double y)
 {
-
 }
 
 void VoxMeshEditorApp::OnMouseKey(int32_t button, int32_t action, int32_t mod)
@@ -602,9 +595,7 @@ bool VoxMeshEditorApp::OnEvent(const GUIEvent& e)
 		break;
 	default:
 		break;
-
 	}
 
 	return true;
 }
-

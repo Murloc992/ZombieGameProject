@@ -9,24 +9,23 @@ class ChunkManager;
 class Camera;
 typedef std::shared_ptr<Camera> CameraPtr;
 
-class ItemEntity:public Entity
+class ItemEntity :public Entity
 {
 public:
 
-
 public:
-    ItemEntity(ChunkManager* chkmgr,const glm::vec3 &pos,const std::string &filename);
-    virtual ~ItemEntity();
+	ItemEntity(ChunkManager* chkmgr, const glm::vec3 &pos, const std::string &filename);
+	virtual ~ItemEntity();
 
-    void Update(float dt);
+	void Update(float dt);
 
-    void OnCollisionWithWorld(const Block &blk);
-    bool OnCollision(Entity* ent);
+	void OnCollisionWithWorld(const Block &blk);
+	bool OnCollision(Entity* ent);
 
-    void Render(float dt,CameraPtr cam);
+	void Render(float dt, CameraPtr cam);
 protected:
-    ChunkManager* _chkmgr;
-    VoxelSprite* _sprite;
+	ChunkManager* _chkmgr;
+	VoxelSprite* _sprite;
 private:
 };
 

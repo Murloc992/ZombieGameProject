@@ -19,7 +19,6 @@ image_loader::~image_loader()
 		delete l;
 }
 
-
 void image_loader::add_loader(iimage_loader * loader)
 {
 	auto it = std::find_if(m_loaders.begin(), m_loaders.end(), [&loader](iimage_loader * l)

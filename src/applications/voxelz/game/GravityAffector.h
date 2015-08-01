@@ -3,11 +3,11 @@
 
 #include "IParticleAffector.h"
 
-class GravityAffector:public IParticleAffector
+class GravityAffector :public IParticleAffector
 {
 public:
-    virtual ~GravityAffector();
-    void Affect(float dt,Particle & particleToAffect, ParticleEmitter *emitter);
+	virtual ~GravityAffector();
+	void Affect(float dt, Particle & particleToAffect, ParticleEmitter *emitter);
 protected:
 private:
 };
