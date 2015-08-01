@@ -96,7 +96,7 @@ void VoxMeshEditorApp::InitGUI()
 
 	cbxpane = new GUIPane(_guiEnv, Rect2D<int>(280, 28, 196, 220), true);
 	cbxpane->SetParent(_mainWin);
-	GUISlider *slid = new GUISlider(_guiEnv, Rect2D<int>(8, 8, 160, 16), 1, 10000, 1024);
+	GUISlider *slid = new GUISlider(_guiEnv, Rect2D<int>(8, 8, 160, 16), 1, 100000, 1024);
 	slid->SetName("slider_EmitterSize");
 	slid->SetParent(cbxpane);
 	slid = new GUISlider(_guiEnv, Rect2D<int>(8, 32, 160, 16), 0.1, 60, 5);
@@ -363,7 +363,7 @@ bool VoxMeshEditorApp::Init(const std::string & title, uint32_t width, uint32_t 
 	_particleSystem = new ParticleSystem();
 	_emitter = new ParticleEmitter(glm::vec3(0, 25, 0), glm::vec3(0, 1, 0), 5, 100, 0.65);
 	_emitter->AddParticleAffector(new GravityAffector());
-	//_emitter->AddParticleAffector(new WindParticleAffector(AABB(glm::vec3(0,0,0),glm::vec3(1024,128,1024)),glm::vec3(-1,0,0),15));
+	//_emitter->AddParticleAffector(new WindParticleAffector(AABB(glm::vec3(0, 0, 0), glm::vec3(1024, 128, 1024)), glm::vec3(-1, 0, 0), 15));
 	_emitter->AddParticleAffector(new AttractFocusAffector(glm::vec3(0, 100, 0), 50));
 	_particleSystem->AddEmitter(_emitter);
 
@@ -444,7 +444,7 @@ bool VoxMeshEditorApp::Update()
 		{
 			_voxShader->Set();
 			MVar<glm::mat4>(0, "mvp", MVP).Set();
-			_voxMesh->Render();
+			_voxMesh->Render(_guiSwitches["wireVoxMesh"]);
 			//cmg->Render(_cam, _voxShader, _guiSwitches["wireVoxMesh"]);
 		}
 		_particleShader->Set();
