@@ -284,16 +284,19 @@ void FontRenderer::_RenderString(const std::wstring &text, glm::ivec2 pos, const
     _SetFontColor(color);
 
     /* Use the Texture containing the atlas */
-    GL_CHECK(glBindTexture(GL_TEXTURE_2D, _currentFont->tex));
+    glBindTexture(GL_TEXTURE_2D, _currentFont->tex);
 
     glBindVertexArray(_VAO);
 
     /* Set up the VBO for our vertex data */
-    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, _VBO));
-    GL_CHECK(glEnableVertexAttribArray(0));
-    GL_CHECK(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0));
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-    glm::vec4 coords[6 * text.length()];
+	const int len = text.length() * 6;
+
+    vector<glm::vec4> coords;
+	coords.resize(len);
     int c = 0;
 
     Font* a=_currentFont;
@@ -327,7 +330,7 @@ void FontRenderer::_RenderString(const std::wstring &text, glm::ivec2 pos, const
     }
 
     /* Draw all the character on the screen in one go */
-    glBufferData(GL_ARRAY_BUFFER, sizeof coords, coords, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof coords, &coords[0], GL_DYNAMIC_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, c);
 
     glDisableVertexAttribArray(0);

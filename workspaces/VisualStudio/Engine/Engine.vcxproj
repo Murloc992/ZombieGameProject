@@ -1,0 +1,305 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{65D3B383-59F6-4FAD-9C1F-F2F07D9CBB95}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\src\engine;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glm;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\boost;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\freetype2\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glfw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glxw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\irrKlang-1.5.0\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\jsoncpp\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libccd\src;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libsigc++;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\physfs;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\stb_image;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\tinyxml2\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <PrecompiledHeaderFile>Precomp.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glxw.lib;glxw_wgl.lib;glfw3.lib;physfs.lib;jsoncpp.lib;tinyxml2_lib.lib;freetype.lib;ccd.lib;sigc++.lib;stb_image_lib.lib;libboost_system-vc140-mt-gd-1_57.lib;libboost_container-vc140-mt-gd-1_57.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+    </Lib>
+    <ProjectReference />
+    <ProjectReference>
+      <LinkLibraryDependencies>
+      </LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\src\engine;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glm;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\boost;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\freetype2\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glfw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glxw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\irrKlang-1.5.0\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\jsoncpp\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libccd\src;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libsigc++;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\physfs;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\stb_image;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\tinyxml2\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>glxw.lib;glfw3.lib;ccd.lib;physfs.lib;freetype.lib;sigc++.lib;tinyxml2_lib.lib;stb_image_lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\engine\application\AppContext.h" />
+    <ClInclude Include="..\..\..\src\engine\application\Application.h" />
+    <ClInclude Include="..\..\..\src\engine\application\ApplicationLauncher.h" />
+    <ClInclude Include="..\..\..\src\engine\application\InputHandler.h" />
+    <ClInclude Include="..\..\..\src\engine\application\Window.h" />
+    <ClInclude Include="..\..\..\src\engine\Config.h" />
+    <ClInclude Include="..\..\..\src\engine\core\Var.h" />
+    <ClInclude Include="..\..\..\src\engine\core\VarGroup.h" />
+    <ClInclude Include="..\..\..\src\engine\core\VarJsonReader.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\custom_elements\GUIColorPicker.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\custom_elements\ToggleGroup.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\font_rendering\Font.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\font_rendering\FontFamily.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\font_rendering\FontRenderer.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUI.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIButton.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUICheckbox.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIEditBox.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIElement.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIEnvironment.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIEvent.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIEventListener.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIImage.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIPane.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUISkin.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUISlider.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIStaticText.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUITestElement.h" />
+    <ClInclude Include="..\..\..\src\engine\gui\GUIWindow.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\AABB.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\BufferObject.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\CubeMesh.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\FrameBufferObject.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\GLObject.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\GridMesh.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\GUIQuad.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\IBufferObject.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\Material.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\Mesh.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\MVar.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\OpenGLUtil.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\Quad.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\RenderBufferObject.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\Shader.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\SlicedGUIQuad.h" />
+    <ClInclude Include="..\..\..\src\engine\opengl\Texture.h" />
+    <ClInclude Include="..\..\..\src\engine\Precomp.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\IImageLoader.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\Image.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\ImageLoader.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\IMeshLoader.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\IQM.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\IQMloader.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\MeshLoader.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\PNGLoader.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\ResourceCache.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\ShaderLoader.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\SoundManager.h" />
+    <ClInclude Include="..\..\..\src\engine\resources\TGAloader.h" />
+    <ClInclude Include="..\..\..\src\engine\scenegraph\Camera.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\Bit.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\Box3d.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\Helpers.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\Logger.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\Plane3d.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\Rect2d.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\SimplexNoise.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\StringUtil.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\Timer.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\Util.h" />
+    <ClInclude Include="..\..\..\src\engine\utility\Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\engine\application\Application.cpp" />
+    <ClCompile Include="..\..\..\src\engine\application\ApplicationLauncher.cpp" />
+    <ClCompile Include="..\..\..\src\engine\application\InputHandler.cpp" />
+    <ClCompile Include="..\..\..\src\engine\application\Window.cpp" />
+    <ClCompile Include="..\..\..\src\engine\core\Var.cpp" />
+    <ClCompile Include="..\..\..\src\engine\core\VarGroup.cpp" />
+    <ClCompile Include="..\..\..\src\engine\core\VarJsonReader.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\custom_elements\GUIColorPicker.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\font_rendering\Font.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\font_rendering\FontFamily.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\font_rendering\FontRenderer.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUIButton.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUICheckbox.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUIEditBox.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUIElement.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUIEnvironment.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUIImage.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUIPane.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUISkin.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUISlider.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUIStaticText.cpp" />
+    <ClCompile Include="..\..\..\src\engine\gui\GUIWindow.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\AABB.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\BufferObject.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\CubeMesh.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\FrameBufferObject.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\GLObject.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\IBufferObject.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\Material.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\Mesh.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\MVar.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\OpenGLUtil.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\RenderBufferObject.cpp" />
+    <ClCompile Include="..\..\..\src\engine\opengl\Texture.cpp" />
+    <ClCompile Include="..\..\..\src\engine\Precomp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\engine\resources\IImageLoader.cpp" />
+    <ClCompile Include="..\..\..\src\engine\resources\Image.cpp" />
+    <ClCompile Include="..\..\..\src\engine\resources\ImageLoader.cpp" />
+    <ClCompile Include="..\..\..\src\engine\resources\IMeshLoader.cpp" />
+    <ClCompile Include="..\..\..\src\engine\resources\IQMLoader.cpp" />
+    <ClCompile Include="..\..\..\src\engine\resources\MeshLoader.cpp" />
+    <ClCompile Include="..\..\..\src\engine\resources\PNGLoader.cpp" />
+    <ClCompile Include="..\..\..\src\engine\resources\ShaderLoader.cpp" />
+    <ClCompile Include="..\..\..\src\engine\resources\TGAloader.cpp" />
+    <ClCompile Include="..\..\..\src\engine\scenegraph\Camera.cpp" />
+    <ClCompile Include="..\..\..\src\engine\utility\Helpers.cpp" />
+    <ClCompile Include="..\..\..\src\engine\utility\Logger.cpp" />
+    <ClCompile Include="..\..\..\src\engine\utility\SimplexNoise.cpp" />
+    <ClCompile Include="..\..\..\src\engine\utility\Timer.cpp" />
+    <ClCompile Include="..\..\..\src\engine\utility\Util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\engine\opengl\AABB.inl" />
+    <None Include="..\..\..\src\engine\utility\Helpers.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

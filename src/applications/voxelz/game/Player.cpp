@@ -24,7 +24,7 @@ Player::~Player()
 
 bool Player::OnCollision(Entity* ent)
 {
-    Entity::OnCollision(ent);
+    bool collRes=Entity::OnCollision(ent);
 
     if(ent->IsAlive())
     {
@@ -39,6 +39,8 @@ bool Player::OnCollision(Entity* ent)
             break;
         }
     }
+
+	return collRes;
 }
 
 glm::vec3 Player::GetVelocity()

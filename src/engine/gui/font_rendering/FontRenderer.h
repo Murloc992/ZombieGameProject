@@ -7,10 +7,10 @@
 #include "Font.h"
 #include "FontFamily.h"
 
-class AppContext;
+struct AppContext;
 class Logger;
 class GUIEnvironment;
-class Shader;
+struct Shader;
 
 typedef boost::unordered_map<std::string,FontFamily*> FontFamilyMap;
 

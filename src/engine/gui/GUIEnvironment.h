@@ -4,14 +4,14 @@
 #include "GUISkin.h"
 #include "font_rendering/FontRenderer.h"
 
-class Shader;
+struct Shader;
 class GUIQuad;
 class SlicedGUIQuad;
-class Texture;
+struct Texture;
 class Window;
-class GUISkin;
+struct GUISkin;
 class Logger;
-class AppContext;
+struct AppContext;
 
 class GUIEnvironment : public GUIElement
 {

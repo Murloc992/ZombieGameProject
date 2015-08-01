@@ -10,7 +10,7 @@ platform = ""
 LINUX = "linux"
 WINDOWS = "windows"
 
-if os.name == "posix":
+if os.name == "binbows":
     platform = LINUX
 else:
     platform = WINDOWS
@@ -73,12 +73,12 @@ def compile_boost_windows():
                 subprocess.call('b2 tools/bcp', shell=True)
 
         if easygui.boolbox(msg='Would you like to compile boost.python?', title='Compile boost', choices=('Yes', 'No'), image=None):
-            buildstr = 'b2 ' + buildcores + ' --with-python --build-dir="../../build"  toolset=gcc cxxflags="-fPIC" link=shared threading=multi debug'
+            buildstr = 'b2 ' + buildcores + ' --with-python --build-dir="../../build"  toolset=msvc cxxflags="-fPIC" link=shared threading=multi debug'
             print("Calling boost: " + buildstr)
             subprocess.call(buildstr, shell=True)
 
         if easygui.boolbox(msg='Would you like to compile boost?', title='Compile boost', choices=('Yes', 'No'), image=None):
-            buildstr = 'b2 ' + buildcores + ' --without-python --build-dir="../../build"  toolset=gcc cxxflags="-fPIC" link=static threading=multi release'
+            buildstr = 'b2 ' + buildcores + ' --without-python --build-dir="../../build"  toolset=msvc cxxflags="-fPIC" link=static threading=multi debug'
             print("Calling boost: " + buildstr)
             subprocess.call(buildstr, shell=True)
             
@@ -127,8 +127,7 @@ if easygui.boolbox(msg='Would you like to compile other libraries?', title='Comp
         subprocess.call('cmake ../ -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "Unix Makefiles"', shell=True)
         subprocess.call('make ' + buildcores, shell=True)
     else:
-        subprocess.call('cmake ../ -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "MinGW Makefiles"', shell=True)
-        subprocess.call('mingw32-make ' + buildcores, shell=True)
+        subprocess.call('cmake ../ -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "Visual Studio 12 2013"', shell=True)
 
     os.chdir("..")
 

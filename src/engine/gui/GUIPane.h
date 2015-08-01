@@ -3,7 +3,7 @@
 #include "gui/GUIElement.h"
 
 class Quad;
-class Shader;
+struct Shader;
 template <typename T>
 class Rect2D;
 class GUIPane:public GUIElement

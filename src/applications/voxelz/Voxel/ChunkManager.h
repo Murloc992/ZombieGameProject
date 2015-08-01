@@ -11,7 +11,7 @@
 #include "SuperChunk.h"
 
 class Camera;
-enum EBlockType;
+enum EBlockType:uint32_t;
 
 class WorldGenerator;
 
@@ -65,12 +65,13 @@ public:
 protected:
 private:
     SuperChunkMap _superChunks;
-    vector<SuperChunkPtr> _generationPools[GENERATION_THREAD_COUNT];
+
+    vector<SuperChunkPtr> _chunksToGenerate;
     vector<glm::ivec3> _removableChunks;
-    void GetLeastBusyGenerationPool();
+
     WorldGenerator *_worldGenerator;
 
-    void AsyncGeneration(int id);
+    void AsyncGenerate(vector<SuperChunkPtr> _vec);
 
     static SuperChunk NULL_SUPERCHUNK;
 };

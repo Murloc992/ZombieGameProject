@@ -11,7 +11,7 @@ enum loglevel
 };
 
 class Application;
-class PHYSFS_File;
+struct PHYSFS_File;
 class Logger
 {
 public:

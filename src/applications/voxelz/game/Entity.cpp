@@ -208,5 +208,9 @@ bool Entity::OnCollision(Entity* ent)
         }
         if(ent->GetTopPosition().y<=this->GetBottomPosition().y) _isOnGround=true;
         if(ent->GetBottomPosition().y>=this->GetTopPosition().y) _hitCeiling=true;
+
+		return true;
     }
+
+	return false;
 }

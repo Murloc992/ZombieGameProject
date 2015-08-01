@@ -42,7 +42,7 @@ void ItemEntity::OnCollisionWithWorld(const Block &blk)
 
 bool ItemEntity::OnCollision(Entity* ent)
 {
-
+	return true;
 }
 
 void ItemEntity::Render(float dt,CameraPtr cam)

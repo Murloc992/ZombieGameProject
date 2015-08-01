@@ -1,7 +1,6 @@
 #include "Precomp.h"
-#include "VoxelSprite.h"
-
 #include "resources/Image.h"
+#include "VoxelSprite.h"
 
 VoxelSprite::VoxelSprite(const u16vec3 &size):VoxelMesh(size)
 {

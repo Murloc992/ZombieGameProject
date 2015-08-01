@@ -65,32 +65,6 @@ void BufferObject<glm::ivec3>::UploadSubData(vector<glm::ivec3> subdata,uint32_t
 }
 
 template <>
-uint32_t BufferObject<u8vec4>::GetDataType()
-{
-    return GL_UNSIGNED_BYTE;
-}
-
-template <>
-uint32_t BufferObject<u8vec4>::GetComponentCount()
-{
-    return 4;
-}
-
-template <>
-void BufferObject<u8vec4>::Init()
-{
-    glGenBuffers(1, &this->Id);
-}
-
-template <>
-void BufferObject<u8vec4>::Upload()
-{
-    glBindBuffer(GL_ARRAY_BUFFER, this->Id);
-    glBufferData(GL_ARRAY_BUFFER, data.size()*sizeof(u8vec4),&data[0],GL_STATIC_DRAW);
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-template <>
 uint32_t BufferObject<u8vec3>::GetDataType()
 {
     return GL_UNSIGNED_BYTE;

@@ -1,7 +1,7 @@
 #ifndef SG_MVAR_H
 #define SG_MVAR_H
 
-class Shader;
+struct Shader;
 typedef std::shared_ptr<Shader> ShaderPtr;
 
 template <class T>
