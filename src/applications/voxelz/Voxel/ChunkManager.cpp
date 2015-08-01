@@ -147,7 +147,7 @@ void ChunkManager::Generate()
 				{
 					AddSuperChunk(glm::ivec3(x, y, z));
 				}
-		//generated=true;
+		generated = true;
 	}
 }
 

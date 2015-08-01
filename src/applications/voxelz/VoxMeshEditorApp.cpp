@@ -67,13 +67,17 @@ void VoxMeshEditorApp::InitGUI()
 	uint32_t i = 0;
 	for (auto sw : _guiSwitches)
 	{
-		wchar_t wbuf[64];
-		char sbuf[64];
+		wchar_t wbuf[256];
+		char sbuf[128];
 
 		sprintf(sbuf, "lab_%s", sw.first.c_str());
-		swprintf(wbuf, 64, L"['s]%s:[s']", sw.first.c_str());
+
+		std::wstring widen(sw.first.begin(), sw.first.end());
+		swprintf(wbuf, 64, L"['s]%s:[s']", widen.c_str());
+
 		_labels[sbuf] = new GUIStaticText(_guiEnv, Rect2D<int>(8, 24 + i * 20, 96, 16), wbuf);
 		_labels[sbuf]->SetParent(cbxpane);
+
 		sprintf_s(sbuf, 64, "cbx_%s", sw.first.c_str());
 		_checkboxes[sbuf] = new GUICheckbox(_guiEnv, Rect2D<int>(100, 24 + i * 20, 16, 16), sw.second);
 		_checkboxes[sbuf]->SetParent(cbxpane);
@@ -340,20 +344,21 @@ bool VoxMeshEditorApp::Init(const std::string & title, uint32_t width, uint32_t 
 	glm::vec3 hs = _iqmMesh->aabb.GetHalfSize()*2.f;
 	float scale = (float)(gridSize) / glm::abs(glm::max(glm::max(hs.x, hs.y), hs.z));
 	_iqmMesh->HardScale<glm::vec3>(glm::vec3(scale));
-	//_iqmMesh->HardMove<glm::vec3>(_iqmMesh->aabb.GetHalfSize());
+	_iqmMesh->HardMove<glm::vec3>(_iqmMesh->aabb.GetHalfSize());
 
 	AABB bb = _iqmMesh->aabb;
 	boxes.push_back(new CubeMesh(_iqmMesh->aabb));
 
-	//_voxMesh=new VoxelMesh(u16vec3(gridSize));
+	_voxMesh = new VoxelMesh(u16vec3(gridSize));
 
 	vector<Triangle<glm::vec3> > vec = _iqmMesh->GetTriangles<glm::vec3, uint32_t>();
 	printf("Total triangles: %u\n", vec.size());
 
-	//    VoxelizeMesh(vec,_voxMesh);
-	cmg = new ChunkManager();
-	cmg->FlagGenerated();
-	VoxelizeMesh(vec, cmg);
+	VoxelizeMesh(vec, _voxMesh);
+	_voxMesh->UpdateMesh();
+	//cmg = new ChunkManager();
+	//cmg->FlagGenerated();
+	//VoxelizeMesh(vec, cmg);
 
 	_particleSystem = new ParticleSystem();
 	_emitter = new ParticleEmitter(glm::vec3(0, 25, 0), glm::vec3(0, 1, 0), 5, 100, 0.65);
@@ -365,8 +370,6 @@ bool VoxMeshEditorApp::Init(const std::string & title, uint32_t width, uint32_t 
 	//    ParticleEmitter* em=new ParticleEmitter(glm::vec3(10,0,0),glm::vec3(0,1,0),15,50,1,4096);
 	//    em->AddParticleAffector(new GravityAffector());
 	//    _particleSystem->AddEmitter(em);
-
-		//_voxMesh->UpdateMesh();
 
 	_colWall = new CollisionObject(glm::vec3(0, 0, 0), glm::vec3(0.25, 50, 50));
 	_colWallMesh = new CubeMesh(_colWall->GetCollissionShape());
@@ -441,7 +444,8 @@ bool VoxMeshEditorApp::Update()
 		{
 			_voxShader->Set();
 			MVar<glm::mat4>(0, "mvp", MVP).Set();
-			cmg->Render(_cam, _voxShader, _guiSwitches["wireVoxMesh"]);
+			_voxMesh->Render();
+			//cmg->Render(_cam, _voxShader, _guiSwitches["wireVoxMesh"]);
 		}
 		_particleShader->Set();
 		if (_particleShader->getparam("M") != -1) MVar<glm::mat4>(_particleShader->getparam("M"), "M", glm::mat4(1.f)).Set();
@@ -449,7 +453,7 @@ bool VoxMeshEditorApp::Update()
 		if (_particleShader->getparam("P") != -1) MVar<glm::mat4>(_particleShader->getparam("P"), "P", _cam->GetProjectionMat()).Set();
 		_particleSystem->Render();
 
-		//_guiEnv->Render();
+		_guiEnv->Render();
 
 		_appContext->_window->SwapBuffers();
 		return true;
@@ -576,6 +580,8 @@ bool VoxMeshEditorApp::OnEvent(const GUIEvent& e)
 
 		if (e.get_caller()->GetName().compare("cbx_wireVoxMesh") == 0)
 			_guiSwitches["wireVoxMesh"] = _checkboxes["cbx_wireVoxMesh"]->IsChecked();
+
+		return false;
 		break;
 
 	case gui_event_type::scrollbar_changed:
@@ -592,8 +598,10 @@ bool VoxMeshEditorApp::OnEvent(const GUIEvent& e)
 			_emitter->SetParticleLife(newValue);
 			//_appContext->_logger->log(LOG_DEBUG,"%u",newValue);
 		}
+		return false;
 		break;
 	default:
+		return false;
 		break;
 	}
 

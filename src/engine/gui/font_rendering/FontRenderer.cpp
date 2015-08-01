@@ -292,10 +292,9 @@ void FontRenderer::_RenderString(const std::wstring &text, glm::ivec2 pos, const
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-	const int len = text.length() * 6;
-
 	vector<glm::vec4> coords;
-	coords.resize(len);
+	coords.resize(text.length() * 6);
+
 	int c = 0;
 
 	Font* a = _currentFont;
@@ -329,7 +328,7 @@ void FontRenderer::_RenderString(const std::wstring &text, glm::ivec2 pos, const
 	}
 
 	/* Draw all the character on the screen in one go */
-	glBufferData(GL_ARRAY_BUFFER, sizeof coords, &coords[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, coords.size() * sizeof(glm::vec4), glm::value_ptr(coords[0]), GL_DYNAMIC_DRAW);
 	glDrawArrays(GL_TRIANGLES, 0, c);
 
 	glDisableVertexAttribArray(0);

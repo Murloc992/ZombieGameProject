@@ -1,4 +1,5 @@
 #include "Precomp.h"
+
 #include "VoxelzApp.h"
 #include "application/Window.h"
 #include "application/InputHandler.h"
@@ -53,19 +54,19 @@ bool InitPostProc(AppContext* ctx)
 	//    rbo->Init(GL_DEPTH_COMPONENT16,1280,720);
 		/// DEPTH
 	GBdepth = share(new Texture());
-	GL_CHECK(GBdepth->Init(nullptr, GL_TEXTURE_2D, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, 1280, 768));
+	GBdepth->Init(nullptr, GL_TEXTURE_2D, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, 1280, 768);
 	/// DIFFUSE
 	GBdiffuse = share(new Texture());
-	GL_CHECK(GBdiffuse->Init(nullptr, GL_TEXTURE_2D, GL_RGB, GL_RGB, 1280, 768));
+	GBdiffuse->Init(nullptr, GL_TEXTURE_2D, GL_RGB, GL_RGB, 1280, 768);
 	/// NORMALS
 	GBnormal = share(new Texture());
-	GL_CHECK(GBnormal->Init(nullptr, GL_TEXTURE_2D, GL_RGB, GL_RGB, 1280, 768));
+	GBnormal->Init(nullptr, GL_TEXTURE_2D, GL_RGB, GL_RGB, 1280, 768);
 	/// POSITION
 	GBposition = share(new Texture());
-	GL_CHECK(GBposition->Init(nullptr, GL_TEXTURE_2D, GL_RGB, GL_RGB, 1280, 768));
+	GBposition->Init(nullptr, GL_TEXTURE_2D, GL_RGB, GL_RGB, 1280, 768);
 	/// TEXCOORD
 	GBtexcoord = share(new Texture());
-	GL_CHECK(GBtexcoord->Init(nullptr, GL_TEXTURE_2D, GL_RGB, GL_RGB, 1280, 768));
+	GBtexcoord->Init(nullptr, GL_TEXTURE_2D, GL_RGB, GL_RGB, 1280, 768);
 
 	SSAONormal = share(new Texture());
 	image_loader* loader = new image_loader(ctx->_logger);
@@ -306,9 +307,9 @@ bool VoxelzApp::Update()
 		glm::mat4 Model = glm::mat4(1.0f);
 		glm::mat4 MVP = cam->GetViewProjMat() * Model;
 
-		//        vsh->Set();
-		//        MVar<glm::mat4>(0, "mvp", MVP).Set();
-		//        chkmgr->Render(cam.get(),vsh,wireframe);
+		//vsh->Set();
+		//MVar<glm::mat4>(0, "mvp", MVP).Set();
+		//chkmgr->Render(cam.get(), vsh, wireframe);
 
 		sh->Set();
 		Model = glm::mat4(1.0f);
