@@ -125,8 +125,6 @@ public:
 
 	void RebuildIndices();
 
-	void GenerationLoop();
-
 	void BuildingLoop();
 
 	const glm::ivec3 &GetPosition() const

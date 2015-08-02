@@ -248,7 +248,7 @@ void InitPlaneMesh(AppContext * ctx)
 	std::shared_ptr<image> img = std::shared_ptr<image>(loader->load("res/shroom.png"));
 	delete loader;
 	spr = VoxelSprite::LoadFromImage(img);
-	//spr->SaveToFile("res/shroom.voxmesh");
+	spr->SaveToFile("res/shroom.voxmesh");
 	spr->Rebuild();
 
 	//    spr=(VoxelSprite*)VoxelSprite::LoadFromFile("res/shroom.voxmesh");
@@ -269,7 +269,7 @@ bool VoxelzApp::Init(const std::string & title, uint32_t width, uint32_t height)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	glClearColor(0.5, 0.5, 0.7, 0);
+	glClearColor(0.5f, 0.5f, 0.7f, 0.f);
 
 	InitPlaneMesh(_appContext);
 
@@ -452,7 +452,7 @@ void VoxelzApp::OnKeyEvent(int32_t key, int32_t scan_code, int32_t action, int32
 
 	if (key == GLFW_KEY_F3&&action == GLFW_RELEASE)
 	{
-		chkmgr->Generate();
+		//chkmgr->Generate();
 	}
 
 	if (action == GLFW_RELEASE)

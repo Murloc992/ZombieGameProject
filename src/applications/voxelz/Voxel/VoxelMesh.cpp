@@ -128,6 +128,8 @@ void VoxelMesh::SaveToFile(const std::string &filename)
 {
 	auto file = PHYSFS_openWrite(filename.c_str());
 
+	const char * stuff=PHYSFS_getLastError();
+
 	uint32_t sizerino = _vox.size();
 	PHYSFS_write(file, (void*)&_size, sizeof(u16vec3), 1);
 	PHYSFS_write(file, (void*)&sizerino, sizeof(sizerino), 1);

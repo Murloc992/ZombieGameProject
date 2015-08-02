@@ -13,171 +13,213 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\World">
+      <UniqueIdentifier>{8abc4bc1-e147-491c-b0db-064e528e9ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Voxel">
+      <UniqueIdentifier>{ab234b63-73fe-4dc8-8d73-9d7942392c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entities">
+      <UniqueIdentifier>{436005cc-c115-4c29-bfaf-aebd93d50be6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Particles">
+      <UniqueIdentifier>{685f6022-e51a-443f-9959-84aed827706f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Particles\Affectors">
+      <UniqueIdentifier>{1b13e93a-58f6-418d-aabf-59ee8726d680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Applications">
+      <UniqueIdentifier>{7bebd85e-825b-4faf-9872-51eeb0efbe94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Voxel">
+      <UniqueIdentifier>{5bea0a53-8ce2-403f-ad5e-08f87b6261dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World">
+      <UniqueIdentifier>{fe81d444-93c7-46e4-ab03-f56e562539f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Particles">
+      <UniqueIdentifier>{5bf8657f-0951-415d-9ae3-948cc578f248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities">
+      <UniqueIdentifier>{7843c712-0f7d-4de1-bb70-82cbeac22a2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Applications">
+      <UniqueIdentifier>{a030d563-4bc4-4845-99c5-cc03381b883d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Particles\Affectors">
+      <UniqueIdentifier>{422c273b-c7d9-4d0f-9e37-cfe69e39e821}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\applications\voxelz\game\AttractFocusAffector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\game\Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\game\GravityAffector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\game\ItemEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\game\ParticleEmitter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\game\ParticleSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\game\Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\game\WindParticleAffector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\physics\CollisionObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\Chunk.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\ChunkManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\GreedyMeshBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\SimplexNoise.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\SuperChunk.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\VoxelMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\VoxelSprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\VoxelTypes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\WorldGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\CollisionTestApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\applications\voxelz\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\TemplateApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\VoxelzApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\VoxelzProfilingApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\applications\voxelz\VoxMeshEditorApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\engine\Precomp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\game\AttractFocusAffector.cpp">
+      <Filter>Source Files\Particles\Affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\game\WindParticleAffector.cpp">
+      <Filter>Source Files\Particles\Affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\Chunk.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\ChunkManager.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\physics\CollisionObject.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\game\GravityAffector.cpp">
+      <Filter>Source Files\Particles\Affectors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\CollisionTestApp.cpp">
+      <Filter>Source Files\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\game\Entity.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\GreedyMeshBuilder.cpp">
+      <Filter>Source Files\Voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\game\ItemEntity.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\game\ParticleEmitter.cpp">
+      <Filter>Source Files\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\game\ParticleSystem.cpp">
+      <Filter>Source Files\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\game\Player.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\SimplexNoise.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\SuperChunk.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\VoxelMesh.cpp">
+      <Filter>Source Files\Voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\VoxelSprite.cpp">
+      <Filter>Source Files\Voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\VoxelTypes.cpp">
+      <Filter>Source Files\Voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\TemplateApp.cpp">
+      <Filter>Source Files\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\VoxelzApp.cpp">
+      <Filter>Source Files\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\VoxelzProfilingApp.cpp">
+      <Filter>Source Files\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\VoxMeshEditorApp.cpp">
+      <Filter>Source Files\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\WorldGenerator.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\applications\voxelz\voxel\MeshVoxelizer.cpp">
+      <Filter>Source Files\Voxel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\AttractFocusAffector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\GravityAffector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\IParticleAffector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\ItemEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\Particle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\ParticleEmitter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\ParticleSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\game\WindParticleAffector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\physics\CollisionObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\Block.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\Chunk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\ChunkManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\GreedyMeshBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\SimplexNoise.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\SuperChunk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\Voxel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\VoxelMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\VoxelSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\VoxelTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\WorldGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\CollisionTestApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\TemplateApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\VoxelzApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\VoxelzProfilingApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\applications\voxelz\VoxMeshEditorApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\applications\voxelz\VoxMeshGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\engine\Precomp.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\AttractFocusAffector.h">
+      <Filter>Header Files\Particles\Affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\Block.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\Chunk.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\ChunkManager.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\SuperChunk.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\SimplexNoise.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\WorldGenerator.h">
+      <Filter>Header Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\physics\CollisionObject.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\Entity.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\GreedyMeshBuilder.h">
+      <Filter>Header Files\Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\GravityAffector.h">
+      <Filter>Header Files\Particles\Affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\IParticleAffector.h">
+      <Filter>Header Files\Particles\Affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\WindParticleAffector.h">
+      <Filter>Header Files\Particles\Affectors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\Particle.h">
+      <Filter>Header Files\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\ParticleEmitter.h">
+      <Filter>Header Files\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\ParticleSystem.h">
+      <Filter>Header Files\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\ItemEntity.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\game\Player.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\TemplateApp.h">
+      <Filter>Header Files\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\CollisionTestApp.h">
+      <Filter>Header Files\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\VoxelzProfilingApp.h">
+      <Filter>Header Files\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\VoxMeshEditorApp.h">
+      <Filter>Header Files\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\Voxel.h">
+      <Filter>Header Files\Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\VoxelMesh.h">
+      <Filter>Header Files\Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\VoxelSprite.h">
+      <Filter>Header Files\Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\VoxelTypes.h">
+      <Filter>Header Files\Voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\VoxelzApp.h">
+      <Filter>Header Files\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\applications\voxelz\voxel\MeshVoxelizer.h">
+      <Filter>Header Files\Voxel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

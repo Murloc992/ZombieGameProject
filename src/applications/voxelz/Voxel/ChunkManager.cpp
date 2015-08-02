@@ -11,10 +11,11 @@
 #include "Game/Player.h"
 #include <boost/foreach.hpp>
 
+vector<SuperChunkPtr> ChunkManager::_chunksToGenerate;
+vector<glm::ivec3> ChunkManager::_removableChunks;
+
 ChunkManager::ChunkManager()
 {
-	generated = false;
-
 	std::string stri = "hakunamytatas";
 	int seed = 0;
 	for (char c : stri)
@@ -22,6 +23,7 @@ ChunkManager::ChunkManager()
 		seed += rand() % (int)(c);
 	}
 	printf("Seed is: %d\n", seed);
+	_worldGenerator = new WorldGenerator(seed);
 }
 
 ChunkManager::~ChunkManager()
@@ -89,6 +91,8 @@ ChunkPtr ChunkManager::GetChunkWorld(const glm::ivec3 &pos)
 	{
 		return _superChunks[superchunkPos]->GetChunk(chunkCoords);
 	}
+
+	return nullptr;
 }
 
 //! pos in CHUNK INDEX coordinates
@@ -114,11 +118,11 @@ const Block &ChunkManager::GetBlock(const glm::ivec3 &pos)
 		return Chunk::EMPTY_BLOCK;
 }
 
-void ChunkManager::AsyncGenerate(vector<SuperChunkPtr> _vec)
+void ChunkManager::AsyncGenerate()
 {
-	if (_vec.size() > 0)
+	while (_chunksToGenerate.size() > 0 && _chunksToGenerate.size() <= 4)
 	{
-		for (auto it = _vec.begin(); it != _vec.end();)
+		for (auto it = _chunksToGenerate.begin(); it != _chunksToGenerate.end();)
 		{
 			auto sc = *it;
 			if (!sc->generated)
@@ -128,7 +132,9 @@ void ChunkManager::AsyncGenerate(vector<SuperChunkPtr> _vec)
 				sc->BuildingLoop();
 
 			if (sc->generated&&sc->built)
-				it = _vec.erase(it);
+			{
+				it = _chunksToGenerate.erase(it);
+			}
 			else
 				it++;
 		}
@@ -137,79 +143,75 @@ void ChunkManager::AsyncGenerate(vector<SuperChunkPtr> _vec)
 	}
 }
 
-void ChunkManager::Generate()
-{
-	if (!generated)
-	{
-		for (int x = 0; x < 1; x++)
-			for (int z = 0; z < 1; z++)
-				for (int y = 0; y < 1; y++)
-				{
-					AddSuperChunk(glm::ivec3(x, y, z));
-				}
-		generated = true;
-	}
-}
-
 void ChunkManager::Update(float dt, Player *player)
 {
-	if (_removableChunks.size() > 0)
-	{
-		//printf("Removable superchunks: %d\n",_removableChunks.size());
+	//if (_removableChunks.size() > 0)
+	//{
+	//	//printf("Removable superchunks: %d\n",_removableChunks.size());
 
-		for (auto chp : _removableChunks)
-		{
-			RemoveSuperChunk(chp);
-		}
-		_removableChunks.clear();
+	//	for (auto chp : _removableChunks)
+	//	{
+	//		RemoveSuperChunk(chp);
+	//	}
+	//	_removableChunks.clear();
 
-		//printf("Leftover superchunks: %d\n",_superChunks.size());
-	}
+	//	//printf("Leftover superchunks: %d\n",_superChunks.size());
+	//}
 
-	glm::ivec3 plPos = (glm::ivec3)player->GetFeetPos();
+	glm::vec3 playerPos = player->GetFeetPos();
 
 	BOOST_FOREACH(SuperChunkMap::value_type a, _superChunks)
 	{
 		if (a.second->generated&&a.second->built)
 		{
 			glm::vec3 chunkCenter = (glm::vec3)(a.second->GetPosition()) + glm::vec3(SUPERCHUNK_SIZE_BLOCKSF / 2.f);
-			glm::vec3 playerPos = player->GetFeetPos();
 			float dist = glm::distance(chunkCenter, playerPos);
 
 			//printf("DEBUG: %s %s %f\n",GLMVec3ToStr(chunkCenter).c_str(),GLMVec3ToStr(playerPos).c_str(),dist);
 
-//            if(dist>SUPERCHUNK_SIZE_BLOCKSF*3.f)
-//            {
-//                _removableChunks.push_back(a.first);
-//                continue;
-//            }
+			//if (dist > SUPERCHUNK_SIZE_BLOCKSF*3.f)
+			//{
+			//	_removableChunks.push_back(a.first);
+			//	continue;
+			//}
 		}
 
-		/// Uploads will be handled here as they must be synchronous
 		a.second->Update(dt);
-
-		if (!a.second->generating&&!a.second->generated)
-		{
-			a.second->generating = true;
-		}
 	}
 
-	for (int x = plPos.x - SUPERCHUNK_SIZE_BLOCKS * 2; x <= plPos.x + SUPERCHUNK_SIZE_BLOCKS * 2; x += 128)
-	{
-		for (int z = plPos.z - SUPERCHUNK_SIZE_BLOCKS * 2; z <= plPos.z + SUPERCHUNK_SIZE_BLOCKS * 2; z += 128)
-		{
-			glm::ivec3 scp = WorldToSuperChunkCoords(glm::ivec3(x, 0, z));
-			if (GetSuperChunk(scp) != nullptr)
-				continue;
-			else
-			{
-				_chunksToGenerate.push_back(AddSuperChunk(scp));
-				//std::async(std::launch::async,AddSuperChunk,this,scp);
-			}
+	glm::ivec3 ppmin = (glm::ivec3)(playerPos - glm::vec3(SUPERCHUNK_SIZE_BLOCKS));
+	glm::ivec3 ppmax = (glm::ivec3)(playerPos + glm::vec3(SUPERCHUNK_SIZE_BLOCKS));
 
-			if (_chunksToGenerate.size() >= 4);
-			//std::async(std::launch::async,&AsyncGenerate,this,_chunksToGenerate);
-		}
+	if (_chunksToGenerate.size() == 0)
+	{
+		for (int x = ppmin.x; x <= ppmax.x; x += SUPERCHUNK_SIZE_BLOCKS / 2)
+			for (int z = ppmin.z; z <= ppmax.z; z += SUPERCHUNK_SIZE_BLOCKS / 2)
+				for (int y = ppmin.y; y <= ppmax.y; y += SUPERCHUNK_SIZE_BLOCKS / 2)
+				{
+					if (_chunksToGenerate.size() >= 4)
+					{
+						//std::async(std::launch::deferred, &ChunkManager::AsyncGenerate, this);
+						break;
+					}
+
+					glm::ivec3 scc = WorldToSuperChunkCoords(glm::ivec3(x, y, z));
+					SuperChunkPtr chunky = GetSuperChunk(scc);
+
+					if (chunky == nullptr)
+					{
+						_chunksToGenerate.push_back(AddSuperChunk(scc));
+					}
+					else if (chunky->generated && !chunky->built)
+					{
+						_chunksToGenerate.push_back(chunky);
+					}
+					else
+						continue;
+				}
+	}
+	else
+	{
+		std::async(std::launch::async, &ChunkManager::AsyncGenerate, this); // launch on a thread
 	}
 }
 

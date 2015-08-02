@@ -1,8 +1,6 @@
 #ifndef CHUNKMANAGER_H
 #define CHUNKMANAGER_H
 
-#define GENERATION_THREAD_COUNT 4
-
 #define WORLD_HEIGHT 128
 #define WORLD_HEIGHTF 128.f
 
@@ -19,12 +17,6 @@ class Player;
 
 class ChunkManager
 {
-public:
-	std::thread generationThreads[GENERATION_THREAD_COUNT];
-	std::mutex generationLocks[GENERATION_THREAD_COUNT];
-	uint32_t usedThread;
-	bool generated, runAsync;
-
 public:
 	ChunkManager();
 	virtual ~ChunkManager();
@@ -49,29 +41,18 @@ public:
 		return ret;
 	}
 
-	void FlagGenerated()
-	{
-		generated = true;
-		for (auto sc : _superChunks)
-		{
-			sc.second->FlagGenerated();
-		}
-	}
-
-	void Generate();
-
-	void Update(float dt, Player*player);
+	void Update(float dt, Player *player);
 	void Render(Camera *cam, ShaderPtr vsh, bool wireframe = false);
 protected:
 private:
 	SuperChunkMap _superChunks;
 
-	vector<SuperChunkPtr> _chunksToGenerate;
-	vector<glm::ivec3> _removableChunks;
+	static vector<SuperChunkPtr> _chunksToGenerate;
+	static vector<glm::ivec3> _removableChunks;
 
-	WorldGenerator *_worldGenerator;
+	WorldGenerator * _worldGenerator;
 
-	void AsyncGenerate(vector<SuperChunkPtr> _vec);
+	void AsyncGenerate();
 
 	static SuperChunk NULL_SUPERCHUNK;
 };

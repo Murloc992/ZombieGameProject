@@ -81,11 +81,13 @@ void SuperChunk::Fill()
 
 void SuperChunk::FlagGenerated()
 {
-	generated = true;
+	//printf("I am flagged as generated.\n");
+	int size = _chunks.size();
 	for (auto ch : _chunks)
 	{
 		ch.second->generated = true;
 	}
+	generated = true;
 }
 
 void SuperChunk::SetChunkNeighbours(glm::ivec3 chunkIndex, ChunkPtr chunk)
@@ -98,32 +100,6 @@ void SuperChunk::SetChunkNeighbours(glm::ivec3 chunkIndex, ChunkPtr chunk)
 
 	chunk->backN = GetChunk(chunkIndex + glm::ivec3(0, 0, -1));
 	chunk->frontN = GetChunk(chunkIndex + glm::ivec3(0, 0, 1));
-}
-
-void SuperChunk::GenerationLoop()
-{
-	//    if(!generated)
-	//    {
-	//        //printf("Generation loop.\n");
-	//        int32_t chunksPerFrame=0;
-	//        for(auto a:_chunks)
-	//        {
-	//            if(chunksPerFrame!=CHUNK_UPDATES_PER_FRAME)
-	//            {
-	//                if(a.second->empty&&!a.second->generated)
-	//                {
-	//                    Generate(a.second);
-	//                    chunksPerFrame++;
-	//                }
-	//            }
-	//            else
-	//            {
-	//                break;
-	//            }
-	//        }
-	//        if(chunksPerFrame==0)
-	//            generated=true;
-	//    }
 }
 
 void SuperChunk::BuildingLoop()
@@ -140,6 +116,7 @@ void SuperChunk::BuildingLoop()
 				{
 					SetChunkNeighbours(WorldToChunkCoords(a.second->position), a.second);
 					GreedyMeshBuilder::GreedyBuild(a.second);
+					//printf("greedying stuff\n");
 					chunksPerFrame++;
 				}
 			}
@@ -148,8 +125,20 @@ void SuperChunk::BuildingLoop()
 				break;
 			}
 		}
-		if (chunksPerFrame == 0)
-			built = true;
+
+		int totalChunks = 0;
+		for (auto a : _chunks)
+		{
+			if (a.second->generated&&a.second->built||a.second->empty)
+			{
+				totalChunks++;
+			}
+			if (totalChunks == _chunks.size())
+			{
+				//printf("built.\n");
+				built = true;
+			}
+		}	
 	}
 }
 
@@ -157,6 +146,7 @@ void SuperChunk::Update(float dt)
 {
 	if (generated)
 	{
+		//printf("Generated as fuck.\n");
 		int32_t chunksPerFrame = 0;
 
 		for (auto chunk : _chunks)
@@ -268,6 +258,7 @@ ChunkPtr SuperChunk::GetChunk(const glm::ivec3 &chunkCoords)
 
 void SuperChunk::UpdateChunkData(ChunkPtr chunk)
 {
+	//printf("trying to update mesh data.\n");
 	if (!chunk->meshData.empty)
 	{
 		this->UploadBufferSubData(Mesh::POSITION, chunk->meshData.positions, chunk->offset);

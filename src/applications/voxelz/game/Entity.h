@@ -18,7 +18,7 @@ enum E_ENTITY_TYPE :uint32_t
 
 class ChunkManager;
 class CubeMesh;
-class Block;
+struct Block;
 class Chunk;
 typedef std::shared_ptr<Chunk> ChunkPtr;
 
