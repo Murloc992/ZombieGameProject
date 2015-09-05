@@ -48,11 +48,12 @@ private:
 	SuperChunkMap _superChunks;
 
 	static vector<SuperChunkPtr> _chunksToGenerate;
+	static vector<SuperChunkPtr> _chunksToRender;
 	static vector<glm::ivec3> _removableChunks;
 
 	WorldGenerator * _worldGenerator;
 
-	void AsyncGenerate();
+	void AsyncGenerate(vector<SuperChunkPtr> chunksToGenerate);
 
 	static SuperChunk NULL_SUPERCHUNK;
 };

@@ -41,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -106,10 +106,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\src\applications\voxelz;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\src\engine;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glm;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\boost;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\freetype2\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glfw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glxw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\irrKlang-1.5.0\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\jsoncpp\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libccd\src;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libsigc++;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\physfs;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\stb_image;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\tinyxml2\src</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\workspaces\VisualStudio\Debug;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\win32debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,7 +124,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\src\applications\voxelz;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\src\engine;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glm;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\boost;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\freetype2\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glfw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glxw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\irrKlang-1.5.0\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\jsoncpp\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libccd\src;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libsigc++;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\physfs;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\stb_image;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\tinyxml2\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\applications\voxelz;..\..\..\src\engine;..\..\..\libs\glm;..\..\..\libs\boost;..\..\..\libs\freetype2\include;..\..\..\libs\glfw\include;..\..\..\libs\glxw\include;..\..\..\libs\irrKlang-1.5.0\include;..\..\..\libs\jsoncpp\include;..\..\..\libs\libccd\src;..\..\..\libs\libsigc++;..\..\..\libs\physfs;..\..\..\libs\stb_image;..\..\..\libs\tinyxml2\src</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -129,7 +132,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\workspaces\VisualStudio\Release;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\win32release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Release;..\..\..\libs\win32release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glxw.lib;glxw_wgl.lib;glfw3.lib;sigc++.lib;jsoncpp.lib;physfs.lib;stb_image_lib.lib;tinyxml2_lib.lib;ccd.lib;freetype.lib;engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -142,12 +145,16 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\src\applications\voxelz;..\..\..\src\engine;..\..\..\libs\glm;..\..\..\libs\boost;..\..\..\libs\freetype2\include;..\..\..\libs\glfw\include;..\..\..\libs\glxw\include;..\..\..\libs\irrKlang-1.5.0\include;..\..\..\libs\jsoncpp\include;..\..\..\libs\libccd\src;..\..\..\libs\libsigc++;..\..\..\libs\physfs;..\..\..\libs\stb_image;..\..\..\libs\tinyxml2\src</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\x64\Release;..\..\..\libs\win32release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glxw.lib;glxw_wgl.lib;glfw3.lib;sigc++.lib;jsoncpp.lib;physfs.lib;stb_image_lib.lib;tinyxml2_lib.lib;ccd.lib;freetype.lib;engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

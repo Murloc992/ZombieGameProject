@@ -41,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -114,6 +114,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\src\engine;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glm;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\boost;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\freetype2\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glfw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glxw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\irrKlang-1.5.0\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\jsoncpp\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libccd\src;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libsigc++;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\physfs;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\stb_image;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\tinyxml2\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -129,7 +132,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\src\engine;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glm;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\boost;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\freetype2\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glfw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\glxw\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\irrKlang-1.5.0\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\jsoncpp\include;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libccd\src;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\libsigc++;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\physfs;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\stb_image;C:\Users\Andrew\Desktop\Coding\C++\ZombieGameProject\libs\tinyxml2\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\src\engine;..\..\..\libs\glm;..\..\..\libs\boost;..\..\..\libs\freetype2\include;..\..\..\libs\glfw\include;..\..\..\libs\glxw\include;..\..\..\libs\irrKlang-1.5.0\include;..\..\..\libs\jsoncpp\include;..\..\..\libs\libccd\src;..\..\..\libs\libsigc++;..\..\..\libs\physfs;..\..\..\libs\stb_image;..\..\..\libs\tinyxml2\src</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -157,6 +160,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\src\engine;..\..\..\libs\glm;..\..\..\libs\boost;..\..\..\libs\freetype2\include;..\..\..\libs\glfw\include;..\..\..\libs\glxw\include;..\..\..\libs\irrKlang-1.5.0\include;..\..\..\libs\jsoncpp\include;..\..\..\libs\libccd\src;..\..\..\libs\libsigc++;..\..\..\libs\physfs;..\..\..\libs\stb_image;..\..\..\libs\tinyxml2\src</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

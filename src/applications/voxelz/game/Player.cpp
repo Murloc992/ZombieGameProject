@@ -145,7 +145,7 @@ void Player::HandleInput(InputHandler* input)
 		_velocity += _strafingDir*2.f*direction;
 	}
 
-	if (input->IsKeyDown(GLFW_KEY_LEFT_SHIFT) && direction == forward && (!_isSwimming&&_isOnGround&&!_isJumping))
+	if (input->IsKeyDown(GLFW_KEY_LEFT_SHIFT) && direction == forward && (!_isSwimming&&!_isJumping))
 	{
 		_velocity += _walkingDir*2.f;
 	}

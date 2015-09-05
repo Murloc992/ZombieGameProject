@@ -147,27 +147,6 @@ void SuperChunk::Update(float dt)
 	if (generated)
 	{
 		//printf("Generated as fuck.\n");
-		int32_t chunksPerFrame = 0;
-
-		for (auto chunk : _chunks)
-		{
-			if (chunksPerFrame != CHUNK_UPDATES_PER_FRAME)
-			{
-				auto currentChunk = chunk.second;
-				if (!currentChunk->empty)
-				{
-					if (currentChunk->generated&&currentChunk->built&&!currentChunk->uploaded)
-					{
-						UpdateChunkData(currentChunk);
-						chunksPerFrame++;
-					}
-				}
-			}
-			else
-			{
-				break;
-			}
-		}
 
 		loop(x, SUPERCHUNK_SIZE)
 			loop(y, SUPERCHUNK_SIZE)
@@ -179,6 +158,31 @@ void SuperChunk::Update(float dt)
 				if (chk->generated)
 				{
 					chk->Update(dt);
+				}
+			}
+		}
+
+		if (built)
+		{
+			int32_t chunksPerFrame = 0;
+
+			for (auto chunk : _chunks)
+			{
+				if (chunksPerFrame != CHUNK_UPDATES_PER_FRAME)
+				{
+					auto currentChunk = chunk.second;
+					if (!currentChunk->empty)
+					{
+						if (currentChunk->generated&&currentChunk->built&&!currentChunk->uploaded)
+						{
+							UpdateChunkData(currentChunk);
+							chunksPerFrame++;
+						}
+					}
+				}
+				else
+				{
+					break;
 				}
 			}
 		}

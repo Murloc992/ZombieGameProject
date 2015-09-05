@@ -248,13 +248,13 @@ void InitPlaneMesh(AppContext * ctx)
 	std::shared_ptr<image> img = std::shared_ptr<image>(loader->load("res/shroom.png"));
 	delete loader;
 	spr = VoxelSprite::LoadFromImage(img);
-	spr->SaveToFile("res/shroom.voxmesh");
+	//spr->SaveToFile("res/shroom.voxmesh");
 	spr->Rebuild();
 
 	//    spr=(VoxelSprite*)VoxelSprite::LoadFromFile("res/shroom.voxmesh");
 	//    spr->Rebuild();
 
-	testitem = new ItemEntity(chkmgr, glm::vec3(62, 128, 162), "res/shroom.voxmesh");
+	//testitem = new ItemEntity(chkmgr, glm::vec3(62, 128, 162), "res/shroom.voxmesh");
 }
 
 bool VoxelzApp::Init(const std::string & title, uint32_t width, uint32_t height)
@@ -345,8 +345,8 @@ bool VoxelzApp::Update()
 		spr->Render(wireframe);
 
 		//testitem->Update(dt);
-		vsh->Set();
-		testitem->Render(wireframe, cam);
+		//vsh->Set();
+		//testitem->Render(wireframe, cam);
 
 		/// G BUFFER
 		gbsh->Set();
