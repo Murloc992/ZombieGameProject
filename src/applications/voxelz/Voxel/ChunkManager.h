@@ -47,9 +47,9 @@ protected:
 private:
 	SuperChunkMap _superChunks;
 
-	static vector<SuperChunkPtr> _chunksToGenerate;
-	static vector<SuperChunkPtr> _chunksToRender;
-	static vector<glm::ivec3> _removableChunks;
+	vector<SuperChunkPtr> _chunksToGenerate;
+	vector<SuperChunkPtr> _chunksToRender;
+	vector<glm::ivec3> _removableChunks;
 
 	WorldGenerator * _worldGenerator;
 

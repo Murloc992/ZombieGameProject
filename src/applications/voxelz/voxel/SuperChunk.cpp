@@ -11,9 +11,11 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr, const glm::ivec3 &pos)
 	this->_chunkManager = chkmgr;
 	this->_pos = pos;
 	this->_offsetTrack = 0;
+
 	built = false;
 	generated = false;
 	generating = false;
+	uploaded = false;
 
 	_offsetTrack = 0;
 
@@ -129,7 +131,7 @@ void SuperChunk::BuildingLoop()
 		int totalChunks = 0;
 		for (auto a : _chunks)
 		{
-			if (a.second->generated&&a.second->built||a.second->empty)
+			if (a.second->generated&&a.second->built || a.second->empty)
 			{
 				totalChunks++;
 			}
@@ -138,7 +140,7 @@ void SuperChunk::BuildingLoop()
 				//printf("built.\n");
 				built = true;
 			}
-		}	
+		}
 	}
 }
 
@@ -152,7 +154,7 @@ void SuperChunk::Update(float dt)
 			loop(y, SUPERCHUNK_SIZE)
 			loop(z, SUPERCHUNK_SIZE)
 		{
-			if (_chunks.count(glm::ivec3(x, y, z)) != 0)
+			if (_chunks.find(glm::ivec3(x, y, z)) != _chunks.end())
 			{
 				auto chk = _chunks[glm::ivec3(x, y, z)];
 				if (chk->generated)
@@ -165,6 +167,7 @@ void SuperChunk::Update(float dt)
 		if (built)
 		{
 			int32_t chunksPerFrame = 0;
+			vector<ChunkPtr> chunksToUpload;
 
 			for (auto chunk : _chunks)
 			{
@@ -173,9 +176,9 @@ void SuperChunk::Update(float dt)
 					auto currentChunk = chunk.second;
 					if (!currentChunk->empty)
 					{
-						if (currentChunk->generated&&currentChunk->built&&!currentChunk->uploaded)
+						if (currentChunk->generated && currentChunk->built && !currentChunk->uploaded)
 						{
-							UpdateChunkData(currentChunk);
+							chunksToUpload.push_back(currentChunk);
 							chunksPerFrame++;
 						}
 					}
@@ -183,6 +186,25 @@ void SuperChunk::Update(float dt)
 				else
 				{
 					break;
+				}
+			}
+
+			if (chunksToUpload.size() > 0)
+			{
+				UpdateChunkData(chunksToUpload);
+			}
+
+			int totalChunks = 0;
+			for (auto a : _chunks)
+			{
+				if (a.second->uploaded || a.second->empty)
+				{
+					totalChunks++;
+				}
+				if (totalChunks == _chunks.size())
+				{
+					//printf("uploaded.\n");
+					uploaded = true;
 				}
 			}
 		}
@@ -193,7 +215,7 @@ void SuperChunk::Set(uint32_t x, uint32_t y, uint32_t z, EBlockType type, bool a
 {
 	glm::ivec3 pos(x, y, z);
 	glm::ivec3 chunkCoords = WorldToChunkCoords(pos), voxelCoords = ChunkSpaceCoords(pos);
-	if (_chunks.count(chunkCoords) != 0)
+	if (_chunks.find(chunkCoords) != _chunks.end())
 	{
 		_chunks[chunkCoords]->SetBlock(voxelCoords.x, voxelCoords.y, voxelCoords.z, type, active);
 		_chunks[chunkCoords]->built = false;
@@ -214,7 +236,7 @@ const Block &SuperChunk::Get(uint32_t x, uint32_t y, uint32_t z)
 {
 	glm::ivec3 pos(x, y, z);
 	glm::ivec3 chunkCoords = WorldToChunkCoords(pos), voxelCoords = ChunkSpaceCoords(pos);
-	if (_chunks.count(chunkCoords) != 0)
+	if (_chunks.find(chunkCoords) != _chunks.end())
 		return _chunks[chunkCoords]->GetBlock(voxelCoords.x, voxelCoords.y, voxelCoords.z);
 	else
 		return Chunk::EMPTY_BLOCK;
@@ -248,7 +270,7 @@ ChunkPtr SuperChunk::GetChunk(const glm::ivec3 &chunkCoords)
 		chunkCoords.y < SUPERCHUNK_SIZE&&chunkCoords.y >= 0 &&
 		chunkCoords.z < SUPERCHUNK_SIZE&&chunkCoords.z >= 0)
 	{
-		if (_chunks.count(chunkCoords) != 0)
+		if (_chunks.find(chunkCoords) != _chunks.end())
 		{
 			auto chk = _chunks[chunkCoords];
 			if (chk->generated)
@@ -260,35 +282,27 @@ ChunkPtr SuperChunk::GetChunk(const glm::ivec3 &chunkCoords)
 	return nullptr;
 }
 
-void SuperChunk::UpdateChunkData(ChunkPtr chunk)
+void SuperChunk::UpdateChunkData(vector<ChunkPtr> chunks)
 {
-	//printf("trying to update mesh data.\n");
-	if (!chunk->meshData.empty)
+	//printf("Updating chunk data with %u chunks.\n", chunks.size());
+
+	for (auto chunk : chunks)
 	{
-		this->UploadBufferSubData(Mesh::POSITION, chunk->meshData.positions, chunk->offset);
-		this->UploadBufferSubData(Mesh::COLOR, chunk->meshData.colors, chunk->offset);
-		RebuildIndices();
+		if (!chunk->meshData.empty)
+		{
+			this->UploadBufferSubData(Mesh::POSITION, chunk->meshData.positions, chunk->offset);
+			this->UploadBufferSubData(Mesh::COLOR, chunk->meshData.colors, chunk->offset);
+		}
+		chunk->uploaded = true;
 	}
-	chunk->uploaded = true;
+	//printf("trying to update mesh data.\n");
+	RebuildIndices();
 }
 
 void SuperChunk::RebuildIndices()
 {
 	IndexBufferObject<uint32_t> *inds = (IndexBufferObject<uint32_t>*)buffers[Mesh::INDICES];
 	inds->data.clear();
-
-	//    uint32_t finalsize=0;
-	//
-	//        for(auto a:_chunks)
-	//        {
-	//            finalsize+=a.second->meshData.indices.size();
-	//        }
-	//        inds->data.reserve(finalsize);
-	//
-	//        for(auto a:_chunks)
-	//        {
-	//            finalsize+=a.second->meshData.indices.size();
-	//        }
 
 	for (auto a : _chunks)
 	{

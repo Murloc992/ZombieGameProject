@@ -13,10 +13,6 @@
 
 #define CHUNKS_PER_THREAD 1
 
-vector<SuperChunkPtr> ChunkManager::_chunksToGenerate;
-vector<SuperChunkPtr> ChunkManager::_chunksToRender;
-vector<glm::ivec3> ChunkManager::_removableChunks;
-
 ChunkManager::ChunkManager()
 {
 	std::string stri = "besiprisikiskiakopusteliaudamasis";
@@ -31,6 +27,9 @@ ChunkManager::ChunkManager()
 
 ChunkManager::~ChunkManager()
 {
+	_removableChunks.clear();
+	_chunksToGenerate.clear();
+	_chunksToRender.clear();
 	_superChunks.clear();
 }
 
@@ -38,7 +37,7 @@ void ChunkManager::SetBlock(const glm::ivec3 &pos, EBlockType type, bool active)
 {
 	glm::ivec3 chunkCoords = WorldToSuperChunkCoords(pos), voxelCoords = SuperChunkSpaceCoords(pos);
 
-	if (_superChunks.count(chunkCoords) != 0)
+	if (_superChunks.find(chunkCoords) != _superChunks.end())
 	{
 		_superChunks[chunkCoords]->Set(voxelCoords.x, voxelCoords.y, voxelCoords.z, type, active);
 	}
@@ -53,7 +52,7 @@ void ChunkManager::SetBlock(const glm::ivec3 &pos, EBlockType type, bool active)
 //! pos: in SUPERCHUNK coordinates
 SuperChunkPtr ChunkManager::AddSuperChunk(const glm::ivec3 &pos)
 {
-	if (_superChunks.count(pos) != 0)
+	if (_superChunks.find(pos) != _superChunks.end())
 	{
 		return _superChunks[pos];
 	}
@@ -66,7 +65,7 @@ SuperChunkPtr ChunkManager::AddSuperChunk(const glm::ivec3 &pos)
 
 void ChunkManager::RemoveSuperChunk(const glm::ivec3 &pos)
 {
-	if (_superChunks.count(pos) != 0)
+	if (_superChunks.find(pos) != _superChunks.end())
 	{
 		//printf("Attempting to delete: %d %s\n",_superChunks[pos].use_count(),_superChunks[pos].unique()?"true":"false");
 		_superChunks[pos] = nullptr;
@@ -77,7 +76,7 @@ void ChunkManager::RemoveSuperChunk(const glm::ivec3 &pos)
 //! pos: in SUPER_CHUNK coordinates
 SuperChunkPtr ChunkManager::GetSuperChunk(const glm::ivec3 &pos)
 {
-	if (_superChunks.count(pos) != 0)
+	if (_superChunks.find(pos) != _superChunks.end())
 		return _superChunks[pos];
 	else
 		return nullptr;
@@ -90,7 +89,7 @@ ChunkPtr ChunkManager::GetChunkWorld(const glm::ivec3 &pos)
 	glm::ivec3 superchunkspaceCoords = SuperChunkSpaceCoords(pos);
 	glm::ivec3 chunkCoords = WorldToChunkCoords(superchunkspaceCoords);
 
-	if (_superChunks.count(superchunkPos) != 0)
+	if (_superChunks.find(superchunkPos) != _superChunks.end())
 	{
 		return _superChunks[superchunkPos]->GetChunk(chunkCoords);
 	}
@@ -104,7 +103,7 @@ ChunkPtr ChunkManager::GetChunk(const glm::ivec3 &pos)
 	glm::ivec3 superchunkPos = ChunkToSuperChunkCoords(pos);
 	glm::ivec3 chunkPos = SuperChunkSpaceChunkCoords(pos);
 
-	if (_superChunks.count(superchunkPos) != 0)
+	if (_superChunks.find(superchunkPos) != _superChunks.end())
 	{
 		return _superChunks[superchunkPos]->GetChunk(chunkPos);
 	}
@@ -115,17 +114,17 @@ ChunkPtr ChunkManager::GetChunk(const glm::ivec3 &pos)
 const Block &ChunkManager::GetBlock(const glm::ivec3 &pos)
 {
 	glm::ivec3 chunkCoords = WorldToSuperChunkCoords(pos), voxelCoords = SuperChunkSpaceCoords(pos);
-	if (_superChunks.count(chunkCoords) != 0)
+	if (_superChunks.find(chunkCoords) != _superChunks.end())
 		return _superChunks[chunkCoords]->Get(voxelCoords.x, voxelCoords.y, voxelCoords.z);
 	else
 		return Chunk::EMPTY_BLOCK;
 }
 
-std::mutex g_i_mutex;
-
 void ChunkManager::AsyncGenerate(vector<SuperChunkPtr> chunksToGenerate)
 {
 	vector<SuperChunkPtr> internalChunks = chunksToGenerate;
+
+	//printf("Started async.\n");
 
 	while (internalChunks.size() > 0 && internalChunks.size() <= CHUNKS_PER_THREAD)
 	{
@@ -174,7 +173,7 @@ void ChunkManager::Update(float dt, Player *player)
 
 	BOOST_FOREACH(SuperChunkMap::value_type a, _superChunks)
 	{
-		if (!a.second->generating && a.second->built)
+		if (!a.second->generating)
 		{
 			a.second->Update(dt);
 
@@ -188,15 +187,15 @@ void ChunkManager::Update(float dt, Player *player)
 				_removableChunks.push_back(a.first);
 				continue;
 			}
-			else
+			else //if (a.second->uploaded)
 			{
 				_chunksToRender.push_back(a.second);
 			}
 		}
 	}
 
-	glm::ivec3 ppmin = (glm::ivec3)(playerPos - glm::vec3(SUPERCHUNK_SIZE_BLOCKS*2));
-	glm::ivec3 ppmax = (glm::ivec3)(playerPos + glm::vec3(SUPERCHUNK_SIZE_BLOCKS*2));
+	glm::ivec3 ppmin = (glm::ivec3)(playerPos - glm::vec3(SUPERCHUNK_SIZE_BLOCKS * 2));
+	glm::ivec3 ppmax = (glm::ivec3)(playerPos + glm::vec3(SUPERCHUNK_SIZE_BLOCKS * 2));
 
 	if (_chunksToGenerate.size() == 0)
 	{
@@ -206,33 +205,33 @@ void ChunkManager::Update(float dt, Player *player)
 			{
 				//for (int y = ppmin.y; y <= ppmax.y; y += SUPERCHUNK_SIZE_BLOCKS / 2)
 				//{
-					if (_chunksToGenerate.size() >= CHUNKS_PER_THREAD)
+				if (_chunksToGenerate.size() >= CHUNKS_PER_THREAD)
+				{
+					break;
+				}
+
+				glm::ivec3 scc = WorldToSuperChunkCoords(glm::ivec3(x, 0, z));
+				SuperChunkPtr chunky = GetSuperChunk(scc);
+
+
+				if (chunky == nullptr)
+				{
+					//printf("Added a superchunk.\n");
+					chunky = AddSuperChunk(scc);
+					_chunksToGenerate.push_back(chunky);
+					chunky->generating = true;
+				}
+				else if (!chunky->generating)
+				{
+					if (!chunky->generated || !chunky->built)
 					{
-						break;
-					}
-
-					glm::ivec3 scc = WorldToSuperChunkCoords(glm::ivec3(x, 0, z));
-					SuperChunkPtr chunky = GetSuperChunk(scc);
-
-
-					if (chunky == nullptr)
-					{
-						//printf("Added a superchunk.\n");
-						chunky = AddSuperChunk(scc);
+						//printf("Added a NON-GENERATED/BUILT superchunk.\n");
 						_chunksToGenerate.push_back(chunky);
 						chunky->generating = true;
 					}
-					else if (!chunky->generating)
-					{
-						if (!chunky->generated || !chunky->built)
-						{
-							//printf("Added a NON-GENERATED/BUILT superchunk.\n");
-							_chunksToGenerate.push_back(chunky);
-							chunky->generating = true;
-						}
-					}
-					else
-						continue;
+				}
+				else
+					continue;
 				//}
 			}
 		}

@@ -177,7 +177,7 @@ void GreedyMeshBuilder::GreedyBuild(ChunkPtr chk)
 	loop(i, CHUNK_SIZE) mask[i] = new MaskNode[size];
 
 	glm::ivec3 face[4];
-	u16vec4 inds;
+	//u16vec4 inds;
 
 	glm::ivec2 qstart, qdims;
 
@@ -314,11 +314,11 @@ void GreedyMeshBuilder::GreedyBuild(ChunkPtr chk)
 							face[1] = glm::ivec3(qstart.x + qdims.x, qstart.y + qdims.y, z);
 							face[0] = glm::ivec3(qstart.x, qstart.y + qdims.y, z);
 
-							inds = u16vec4(INDEX3D(qstart.x, qstart.y + qdims.y, z, size),
-								INDEX3D(qstart.x + qdims.x, qstart.y + qdims.y, z, size),
-								INDEX3D(qstart.x + qdims.x, qstart.y, z, size),
-								INDEX3D(qstart.x, qstart.y, z, size)
-								);
+							//inds = u16vec4(INDEX3D(qstart.x, qstart.y + qdims.y, z, size),
+							//	INDEX3D(qstart.x + qdims.x, qstart.y + qdims.y, z, size),
+							//	INDEX3D(qstart.x + qdims.x, qstart.y, z, size),
+							//	INDEX3D(qstart.x, qstart.y, z, size)
+							//	);
 
 							AddQuadToMesh(chk, face, mn.color);
 							faceCount++;
@@ -331,11 +331,11 @@ void GreedyMeshBuilder::GreedyBuild(ChunkPtr chk)
 							face[2] = glm::ivec3(qstart.x + qdims.x, qstart.y + qdims.y, z + 1);
 							face[3] = glm::ivec3(qstart.x, qstart.y + qdims.y, z + 1);
 
-							inds = u16vec4(INDEX3D(qstart.x, qstart.y, z + 1, size),
-								INDEX3D(qstart.x + qdims.x, qstart.y, z + 1, size),
-								INDEX3D(qstart.x + qdims.x, qstart.y + qdims.y, z + 1, size),
-								INDEX3D(qstart.x, qstart.y + qdims.y, z + 1, size)
-								);
+							//inds = u16vec4(INDEX3D(qstart.x, qstart.y, z + 1, size),
+							//	INDEX3D(qstart.x + qdims.x, qstart.y, z + 1, size),
+							//	INDEX3D(qstart.x + qdims.x, qstart.y + qdims.y, z + 1, size),
+							//	INDEX3D(qstart.x, qstart.y + qdims.y, z + 1, size)
+							//	);
 
 							AddQuadToMesh(chk, face, mn.color);
 							faceCount++;
@@ -348,11 +348,11 @@ void GreedyMeshBuilder::GreedyBuild(ChunkPtr chk)
 							face[1] = glm::ivec3(qstart.x + qdims.x, z + 1, qstart.y + qdims.y);
 							face[0] = glm::ivec3(qstart.x, z + 1, qstart.y + qdims.y);
 
-							inds = u16vec4(INDEX3D(qstart.x, z + 1, qstart.y + qdims.y, size),
-								INDEX3D(qstart.x + qdims.x, z + 1, qstart.y + qdims.y, size),
-								INDEX3D(qstart.x + qdims.x, z + 1, qstart.y, size),
-								INDEX3D(qstart.x, z + 1, qstart.y, size)
-								);
+							//inds = u16vec4(INDEX3D(qstart.x, z + 1, qstart.y + qdims.y, size),
+							//	INDEX3D(qstart.x + qdims.x, z + 1, qstart.y + qdims.y, size),
+							//	INDEX3D(qstart.x + qdims.x, z + 1, qstart.y, size),
+							//	INDEX3D(qstart.x, z + 1, qstart.y, size)
+							//	);
 
 							AddQuadToMesh(chk, face, mn.color);
 							faceCount++;
@@ -365,11 +365,11 @@ void GreedyMeshBuilder::GreedyBuild(ChunkPtr chk)
 							face[2] = glm::ivec3(qstart.x + qdims.x, z, qstart.y + qdims.y);
 							face[3] = glm::ivec3(qstart.x, z, qstart.y + qdims.y);
 
-							inds = u16vec4(INDEX3D(qstart.x, z, qstart.y, size),
-								INDEX3D(qstart.x + qdims.x, z, qstart.y, size),
-								INDEX3D(qstart.x + qdims.x, z, qstart.y + qdims.y, size),
-								INDEX3D(qstart.x, z, qstart.y + qdims.y, size)
-								);
+							//inds = u16vec4(INDEX3D(qstart.x, z, qstart.y, size),
+							//	INDEX3D(qstart.x + qdims.x, z, qstart.y, size),
+							//	INDEX3D(qstart.x + qdims.x, z, qstart.y + qdims.y, size),
+							//	INDEX3D(qstart.x, z, qstart.y + qdims.y, size)
+							//	);
 
 							AddQuadToMesh(chk, face, mn.color);
 							faceCount++;
@@ -382,11 +382,11 @@ void GreedyMeshBuilder::GreedyBuild(ChunkPtr chk)
 							face[1] = glm::ivec3(z + 1, qstart.y + qdims.y, qstart.x + qdims.x);
 							face[0] = glm::ivec3(z + 1, qstart.y + qdims.y, qstart.x);
 
-							inds = u16vec4(INDEX3D(z + 1, qstart.y + qdims.y, qstart.x, size),
-								INDEX3D(z + 1, qstart.y + qdims.y, qstart.x + qdims.x, size),
-								INDEX3D(z + 1, qstart.y, qstart.x + qdims.x, size),
-								INDEX3D(z + 1, qstart.y, qstart.x, size)
-								);
+							//inds = u16vec4(INDEX3D(z + 1, qstart.y + qdims.y, qstart.x, size),
+							//	INDEX3D(z + 1, qstart.y + qdims.y, qstart.x + qdims.x, size),
+							//	INDEX3D(z + 1, qstart.y, qstart.x + qdims.x, size),
+							//	INDEX3D(z + 1, qstart.y, qstart.x, size)
+							//	);
 
 							AddQuadToMesh(chk, face, mn.color);
 							faceCount++;
@@ -399,11 +399,11 @@ void GreedyMeshBuilder::GreedyBuild(ChunkPtr chk)
 							face[2] = glm::ivec3(z, qstart.y + qdims.y, qstart.x + qdims.x);
 							face[3] = glm::ivec3(z, qstart.y + qdims.y, qstart.x);
 
-							inds = u16vec4(INDEX3D(z, qstart.y, qstart.x, size),
-								INDEX3D(z, qstart.y, qstart.x + qdims.x, size),
-								INDEX3D(z, qstart.y + qdims.y, qstart.x + qdims.x, size),
-								INDEX3D(z, qstart.y + qdims.y, qstart.x, size)
-								);
+							//inds = u16vec4(INDEX3D(z, qstart.y, qstart.x, size),
+							//	INDEX3D(z, qstart.y, qstart.x + qdims.x, size),
+							//	INDEX3D(z, qstart.y + qdims.y, qstart.x + qdims.x, size),
+							//	INDEX3D(z, qstart.y + qdims.y, qstart.x, size)
+							//	);
 
 							AddQuadToMesh(chk, face, mn.color);
 							faceCount++;

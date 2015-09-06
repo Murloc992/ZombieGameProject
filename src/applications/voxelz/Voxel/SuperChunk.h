@@ -9,7 +9,7 @@
 #define SUPERCHUNK_SIZE_BLOCKS (SUPERCHUNK_SIZE*CHUNK_SIZE)
 #define SUPERCHUNK_SIZE_BLOCKSF (SUPERCHUNK_SIZEF*CHUNK_SIZEF)
 #define VRAM_BLOCK_SIZE (CHUNK_MESH_SIZE*(SUPERCHUNK_SIZE*SUPERCHUNK_SIZE*SUPERCHUNK_SIZE))
-#define CHUNK_UPDATES_PER_FRAME 8
+#define CHUNK_UPDATES_PER_FRAME 32
 
 inline glm::ivec3 WorldToSuperChunkCoords(const glm::ivec3 &other)
 {
@@ -82,7 +82,7 @@ class SuperChunk :public Mesh
 {
 public:
 	ChunkMap _chunks;
-	bool built, generated, generating;
+	bool built, generated, generating, uploaded;
 private:
 	ChunkManager* _chunkManager;
 	bool alive;
@@ -121,7 +121,7 @@ public:
 
 	ChunkPtr GetChunk(const glm::ivec3 &chunkCoords);
 
-	void UpdateChunkData(ChunkPtr chunk);
+	void UpdateChunkData(vector<ChunkPtr> chunks);
 
 	void RebuildIndices();
 
