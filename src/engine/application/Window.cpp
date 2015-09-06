@@ -110,9 +110,13 @@ bool Window::Init(const std::string  &title, uint32_t width, uint32_t height, ui
 	}
 
 	//glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4); // 4x antialiasing
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // We want OpenGL 4.3
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE); //We don't want the old OpenGL
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE); //We don't want the old OpenGL
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //We don't want the old OpenGL
+#ifdef _DEBUG_OGL
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+#endif
 
 	glfwWindowHint(GLFW_RED_BITS, 8);
 	glfwWindowHint(GLFW_GREEN_BITS, 8);
@@ -144,7 +148,7 @@ bool Window::Init(const std::string  &title, uint32_t width, uint32_t height, ui
 
 	glfwSetWindowShouldClose(_window, GL_FALSE);
 
-	//glfwSwapInterval(0);
+	glfwSwapInterval(0);
 
 	glfwSwapBuffers(_window);
 	glfwPollEvents();

@@ -23,19 +23,14 @@ SuperChunk::SuperChunk(ChunkManager* chkmgr, const glm::ivec3 &pos)
 	BufferObject<u8vec4> *col = new BufferObject<u8vec4>();
 	IndexBufferObject<uint32_t> *inds = new IndexBufferObject<uint32_t>();
 
-	vert->data.resize(VRAM_BLOCK_SIZE);
-	col->data.resize(VRAM_BLOCK_SIZE);
-	inds->data.resize(0);
-
-	//printf("RESERVED RAM BLOCK: %f Mb\n",(float)(vert->data.size()*sizeof(vert->data[0])+col->data.size()*sizeof(col->data[0]))/1000000.f);
+	vert->data.reserve(VRAM_BLOCK_SIZE);
+	col->data.reserve(VRAM_BLOCK_SIZE);
 
 	buffers[Mesh::POSITION] = vert;
 	buffers[Mesh::COLOR] = col;
 	buffers[Mesh::INDICES] = inds;
 
 	Init();
-	freeVector(((BufferObject<u8vec3>*)buffers[Mesh::POSITION])->data);
-	freeVector(((BufferObject<u8vec4>*)buffers[Mesh::COLOR])->data);
 }
 
 SuperChunk::~SuperChunk()

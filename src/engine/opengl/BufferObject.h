@@ -27,7 +27,7 @@ struct BufferObject : public IBufferObject
 	virtual uint32_t GetComponentCount();
 	virtual uint32_t GetSize()
 	{
-		return data.size();
+		return data.size() > 0 ? data.size() : data.capacity();
 	}
 };
 
@@ -53,7 +53,7 @@ struct IndexBufferObject : public IBufferObject
 	virtual uint32_t GetComponentCount();
 	virtual uint32_t GetSize()
 	{
-		return data.size();
+		return data.size() > 0 ? data.size() : data.capacity();
 	}
 };
 

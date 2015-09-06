@@ -84,7 +84,8 @@ template <>
 void BufferObject<u8vec3>::Upload()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, this->Id);
-	glBufferData(GL_ARRAY_BUFFER, data.size()*sizeof(u8vec3), &data[0], GL_STATIC_DRAW);
+
+	glBufferData(GL_ARRAY_BUFFER, data.size() > 0 ? data.size()*sizeof(u8vec3) : data.capacity()*sizeof(u8vec3), data.size() > 0 ? &data[0] : NULL, GL_DYNAMIC_DRAW);
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -92,7 +93,47 @@ template <>
 void BufferObject<u8vec3>::UploadSubData(vector<u8vec3> subdata, uint32_t offset)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, this->Id);
-	glBufferSubData(GL_ARRAY_BUFFER, offset*sizeof(u8vec3), subdata.size()*sizeof(u8vec3), &subdata[0]);
+	u8vec3*data = reinterpret_cast<u8vec3*>(glMapBufferRange(GL_ARRAY_BUFFER, offset * sizeof(u8vec3), subdata.size() * sizeof(u8vec3), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+	std::copy(subdata.begin(), subdata.end(), data);
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+	//glBufferSubData(GL_ARRAY_BUFFER, offset*sizeof(u8vec3), subdata.size()*sizeof(u8vec3), &subdata[0]);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+template <>
+uint32_t BufferObject<u8vec4>::GetDataType()
+{
+	return GL_UNSIGNED_BYTE;
+}
+
+template <>
+uint32_t BufferObject<u8vec4>::GetComponentCount()
+{
+	return 4;
+}
+
+template <>
+void BufferObject<u8vec4>::Init()
+{
+	glGenBuffers(1, &this->Id);
+}
+
+template <>
+void BufferObject<u8vec4>::Upload()
+{
+	glBindBuffer(GL_ARRAY_BUFFER, this->Id);
+	glBufferData(GL_ARRAY_BUFFER, data.size() > 0 ? data.size()*sizeof(u8vec4) : data.capacity()*sizeof(u8vec4), data.size() > 0 ? &data[0] : NULL, GL_DYNAMIC_DRAW);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+template <>
+void BufferObject<u8vec4>::UploadSubData(vector<u8vec4> subdata, uint32_t offset)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, this->Id);
+	u8vec4*data = reinterpret_cast<u8vec4*>(glMapBufferRange(GL_ARRAY_BUFFER, offset * sizeof(u8vec4), subdata.size() * sizeof(u8vec4), GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+	std::copy(subdata.begin(), subdata.end(), data);
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+	//glBufferSubData(GL_ARRAY_BUFFER, offset*sizeof(u8vec4), subdata.size()*sizeof(u8vec4), &subdata[0]);
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

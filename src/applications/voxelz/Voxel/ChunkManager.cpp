@@ -122,13 +122,11 @@ const Block &ChunkManager::GetBlock(const glm::ivec3 &pos)
 
 void ChunkManager::AsyncGenerate(vector<SuperChunkPtr> chunksToGenerate)
 {
-	vector<SuperChunkPtr> internalChunks = chunksToGenerate;
-
 	//printf("Started async.\n");
 
-	while (internalChunks.size() > 0 && internalChunks.size() <= CHUNKS_PER_THREAD)
+	while (chunksToGenerate.size() > 0 && chunksToGenerate.size() <= CHUNKS_PER_THREAD)
 	{
-		for (auto it = internalChunks.begin(); it != internalChunks.end();)
+		for (auto it = chunksToGenerate.begin(); it != chunksToGenerate.end();)
 		{
 			auto sc = *it;
 
@@ -141,7 +139,7 @@ void ChunkManager::AsyncGenerate(vector<SuperChunkPtr> chunksToGenerate)
 			if (sc->generated&&sc->built)
 			{
 				sc->generating = false;
-				it = internalChunks.erase(it);
+				it = chunksToGenerate.erase(it);
 			}
 			else
 				it++;
@@ -170,29 +168,6 @@ void ChunkManager::Update(float dt, Player *player)
 	}
 
 	glm::vec3 playerPos = player->GetFeetPos();
-
-	BOOST_FOREACH(SuperChunkMap::value_type a, _superChunks)
-	{
-		if (!a.second->generating)
-		{
-			a.second->Update(dt);
-
-			glm::vec3 chunkCenter = (glm::vec3)(a.second->GetPosition()) + glm::vec3(SUPERCHUNK_SIZE_BLOCKSF / 2.f);
-			float dist = glm::distance(chunkCenter, playerPos);
-
-			//printf("DEBUG: %s %s %f\n",GLMVec3ToStr(chunkCenter).c_str(),GLMVec3ToStr(playerPos).c_str(),dist);
-
-			if (dist > SUPERCHUNK_SIZE_BLOCKSF*5.f)
-			{
-				_removableChunks.push_back(a.first);
-				continue;
-			}
-			else //if (a.second->uploaded)
-			{
-				_chunksToRender.push_back(a.second);
-			}
-		}
-	}
 
 	glm::ivec3 ppmin = (glm::ivec3)(playerPos - glm::vec3(SUPERCHUNK_SIZE_BLOCKS * 2));
 	glm::ivec3 ppmax = (glm::ivec3)(playerPos + glm::vec3(SUPERCHUNK_SIZE_BLOCKS * 2));
@@ -241,10 +216,34 @@ void ChunkManager::Update(float dt, Player *player)
 	{
 		//printf("Created a thread to generate.\n");
 		//std::async(std::launch::async, &ChunkManager::AsyncGenerate, this, _chunksToGenerate); // launch on a thread
+		
 		std::thread t(&ChunkManager::AsyncGenerate, this, _chunksToGenerate);
 		t.detach();
-		_chunksToGenerate.clear();
 		//printf("Size of _chunksToGenerate: %u\n", _chunksToGenerate.size());
+		_chunksToGenerate.clear();
+	}
+
+	BOOST_FOREACH(SuperChunkMap::value_type a, _superChunks)
+	{
+		if (!a.second->generating)
+		{
+			a.second->Update(dt);
+
+			glm::vec3 chunkCenter = (glm::vec3)(a.second->GetPosition()) + glm::vec3(SUPERCHUNK_SIZE_BLOCKSF / 2.f);
+			float dist = glm::distance(chunkCenter, playerPos);
+
+			//printf("DEBUG: %s %s %f\n",GLMVec3ToStr(chunkCenter).c_str(),GLMVec3ToStr(playerPos).c_str(),dist);
+
+			if (dist > SUPERCHUNK_SIZE_BLOCKSF*10.f)
+			{
+				_removableChunks.push_back(a.first);
+				continue;
+			}
+			else if (a.second->uploaded)
+			{
+				_chunksToRender.push_back(a.second);
+			}
+		}
 	}
 }
 

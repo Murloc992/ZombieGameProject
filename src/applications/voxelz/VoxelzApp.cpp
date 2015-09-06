@@ -240,7 +240,7 @@ void InitPlaneMesh(AppContext * ctx)
 
 	plr = new Player(chkmgr, glm::vec3(61, 128, 161));
 
-	cam = share(new Camera(ctx, glm::vec3(0, 128, -128), plr->GetPosition(), glm::vec3(0, 1, 0), 1.777777f, 45.0f, 0.1f, 512.f));
+	cam = share(new Camera(ctx, glm::vec3(0, 128, -128), plr->GetPosition(), glm::vec3(0, 1, 0), 1.777777f, 45.0f, 0.1f, 4096.f));
 	cam->SetFPS(false);
 	//cam->SetFPS(false);
 
